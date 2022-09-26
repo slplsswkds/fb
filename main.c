@@ -55,7 +55,6 @@ int main() {
             while(1);
         }
 
-        // PB_ODR = ~PB_ODR;
         delay(65535);
     }
 }
