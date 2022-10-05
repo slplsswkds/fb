@@ -7,6 +7,7 @@
 #include "inc/clk.h"
 #include "inc/gpio.h"
 #include "inc/tim2.h"
+#include "inc/color.h"
 
 /*
  * TIM2_CH1 -> PD4
@@ -21,6 +22,7 @@ static void delay(uint16_t t) {
     while(t--) {};
 }
 
+void tim2_demo();
 
 int main() {
     do { __asm sim __endasm; } while(0); // Disable interrupts
@@ -32,30 +34,37 @@ int main() {
     do { __asm rim __endasm; } while(0); // Enable interrupts
     
     PB_ODR |= (1 << 5);
-
-    for(;;) {
-        static uint16_t counter, duty = 0;
-        TIM2_CCR1H = duty >> 8; // Red
-        TIM2_CCR1L = duty;
-
-        TIM2_CCR2H = duty >> 8; // Green
-        TIM2_CCR2L = duty;
-        
-        TIM2_CCR3H = duty >> 8; // Blue
-        TIM2_CCR3L = duty;
-        
-        if(counter < 16) {
-            counter ++;
-            duty = pwm_steps[counter];
-        }
-        else {
-            duty = 0;
-            counter = 0;
-            PB_ODR &= ~(1 << 5);
-            while(1);
-        }
-
-        delay(65535);
-    }
+    
+    tim2_demo();
 }
 
+void tim2_demo() {
+    struct Color rgb;
+    rgb.r = 0;
+    rgb.g = 0;
+    rgb.b = 0;
+
+    for(;;) {
+        static uint16_t counter = 0;
+
+        write_color_to_registers(&rgb);
+
+        if(counter < 255) {
+            counter ++;
+            rgb.r += 5;
+            rgb.g += 5;
+            rgb.b += 5;
+        }
+        else {
+            counter = 0;
+            rgb.r = 0;
+            rgb.g = 0;
+            rgb.b = 0;
+            
+            PB_ODR &= ~(1 << 5);
+            //while(1);
+        }
+
+        delay(655);
+    }
+}
