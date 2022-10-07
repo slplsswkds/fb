@@ -26,5 +26,38 @@ void gpio_init() {
     PA_CR1 |= (1 << 3);
     PA_CR2 &= ~(1 << 3);
     PA_ODR &= ~(1 << 3);
+    
+    /* Buttons 
+     * But_R+ -> PD1
+     * But_R- -> PC7
+     * But_G+ -> PC6
+     * But_G- -> PC5
+     * But_B+ -> PC4
+     * But_B- -> PC3
+     */
+    
+    PD_DDR &= ~(1 << 2); // Input 
+    PD_CR1 |= (1 << 2); // Pull-Up
+    PD_CR2 &= ~(1 << 2); // Interrupt disabled
+
+    PC_DDR &= ~(1 << 7);
+    PC_CR1 |= (1 << 7);
+    PC_CR2 &= ~(1 << 7);
+
+    PC_DDR &= ~(1 << 6);
+    PC_CR1 |= (1 << 6);
+    PC_CR2 &= ~(1 << 6);
+
+    PC_DDR &= ~(1 << 5);
+    PC_CR1 |= (1 << 5);
+    PC_CR2 &= ~(1 << 5);
+
+    PC_DDR &= ~(1 << 4);
+    PC_CR1 |= (1 << 4);
+    PC_CR2 &= ~(1 << 4);
+
+    PC_DDR &= ~(1 << 3);
+    PC_CR1 |= (1 << 3);
+    PC_CR2 &= ~(1 << 3);
 }
 

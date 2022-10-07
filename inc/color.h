@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <math.h>
 
-
 struct Color {
     uint8_t r;
     uint8_t g;
@@ -14,3 +13,11 @@ struct Color {
 uint16_t normalize_from(uint8_t *val);
 
 void write_color_to_registers(struct Color *color);
+
+// The function of adding to a variable without outing of
+// range MAX uint8_t value
+void smart_increment(uint8_t *val);
+
+// the function of subtracting from a variable without 
+// outing of range MIN uint8_t value
+void smart_decrement(uint8_t *val);

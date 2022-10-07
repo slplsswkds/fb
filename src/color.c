@@ -2,7 +2,7 @@
 
 uint16_t normalize_from(uint8_t *val) {
     float tmp1 = *val;
-    float tmp2 = sqrtf(11 * tmp1) / 5;
+    float tmp2 = sqrtf(10 * tmp1) / 5;
     return (expf(tmp2));
 }
 
@@ -20,4 +20,16 @@ void write_color_to_registers(struct Color *color) {
     
     TIM2_CCR3H = blue >> 8;
     TIM2_CCR3L = blue;
+}
+
+void smart_increment(uint8_t *val) {
+    if(*val < 255) {
+        *val += 1;
+    }
+}
+
+void smart_decrement(uint8_t *val) {
+    if(*val > 0) {
+        *val -= 1;
+    }
 }

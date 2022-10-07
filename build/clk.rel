@@ -1,0 +1,23 @@
+XH3
+H B areas 2 global symbols
+M clk
+O -mstm8
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A DATA size 0 flags 0 addr 0
+A INITIALIZED size 0 flags 0 addr 0
+A DABS size 0 flags 8 addr 0
+A HOME size 0 flags 0 addr 0
+A GSINIT size 0 flags 0 addr 0
+A GSFINAL size 0 flags 0 addr 0
+A CONST size 0 flags 0 addr 0
+A INITIALIZER size 0 flags 0 addr 0
+A CODE size C flags 0 addr 0
+S _clk_init Def000000
+A CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 00 09
+T 00 00 00
+R 00 00 00 09
+T 00 00 00 C6 50 C0 5F 97 53 9F A5 02 26 F5 81
+R 00 00 00 09

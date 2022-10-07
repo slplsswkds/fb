@@ -1,0 +1,339 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.2.0 #13081 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _pwm_steps
+                                     12 	.globl _main
+                                     13 	.globl _smart_decrement
+                                     14 	.globl _smart_increment
+                                     15 	.globl _write_color_to_registers
+                                     16 	.globl _tim2_init
+                                     17 	.globl _gpio_init
+                                     18 	.globl _clk_init
+                                     19 	.globl _rgb
+                                     20 	.globl _tim2_demo
+                                     21 	.globl _button_hundler
+                                     22 ;--------------------------------------------------------
+                                     23 ; ram data
+                                     24 ;--------------------------------------------------------
+                                     25 	.area DATA
+      000000                         26 _rgb::
+      000000                         27 	.ds 3
+      000003                         28 _tim2_demo_counter_196608_40:
+      000003                         29 	.ds 2
+                                     30 ;--------------------------------------------------------
+                                     31 ; ram data
+                                     32 ;--------------------------------------------------------
+                                     33 	.area INITIALIZED
+                                     34 ;--------------------------------------------------------
+                                     35 ; Stack segment in internal ram
+                                     36 ;--------------------------------------------------------
+                                     37 	.area	SSEG
+      000000                         38 __start__stack:
+      000000                         39 	.ds	1
+                                     40 
+                                     41 ;--------------------------------------------------------
+                                     42 ; absolute external ram data
+                                     43 ;--------------------------------------------------------
+                                     44 	.area DABS (ABS)
+                                     45 
+                                     46 ; default segment ordering for linker
+                                     47 	.area HOME
+                                     48 	.area GSINIT
+                                     49 	.area GSFINAL
+                                     50 	.area CONST
+                                     51 	.area INITIALIZER
+                                     52 	.area CODE
+                                     53 
+                                     54 ;--------------------------------------------------------
+                                     55 ; interrupt vector
+                                     56 ;--------------------------------------------------------
+                                     57 	.area HOME
+      000000                         58 __interrupt_vect:
+      000000 82v00u00u00             59 	int s_GSINIT ; reset
+                                     60 ;--------------------------------------------------------
+                                     61 ; global & static initialisations
+                                     62 ;--------------------------------------------------------
+                                     63 	.area HOME
+                                     64 	.area GSINIT
+                                     65 	.area GSFINAL
+                                     66 	.area GSINIT
+      000000                         67 __sdcc_init_data:
+                                     68 ; stm8_genXINIT() start
+      000000 AEr00r00         [ 2]   69 	ldw x, #l_DATA
+      000003 27 07            [ 1]   70 	jreq	00002$
+      000005                         71 00001$:
+      000005 72 4FuFFuFF      [ 1]   72 	clr (s_DATA - 1, x)
+      000009 5A               [ 2]   73 	decw x
+      00000A 26 F9            [ 1]   74 	jrne	00001$
+      00000C                         75 00002$:
+      00000C AEr00r00         [ 2]   76 	ldw	x, #l_INITIALIZER
+      00000F 27 09            [ 1]   77 	jreq	00004$
+      000011                         78 00003$:
+      000011 D6uFFuFF         [ 1]   79 	ld	a, (s_INITIALIZER - 1, x)
+      000014 D7uFFuFF         [ 1]   80 	ld	(s_INITIALIZED - 1, x), a
+      000017 5A               [ 2]   81 	decw	x
+      000018 26 F7            [ 1]   82 	jrne	00003$
+      00001A                         83 00004$:
+                                     84 ; stm8_genXINIT() end
+                                     85 ;	main.c: 55: static uint16_t counter = 0;
+      00001A 5F               [ 1]   86 	clrw	x
+      00001B CFu00u03         [ 2]   87 	ldw	_tim2_demo_counter_196608_40+0, x
+                                     88 	.area GSFINAL
+      000000 CCr00r04         [ 2]   89 	jp	__sdcc_program_startup
+                                     90 ;--------------------------------------------------------
+                                     91 ; Home
+                                     92 ;--------------------------------------------------------
+                                     93 	.area HOME
+                                     94 	.area HOME
+      000004                         95 __sdcc_program_startup:
+      000004 CCr00r08         [ 2]   96 	jp	_main
+                                     97 ;	return from main will return to caller
+                                     98 ;--------------------------------------------------------
+                                     99 ; code
+                                    100 ;--------------------------------------------------------
+                                    101 	.area CODE
+                                    102 ;	main.c: 19: static void delay(uint16_t t) {
+                                    103 ;	-----------------------------------------
+                                    104 ;	 function delay
+                                    105 ;	-----------------------------------------
+      000000                        106 _delay:
+                                    107 ;	main.c: 20: while(t--) {};
+      000000                        108 00101$:
+      000000 90 93            [ 1]  109 	ldw	y, x
+      000002 5A               [ 2]  110 	decw	x
+      000003 90 5D            [ 2]  111 	tnzw	y
+      000005 26 F9            [ 1]  112 	jrne	00101$
+                                    113 ;	main.c: 21: }
+      000007 81               [ 4]  114 	ret
+                                    115 ;	main.c: 28: int main() {
+                                    116 ;	-----------------------------------------
+                                    117 ;	 function main
+                                    118 ;	-----------------------------------------
+      000008                        119 _main:
+                                    120 ;	main.c: 29: do { __asm sim __endasm; } while(0); // Disable interrupts
+      000008 9B               [ 1]  121 	sim	
+                                    122 ;	main.c: 31: clk_init();
+      000009 CDr00r00         [ 4]  123 	call	_clk_init
+                                    124 ;	main.c: 32: gpio_init();
+      00000C CDr00r00         [ 4]  125 	call	_gpio_init
+                                    126 ;	main.c: 33: tim2_init();
+      00000F CDr00r00         [ 4]  127 	call	_tim2_init
+                                    128 ;	main.c: 35: do { __asm rim __endasm; } while(0); // Enable interrupts
+      000012 9A               [ 1]  129 	rim	
+                                    130 ;	main.c: 37: PB_ODR |= (1 << 5);
+      000013 72 1A 50 05      [ 1]  131 	bset	0x5005, #5
+                                    132 ;	main.c: 39: rgb.r = 0;
+      000017 35 00u00u00      [ 1]  133 	mov	_rgb+0, #0x00
+                                    134 ;	main.c: 40: rgb.g = 0;
+      00001B 35 00u00u01      [ 1]  135 	mov	_rgb+1, #0x00
+                                    136 ;	main.c: 41: rgb.b = 0;
+      00001F 35 00u00u02      [ 1]  137 	mov	_rgb+2, #0x00
+      000023                        138 00108$:
+                                    139 ;	main.c: 44: button_hundler(&rgb);
+      000023 AEr00r00         [ 2]  140 	ldw	x, #(_rgb+0)
+      000026 CDr00r87         [ 4]  141 	call	_button_hundler
+                                    142 ;	main.c: 45: write_color_to_registers(&rgb);
+      000029 AEr00r00         [ 2]  143 	ldw	x, #(_rgb+0)
+      00002C CDr00r00         [ 4]  144 	call	_write_color_to_registers
+      00002F 20 F2            [ 2]  145 	jra	00108$
+                                    146 ;	main.c: 47: }
+      000031 81               [ 4]  147 	ret
+                                    148 ;	main.c: 49: void tim2_demo() {
+                                    149 ;	-----------------------------------------
+                                    150 ;	 function tim2_demo
+                                    151 ;	-----------------------------------------
+      000032                        152 _tim2_demo:
+                                    153 ;	main.c: 50: rgb.r = 0;
+      000032 35 00u00u00      [ 1]  154 	mov	_rgb+0, #0x00
+                                    155 ;	main.c: 51: rgb.g = 0;
+      000036 35 00u00u01      [ 1]  156 	mov	_rgb+1, #0x00
+                                    157 ;	main.c: 52: rgb.b = 0;
+      00003A 35 00u00u02      [ 1]  158 	mov	_rgb+2, #0x00
+      00003E                        159 00105$:
+                                    160 ;	main.c: 57: write_color_to_registers(&rgb);
+      00003E AEr00r00         [ 2]  161 	ldw	x, #(_rgb+0)
+      000041 CDr00r00         [ 4]  162 	call	_write_color_to_registers
+                                    163 ;	main.c: 59: if(counter < 255) {
+                                    164 ;	main.c: 60: counter ++;
+      000044 CEu00u03         [ 2]  165 	ldw	x, _tim2_demo_counter_196608_40+0
+      000047 A3 00 FF         [ 2]  166 	cpw	x, #0x00ff
+      00004A 24 1E            [ 1]  167 	jrnc	00102$
+      00004C 5C               [ 1]  168 	incw	x
+      00004D CFu00u03         [ 2]  169 	ldw	_tim2_demo_counter_196608_40+0, x
+                                    170 ;	main.c: 61: rgb.r += 5;
+      000050 C6u00u00         [ 1]  171 	ld	a, _rgb+0
+      000053 AB 05            [ 1]  172 	add	a, #0x05
+      000055 C7u00u00         [ 1]  173 	ld	_rgb+0, a
+                                    174 ;	main.c: 62: rgb.g += 5;
+      000058 C6u00u01         [ 1]  175 	ld	a, _rgb+1
+      00005B AB 05            [ 1]  176 	add	a, #0x05
+      00005D C7u00u01         [ 1]  177 	ld	_rgb+1, a
+                                    178 ;	main.c: 63: rgb.b += 5;
+      000060 C6u00u02         [ 1]  179 	ld	a, _rgb+2
+      000063 AB 05            [ 1]  180 	add	a, #0x05
+      000065 C7u00u02         [ 1]  181 	ld	_rgb+2, a
+      000068 20 14            [ 2]  182 	jra	00103$
+      00006A                        183 00102$:
+                                    184 ;	main.c: 66: counter = 0;
+      00006A 5F               [ 1]  185 	clrw	x
+      00006B CFu00u03         [ 2]  186 	ldw	_tim2_demo_counter_196608_40+0, x
+                                    187 ;	main.c: 67: rgb.r = 0;
+      00006E 35 00u00u00      [ 1]  188 	mov	_rgb+0, #0x00
+                                    189 ;	main.c: 68: rgb.g = 0;
+      000072 35 00u00u01      [ 1]  190 	mov	_rgb+1, #0x00
+                                    191 ;	main.c: 69: rgb.b = 0;
+      000076 35 00u00u02      [ 1]  192 	mov	_rgb+2, #0x00
+                                    193 ;	main.c: 71: PB_ODR &= ~(1 << 5);
+      00007A 72 1B 50 05      [ 1]  194 	bres	0x5005, #5
+      00007E                        195 00103$:
+                                    196 ;	main.c: 75: delay(655);
+      00007E AE 02 8F         [ 2]  197 	ldw	x, #0x028f
+      000081 CDr00r00         [ 4]  198 	call	_delay
+      000084 20 B8            [ 2]  199 	jra	00105$
+                                    200 ;	main.c: 77: }
+      000086 81               [ 4]  201 	ret
+                                    202 ;	main.c: 79: void button_hundler(struct Color *color) {
+                                    203 ;	-----------------------------------------
+                                    204 ;	 function button_hundler
+                                    205 ;	-----------------------------------------
+      000087                        206 _button_hundler:
+      000087 52 04            [ 2]  207 	sub	sp, #4
+      000089 1F 03            [ 2]  208 	ldw	(0x03, sp), x
+                                    209 ;	main.c: 80: if((1 << 2) == (~PD_IDR & (1 << 2))) { // But_R+
+      00008B C6 50 10         [ 1]  210 	ld	a, 0x5010
+      00008E 5F               [ 1]  211 	clrw	x
+      00008F 97               [ 1]  212 	ld	xl, a
+      000090 53               [ 2]  213 	cplw	x
+      000091 9F               [ 1]  214 	ld	a, xl
+      000092 A4 04            [ 1]  215 	and	a, #0x04
+      000094 97               [ 1]  216 	ld	xl, a
+      000095 4F               [ 1]  217 	clr	a
+      000096 95               [ 1]  218 	ld	xh, a
+      000097 A3 00 04         [ 2]  219 	cpw	x, #0x0004
+      00009A 26 05            [ 1]  220 	jrne	00102$
+                                    221 ;	main.c: 81: smart_increment(&color->r);
+      00009C 1E 03            [ 2]  222 	ldw	x, (0x03, sp)
+      00009E CDr00r00         [ 4]  223 	call	_smart_increment
+      0000A1                        224 00102$:
+                                    225 ;	main.c: 84: if((1 << 7) == (~PC_IDR & (1 << 7))) { // But_R-
+      0000A1 C6 50 0B         [ 1]  226 	ld	a, 0x500b
+      0000A4 5F               [ 1]  227 	clrw	x
+      0000A5 97               [ 1]  228 	ld	xl, a
+      0000A6 53               [ 2]  229 	cplw	x
+      0000A7 9F               [ 1]  230 	ld	a, xl
+      0000A8 A4 80            [ 1]  231 	and	a, #0x80
+      0000AA 97               [ 1]  232 	ld	xl, a
+      0000AB 4F               [ 1]  233 	clr	a
+      0000AC 95               [ 1]  234 	ld	xh, a
+      0000AD A3 00 80         [ 2]  235 	cpw	x, #0x0080
+      0000B0 26 05            [ 1]  236 	jrne	00104$
+                                    237 ;	main.c: 85: smart_decrement(&color->r);
+      0000B2 1E 03            [ 2]  238 	ldw	x, (0x03, sp)
+      0000B4 CDr00r00         [ 4]  239 	call	_smart_decrement
+      0000B7                        240 00104$:
+                                    241 ;	main.c: 88: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
+      0000B7 C6 50 0B         [ 1]  242 	ld	a, 0x500b
+      0000BA 5F               [ 1]  243 	clrw	x
+      0000BB 97               [ 1]  244 	ld	xl, a
+      0000BC 53               [ 2]  245 	cplw	x
+      0000BD 9F               [ 1]  246 	ld	a, xl
+      0000BE A4 40            [ 1]  247 	and	a, #0x40
+      0000C0 97               [ 1]  248 	ld	xl, a
+      0000C1 4F               [ 1]  249 	clr	a
+                                    250 ;	main.c: 89: smart_increment(&color->g);
+      0000C2 16 03            [ 2]  251 	ldw	y, (0x03, sp)
+      0000C4 90 5C            [ 1]  252 	incw	y
+      0000C6 17 01            [ 2]  253 	ldw	(0x01, sp), y
+                                    254 ;	main.c: 88: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
+      0000C8 95               [ 1]  255 	ld	xh, a
+      0000C9 A3 00 40         [ 2]  256 	cpw	x, #0x0040
+      0000CC 26 05            [ 1]  257 	jrne	00106$
+                                    258 ;	main.c: 89: smart_increment(&color->g);
+      0000CE 1E 01            [ 2]  259 	ldw	x, (0x01, sp)
+      0000D0 CDr00r00         [ 4]  260 	call	_smart_increment
+      0000D3                        261 00106$:
+                                    262 ;	main.c: 92: if((1 << 5) == (~PC_IDR & (1 << 5))) { // But_G-
+      0000D3 C6 50 0B         [ 1]  263 	ld	a, 0x500b
+      0000D6 5F               [ 1]  264 	clrw	x
+      0000D7 97               [ 1]  265 	ld	xl, a
+      0000D8 53               [ 2]  266 	cplw	x
+      0000D9 9F               [ 1]  267 	ld	a, xl
+      0000DA A4 20            [ 1]  268 	and	a, #0x20
+      0000DC 97               [ 1]  269 	ld	xl, a
+      0000DD 4F               [ 1]  270 	clr	a
+      0000DE 95               [ 1]  271 	ld	xh, a
+      0000DF A3 00 20         [ 2]  272 	cpw	x, #0x0020
+      0000E2 26 05            [ 1]  273 	jrne	00108$
+                                    274 ;	main.c: 93: smart_decrement(&color->g);
+      0000E4 1E 01            [ 2]  275 	ldw	x, (0x01, sp)
+      0000E6 CDr00r00         [ 4]  276 	call	_smart_decrement
+      0000E9                        277 00108$:
+                                    278 ;	main.c: 96: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
+      0000E9 C6 50 0B         [ 1]  279 	ld	a, 0x500b
+      0000EC 5F               [ 1]  280 	clrw	x
+      0000ED 97               [ 1]  281 	ld	xl, a
+      0000EE 53               [ 2]  282 	cplw	x
+      0000EF 90 5F            [ 1]  283 	clrw	y
+      0000F1 9F               [ 1]  284 	ld	a, xl
+      0000F2 A4 10            [ 1]  285 	and	a, #0x10
+      0000F4 90 97            [ 1]  286 	ld	yl, a
+                                    287 ;	main.c: 97: smart_increment(&color->b);
+      0000F6 1E 03            [ 2]  288 	ldw	x, (0x03, sp)
+      0000F8 5C               [ 1]  289 	incw	x
+      0000F9 5C               [ 1]  290 	incw	x
+      0000FA 1F 01            [ 2]  291 	ldw	(0x01, sp), x
+                                    292 ;	main.c: 96: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
+      0000FC 90 A3 00 10      [ 2]  293 	cpw	y, #0x0010
+      000100 26 05            [ 1]  294 	jrne	00110$
+                                    295 ;	main.c: 97: smart_increment(&color->b);
+      000102 1E 01            [ 2]  296 	ldw	x, (0x01, sp)
+      000104 CDr00r00         [ 4]  297 	call	_smart_increment
+      000107                        298 00110$:
+                                    299 ;	main.c: 100: if((1 << 3) == (~PC_IDR & (1 << 3))) { // But_B-
+      000107 C6 50 0B         [ 1]  300 	ld	a, 0x500b
+      00010A 5F               [ 1]  301 	clrw	x
+      00010B 97               [ 1]  302 	ld	xl, a
+      00010C 53               [ 2]  303 	cplw	x
+      00010D 9F               [ 1]  304 	ld	a, xl
+      00010E A4 08            [ 1]  305 	and	a, #0x08
+      000110 97               [ 1]  306 	ld	xl, a
+      000111 4F               [ 1]  307 	clr	a
+      000112 95               [ 1]  308 	ld	xh, a
+      000113 A3 00 08         [ 2]  309 	cpw	x, #0x0008
+      000116 26 07            [ 1]  310 	jrne	00113$
+                                    311 ;	main.c: 101: smart_decrement(&color->b);
+      000118 1E 01            [ 2]  312 	ldw	x, (0x01, sp)
+      00011A 5B 04            [ 2]  313 	addw	sp, #4
+      00011C CCr00r00         [ 2]  314 	jp	_smart_decrement
+      00011F                        315 00113$:
+                                    316 ;	main.c: 103: }
+      00011F 5B 04            [ 2]  317 	addw	sp, #4
+      000121 81               [ 4]  318 	ret
+                                    319 	.area CODE
+                                    320 	.area CONST
+      000000                        321 _pwm_steps:
+      000000 00 00                  322 	.dw #0x0000
+      000002 00 01                  323 	.dw #0x0001
+      000004 00 02                  324 	.dw #0x0002
+      000006 00 05                  325 	.dw #0x0005
+      000008 00 0B                  326 	.dw #0x000b
+      00000A 00 18                  327 	.dw #0x0018
+      00000C 00 34                  328 	.dw #0x0034
+      00000E 00 74                  329 	.dw #0x0074
+      000010 01 00                  330 	.dw #0x0100
+      000012 02 35                  331 	.dw #0x0235
+      000014 04 DF                  332 	.dw #0x04df
+      000016 0A C1                  333 	.dw #0x0ac1
+      000018 17 BF                  334 	.dw #0x17bf
+      00001A 34 6F                  335 	.dw #0x346f
+      00001C 73 C5                  336 	.dw #0x73c5
+      00001E FF FE                  337 	.dw #0xfffe
+                                    338 	.area INITIALIZER
+                                    339 	.area CABS (ABS)
