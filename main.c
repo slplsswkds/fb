@@ -11,6 +11,9 @@
  * But_G- -> PC5
  * But_B+ -> PC4
  * But_B- -> PC3
+ * 
+ * But_FLASH -> PB4
+ * But_LOAD -> PB5
  * */
 
 static void delay(uint16_t t) {
@@ -26,7 +29,7 @@ int main() {
     
     do { __asm rim __endasm; } while(0); // Enable interrupts
 
-    write_to_eeprom();
+    //write_to_eeprom();
 
     struct Color rgb;
     rgb.r = 0;
@@ -62,5 +65,11 @@ void button_hundler(struct Color *color) {
     
     if((1 << 3) == (~PC_IDR & (1 << 3))) { // But_B-
         smart_decrement(&color->b);
+    }
+
+    if((1 << 4) == (~PB_IDR & (1 << 4))) { // But_FLASH
+    }
+
+    if((1 << 5) == (~PB_IDR & (1 << 5))) { // But_LOAD
     }
 }

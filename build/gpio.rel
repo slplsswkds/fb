@@ -12,7 +12,7 @@ A GSINIT size 0 flags 0 addr 0
 A GSFINAL size 0 flags 0 addr 0
 A CONST size 0 flags 0 addr 0
 A INITIALIZER size 0 flags 0 addr 0
-A CODE size 89 flags 0 addr 0
+A CODE size A1 flags 0 addr 0
 S _gpio_init Def000000
 A CABS size 0 flags 8 addr 0
 T 00 00 00
@@ -39,5 +39,9 @@ T 00 00 6E 50 0E 72 19 50 0C 72 18 50 0D 72 19
 R 00 00 00 09
 T 00 00 7A 50 0E 72 17 50 0C 72 16 50 0D 72 17
 R 00 00 00 09
-T 00 00 86 50 0E 81
+T 00 00 86 50 0E 72 19 50 07 72 18 50 08 72 19
+R 00 00 00 09
+T 00 00 92 50 09 72 1B 50 07 72 1A 50 08 72 1B
+R 00 00 00 09
+T 00 00 9E 50 09 81
 R 00 00 00 09

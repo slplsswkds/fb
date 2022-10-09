@@ -36,6 +36,9 @@ void gpio_init() {
      * But_G- -> PC5
      * But_B+ -> PC4
      * But_B- -> PC3
+     * 
+     * But_FLASH -> PB4
+     * But_LOAD  -> PB5
      */
     
     PD_DDR &= ~(1 << 2); // Input 
@@ -61,5 +64,14 @@ void gpio_init() {
     PC_DDR &= ~(1 << 3);
     PC_CR1 |= (1 << 3);
     PC_CR2 &= ~(1 << 3);
+
+
+    PB_DDR &= ~(1 << 4);
+    PB_CR1 |= (1 << 4);
+    PB_CR2 &= ~(1 << 4);
+
+    PB_DDR &= ~(1 << 5);
+    PB_CR1 |= (1 << 5);
+    PB_CR2 &= ~(1 << 5);
 }
 

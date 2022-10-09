@@ -51,33 +51,33 @@
                                      51 ;	-----------------------------------------
                                      52 ;	 function eeprom_unlock
                                      53 ;	-----------------------------------------
-      008262                         54 _eeprom_unlock:
+      008277                         54 _eeprom_unlock:
                                      55 ;	./src/flash.c: 4: FLASH_PUKR = 0x56;
-      008262 35 56 50 62      [ 1]   56 	mov	0x5062+0, #0x56
+      008277 35 56 50 62      [ 1]   56 	mov	0x5062+0, #0x56
                                      57 ;	./src/flash.c: 5: FLASH_PUKR = 0xAE;
-      008266 35 AE 50 62      [ 1]   58 	mov	0x5062+0, #0xae
+      00827B 35 AE 50 62      [ 1]   58 	mov	0x5062+0, #0xae
                                      59 ;	./src/flash.c: 6: }
-      00826A 81               [ 4]   60 	ret
+      00827F 81               [ 4]   60 	ret
                                      61 ;	./src/flash.c: 8: void write_to_eeprom(void) {
                                      62 ;	-----------------------------------------
                                      63 ;	 function write_to_eeprom
                                      64 ;	-----------------------------------------
-      00826B                         65 _write_to_eeprom:
+      008280                         65 _write_to_eeprom:
                                      66 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
-      00826B 72 02 50 5F 08   [ 2]   67 	btjt	0x505f, #1, 00103$
+      008280 72 02 50 5F 08   [ 2]   67 	btjt	0x505f, #1, 00103$
                                      68 ;	./src/flash.c: 12: FLASH_DUKR = 0xAE;
-      008270 35 AE 50 64      [ 1]   69 	mov	0x5064+0, #0xae
+      008285 35 AE 50 64      [ 1]   69 	mov	0x5064+0, #0xae
                                      70 ;	./src/flash.c: 13: FLASH_DUKR = 0x56;
-      008274 35 56 50 64      [ 1]   71 	mov	0x5064+0, #0x56
+      008289 35 56 50 64      [ 1]   71 	mov	0x5064+0, #0x56
                                      72 ;	./src/flash.c: 16: while (!(FLASH_IAPSR & DUL));
-      008278                         73 00103$:
-      008278 72 07 50 5F FB   [ 2]   74 	btjf	0x505f, #3, 00103$
+      00828D                         73 00103$:
+      00828D 72 07 50 5F FB   [ 2]   74 	btjf	0x505f, #3, 00103$
                                      75 ;	./src/flash.c: 18: EEPROM_FIRST_ADDR = 0xff;
-      00827D 35 FF 40 00      [ 1]   76 	mov	0x4000+0, #0xff
+      008292 35 FF 40 00      [ 1]   76 	mov	0x4000+0, #0xff
                                      77 ;	./src/flash.c: 20: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
-      008281 72 17 50 5F      [ 1]   78 	bres	0x505f, #3
+      008296 72 17 50 5F      [ 1]   78 	bres	0x505f, #3
                                      79 ;	./src/flash.c: 21: }
-      008285 81               [ 4]   80 	ret
+      00829A 81               [ 4]   80 	ret
                                      81 	.area CODE
                                      82 	.area CONST
                                      83 	.area INITIALIZER

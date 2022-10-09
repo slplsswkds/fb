@@ -80,7 +80,7 @@ _tim2_init:
 ;	./src/tim2.c: 22: TIM2_CCER1 &= ~CC2P; // Active high
 	ld	a, 0x530a
 	and	a, #0xdf
-;	./src/tim2.c: 23: TIM2_CCER1 |= CC2E; // Enable CH1 output
+;	./src/tim2.c: 23: TIM2_CCER1 |= CC2E; // Enable CH2 output
 	ld	0x530a, a
 	or	a, #0x10
 	ld	0x530a, a
@@ -95,7 +95,7 @@ _tim2_init:
 ;	./src/tim2.c: 29: TIM2_CCER2 &= ~CC3P; // Active high
 	ld	a, 0x530b
 	and	a, #0xfd
-;	./src/tim2.c: 30: TIM2_CCER2 |= CC3E; // Enable CH1 output
+;	./src/tim2.c: 30: TIM2_CCER2 |= CC3E; // Enable CH3 output
 	ld	0x530b, a
 	or	a, #0x01
 	ld	0x530b, a

@@ -25,7 +25,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000003  s_SSEG                          
      00000007  l_HOME                          
      0000001A  l_GSINIT                        
-     00000F9B  l_CODE                          
+     00000FB0  l_CODE                          
      00008000  s_HOME                          
      00008007  s_GSINIT                        
      00008021  s_GSFINAL                       
@@ -85,41 +85,41 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008024    00000F9B =        3995. bytes (REL,CON)
+CODE                                00008024    00000FB0 =        4016. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      0000802C  _main                              main
-     00008051  _button_hundler                    main
-     000080EC  _normalize_from                    color
-     0000811D  _write_color_to_registers          color
-     00008154  _smart_increment                   color
-     0000815D  _smart_decrement                   color
-     00008164  _tim2_init                         tim2
-     000081CD  _gpio_init                         gpio
-     00008256  _clk_init                          clk
-     00008262  _eeprom_unlock                     flash
-     0000826B  _write_to_eeprom                   flash
-     00008286  ___fsmul                           _fsmul
-     00008440  _sqrtf                             sqrtf
-     0000853E  _expf                              expf
-     00008708  ___fslt                            _fslt
-     00008798  ___fsadd                           _fsadd
-     000089C3  _ldexpf                            ldexpf
-     00008A45  ___fs2sint                         _fs2sint
-     00008A85  ___sint2fs                         _sint2fs
-     00008A95  ___fs2uint                         _fs2uint
-     00008AB5  _frexpf                            frexpf
-     00008C96  ___fsdiv                           _fsdiv
-     00008D0F  ___uchar2fs                        _uchar2fs
-     00008D1C  ___fssub                           _fssub
-     00008D45  ___muluint2ulong                   
-     00008D4B  ___mulsint2slong                   
-     00008D9C  ___slong2fs                        _slong2fs
-     00008DC4  ___fs2slong                        _fs2slong
-     00008E0E  ___fseq                            _fseq
-     00008E5C  ___ulong2fs                        _ulong2fs
-     00008EF8  ___fs2ulong                        _fs2ulong
+     0000804E  _button_hundler                    main
+     000080E9  _normalize_from                    color
+     0000811A  _write_color_to_registers          color
+     00008151  _smart_increment                   color
+     0000815A  _smart_decrement                   color
+     00008161  _tim2_init                         tim2
+     000081CA  _gpio_init                         gpio
+     0000826B  _clk_init                          clk
+     00008277  _eeprom_unlock                     flash
+     00008280  _write_to_eeprom                   flash
+     0000829B  ___fsmul                           _fsmul
+     00008455  _sqrtf                             sqrtf
+     00008553  _expf                              expf
+     0000871D  ___fslt                            _fslt
+     000087AD  ___fsadd                           _fsadd
+     000089D8  _ldexpf                            ldexpf
+     00008A5A  ___fs2sint                         _fs2sint
+     00008A9A  ___sint2fs                         _sint2fs
+     00008AAA  ___fs2uint                         _fs2uint
+     00008ACA  _frexpf                            frexpf
+     00008CAB  ___fsdiv                           _fsdiv
+     00008D24  ___uchar2fs                        _uchar2fs
+     00008D31  ___fssub                           _fssub
+     00008D5A  ___muluint2ulong                   
+     00008D60  ___mulsint2slong                   
+     00008DB1  ___slong2fs                        _slong2fs
+     00008DD9  ___fs2slong                        _fs2slong
+     00008E23  ___fseq                            _fseq
+     00008E71  ___ulong2fs                        _ulong2fs
+     00008F0D  ___fs2ulong                        _fs2ulong
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 

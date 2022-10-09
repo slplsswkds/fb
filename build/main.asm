@@ -9,7 +9,6 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _write_to_eeprom
 	.globl _smart_decrement
 	.globl _smart_increment
 	.globl _write_color_to_registers
@@ -90,64 +89,62 @@ __sdcc_program_startup:
 ; code
 ;--------------------------------------------------------
 	.area CODE
-;	main.c: 16: static void delay(uint16_t t) {
+;	main.c: 19: static void delay(uint16_t t) {
 ;	-----------------------------------------
 ;	 function delay
 ;	-----------------------------------------
 _delay:
-;	main.c: 17: while(t--) {};
+;	main.c: 20: while(t--) {};
 00101$:
 	ldw	y, x
 	decw	x
 	tnzw	y
 	jrne	00101$
-;	main.c: 18: }
+;	main.c: 21: }
 	ret
-;	main.c: 20: int main() {
+;	main.c: 23: int main() {
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
 	sub	sp, #3
-;	main.c: 21: do { __asm sim __endasm; } while(0); // Disable interrupts
+;	main.c: 24: do { __asm sim __endasm; } while(0); // Disable interrupts
 	sim	
-;	main.c: 23: clk_init();
+;	main.c: 26: clk_init();
 	call	_clk_init
-;	main.c: 24: gpio_init();
+;	main.c: 27: gpio_init();
 	call	_gpio_init
-;	main.c: 25: tim2_init();
+;	main.c: 28: tim2_init();
 	call	_tim2_init
-;	main.c: 27: do { __asm rim __endasm; } while(0); // Enable interrupts
+;	main.c: 30: do { __asm rim __endasm; } while(0); // Enable interrupts
 	rim	
-;	main.c: 29: write_to_eeprom();
-	call	_write_to_eeprom
-;	main.c: 32: rgb.r = 0;
+;	main.c: 35: rgb.r = 0;
 	clr	(0x01, sp)
-;	main.c: 33: rgb.g = 0;
+;	main.c: 36: rgb.g = 0;
 	clr	(0x02, sp)
-;	main.c: 34: rgb.b = 0;
+;	main.c: 37: rgb.b = 0;
 	clr	(0x03, sp)
 00108$:
-;	main.c: 37: button_hundler(&rgb);
+;	main.c: 40: button_hundler(&rgb);
 	ldw	x, sp
 	incw	x
 	call	_button_hundler
-;	main.c: 38: write_color_to_registers(&rgb);
+;	main.c: 41: write_color_to_registers(&rgb);
 	ldw	x, sp
 	incw	x
 	call	_write_color_to_registers
 	jra	00108$
-;	main.c: 40: }
+;	main.c: 43: }
 	addw	sp, #3
 	ret
-;	main.c: 42: void button_hundler(struct Color *color) {
+;	main.c: 45: void button_hundler(struct Color *color) {
 ;	-----------------------------------------
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
 	sub	sp, #4
 	ldw	(0x03, sp), x
-;	main.c: 43: if((1 << 2) == (~PD_IDR & (1 << 2))) { // But_R+
+;	main.c: 46: if((1 << 2) == (~PD_IDR & (1 << 2))) { // But_R+
 	ld	a, 0x5010
 	clrw	x
 	ld	xl, a
@@ -159,11 +156,11 @@ _button_hundler:
 	ld	xh, a
 	cpw	x, #0x0004
 	jrne	00102$
-;	main.c: 44: smart_increment(&color->r);
+;	main.c: 47: smart_increment(&color->r);
 	ldw	x, (0x03, sp)
 	call	_smart_increment
 00102$:
-;	main.c: 47: if((1 << 7) == (~PC_IDR & (1 << 7))) { // But_R-
+;	main.c: 50: if((1 << 7) == (~PC_IDR & (1 << 7))) { // But_R-
 	ld	a, 0x500b
 	clrw	x
 	ld	xl, a
@@ -175,11 +172,11 @@ _button_hundler:
 	ld	xh, a
 	cpw	x, #0x0080
 	jrne	00104$
-;	main.c: 48: smart_decrement(&color->r);
+;	main.c: 51: smart_decrement(&color->r);
 	ldw	x, (0x03, sp)
 	call	_smart_decrement
 00104$:
-;	main.c: 51: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
+;	main.c: 54: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
 	ld	a, 0x500b
 	clrw	x
 	ld	xl, a
@@ -188,19 +185,19 @@ _button_hundler:
 	and	a, #0x40
 	ld	xl, a
 	clr	a
-;	main.c: 52: smart_increment(&color->g);
+;	main.c: 55: smart_increment(&color->g);
 	ldw	y, (0x03, sp)
 	incw	y
 	ldw	(0x01, sp), y
-;	main.c: 51: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
+;	main.c: 54: if((1 << 6) == (~PC_IDR & (1 << 6))) { // But_G+
 	ld	xh, a
 	cpw	x, #0x0040
 	jrne	00106$
-;	main.c: 52: smart_increment(&color->g);
+;	main.c: 55: smart_increment(&color->g);
 	ldw	x, (0x01, sp)
 	call	_smart_increment
 00106$:
-;	main.c: 55: if((1 << 5) == (~PC_IDR & (1 << 5))) { // But_G-
+;	main.c: 58: if((1 << 5) == (~PC_IDR & (1 << 5))) { // But_G-
 	ld	a, 0x500b
 	clrw	x
 	ld	xl, a
@@ -212,11 +209,11 @@ _button_hundler:
 	ld	xh, a
 	cpw	x, #0x0020
 	jrne	00108$
-;	main.c: 56: smart_decrement(&color->g);
+;	main.c: 59: smart_decrement(&color->g);
 	ldw	x, (0x01, sp)
 	call	_smart_decrement
 00108$:
-;	main.c: 59: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
+;	main.c: 62: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
 	ld	a, 0x500b
 	clrw	x
 	ld	xl, a
@@ -225,19 +222,19 @@ _button_hundler:
 	ld	a, xl
 	and	a, #0x10
 	ld	yl, a
-;	main.c: 60: smart_increment(&color->b);
+;	main.c: 63: smart_increment(&color->b);
 	ldw	x, (0x03, sp)
 	incw	x
 	incw	x
 	ldw	(0x01, sp), x
-;	main.c: 59: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
+;	main.c: 62: if((1 << 4) == (~PC_IDR & (1 << 4))) { // But_B+
 	cpw	y, #0x0010
 	jrne	00110$
-;	main.c: 60: smart_increment(&color->b);
+;	main.c: 63: smart_increment(&color->b);
 	ldw	x, (0x01, sp)
 	call	_smart_increment
 00110$:
-;	main.c: 63: if((1 << 3) == (~PC_IDR & (1 << 3))) { // But_B-
+;	main.c: 66: if((1 << 3) == (~PC_IDR & (1 << 3))) { // But_B-
 	ld	a, 0x500b
 	clrw	x
 	ld	xl, a
@@ -249,12 +246,12 @@ _button_hundler:
 	ld	xh, a
 	cpw	x, #0x0008
 	jrne	00113$
-;	main.c: 64: smart_decrement(&color->b);
+;	main.c: 67: smart_decrement(&color->b);
 	ldw	x, (0x01, sp)
 	addw	sp, #4
 	jp	_smart_decrement
 00113$:
-;	main.c: 66: }
+;	main.c: 70: }
 	addw	sp, #4
 	ret
 	.area CODE

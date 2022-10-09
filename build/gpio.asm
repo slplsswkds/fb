@@ -83,43 +83,55 @@ _gpio_init:
 	bres	0x5004, #3
 ;	./src/gpio.c: 30: PA_ODR &= ~(1 << 3);
 	bres	0x5000, #3
-;	./src/gpio.c: 41: PD_DDR &= ~(1 << 2); // Input 
+;	./src/gpio.c: 44: PD_DDR &= ~(1 << 2); // Input 
 	bres	0x5011, #2
-;	./src/gpio.c: 42: PD_CR1 |= (1 << 2); // Pull-Up
+;	./src/gpio.c: 45: PD_CR1 |= (1 << 2); // Pull-Up
 	bset	0x5012, #2
-;	./src/gpio.c: 43: PD_CR2 &= ~(1 << 2); // Interrupt disabled
+;	./src/gpio.c: 46: PD_CR2 &= ~(1 << 2); // Interrupt disabled
 	bres	0x5013, #2
-;	./src/gpio.c: 45: PC_DDR &= ~(1 << 7);
+;	./src/gpio.c: 48: PC_DDR &= ~(1 << 7);
 	bres	0x500c, #7
-;	./src/gpio.c: 46: PC_CR1 |= (1 << 7);
+;	./src/gpio.c: 49: PC_CR1 |= (1 << 7);
 	bset	0x500d, #7
-;	./src/gpio.c: 47: PC_CR2 &= ~(1 << 7);
+;	./src/gpio.c: 50: PC_CR2 &= ~(1 << 7);
 	bres	0x500e, #7
-;	./src/gpio.c: 49: PC_DDR &= ~(1 << 6);
+;	./src/gpio.c: 52: PC_DDR &= ~(1 << 6);
 	bres	0x500c, #6
-;	./src/gpio.c: 50: PC_CR1 |= (1 << 6);
+;	./src/gpio.c: 53: PC_CR1 |= (1 << 6);
 	bset	0x500d, #6
-;	./src/gpio.c: 51: PC_CR2 &= ~(1 << 6);
+;	./src/gpio.c: 54: PC_CR2 &= ~(1 << 6);
 	bres	0x500e, #6
-;	./src/gpio.c: 53: PC_DDR &= ~(1 << 5);
+;	./src/gpio.c: 56: PC_DDR &= ~(1 << 5);
 	bres	0x500c, #5
-;	./src/gpio.c: 54: PC_CR1 |= (1 << 5);
+;	./src/gpio.c: 57: PC_CR1 |= (1 << 5);
 	bset	0x500d, #5
-;	./src/gpio.c: 55: PC_CR2 &= ~(1 << 5);
+;	./src/gpio.c: 58: PC_CR2 &= ~(1 << 5);
 	bres	0x500e, #5
-;	./src/gpio.c: 57: PC_DDR &= ~(1 << 4);
+;	./src/gpio.c: 60: PC_DDR &= ~(1 << 4);
 	bres	0x500c, #4
-;	./src/gpio.c: 58: PC_CR1 |= (1 << 4);
+;	./src/gpio.c: 61: PC_CR1 |= (1 << 4);
 	bset	0x500d, #4
-;	./src/gpio.c: 59: PC_CR2 &= ~(1 << 4);
+;	./src/gpio.c: 62: PC_CR2 &= ~(1 << 4);
 	bres	0x500e, #4
-;	./src/gpio.c: 61: PC_DDR &= ~(1 << 3);
+;	./src/gpio.c: 64: PC_DDR &= ~(1 << 3);
 	bres	0x500c, #3
-;	./src/gpio.c: 62: PC_CR1 |= (1 << 3);
+;	./src/gpio.c: 65: PC_CR1 |= (1 << 3);
 	bset	0x500d, #3
-;	./src/gpio.c: 63: PC_CR2 &= ~(1 << 3);
+;	./src/gpio.c: 66: PC_CR2 &= ~(1 << 3);
 	bres	0x500e, #3
-;	./src/gpio.c: 64: }
+;	./src/gpio.c: 69: PB_DDR &= ~(1 << 4);
+	bres	0x5007, #4
+;	./src/gpio.c: 70: PB_CR1 |= (1 << 4);
+	bset	0x5008, #4
+;	./src/gpio.c: 71: PB_CR2 &= ~(1 << 4);
+	bres	0x5009, #4
+;	./src/gpio.c: 73: PB_DDR &= ~(1 << 5);
+	bres	0x5007, #5
+;	./src/gpio.c: 74: PB_CR1 |= (1 << 5);
+	bset	0x5008, #5
+;	./src/gpio.c: 75: PB_CR2 &= ~(1 << 5);
+	bres	0x5009, #5
+;	./src/gpio.c: 76: }
 	ret
 	.area CODE
 	.area CONST

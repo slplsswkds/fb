@@ -80,7 +80,7 @@
                                      80 ;	./src/tim2.c: 22: TIM2_CCER1 &= ~CC2P; // Active high
       000032 C6 53 0A         [ 1]   81 	ld	a, 0x530a
       000035 A4 DF            [ 1]   82 	and	a, #0xdf
-                                     83 ;	./src/tim2.c: 23: TIM2_CCER1 |= CC2E; // Enable CH1 output
+                                     83 ;	./src/tim2.c: 23: TIM2_CCER1 |= CC2E; // Enable CH2 output
       000037 C7 53 0A         [ 1]   84 	ld	0x530a, a
       00003A AA 10            [ 1]   85 	or	a, #0x10
       00003C C7 53 0A         [ 1]   86 	ld	0x530a, a
@@ -95,7 +95,7 @@
                                      95 ;	./src/tim2.c: 29: TIM2_CCER2 &= ~CC3P; // Active high
       00004F C6 53 0B         [ 1]   96 	ld	a, 0x530b
       000052 A4 FD            [ 1]   97 	and	a, #0xfd
-                                     98 ;	./src/tim2.c: 30: TIM2_CCER2 |= CC3E; // Enable CH1 output
+                                     98 ;	./src/tim2.c: 30: TIM2_CCER2 |= CC3E; // Enable CH3 output
       000054 C7 53 0B         [ 1]   99 	ld	0x530b, a
       000057 AA 01            [ 1]  100 	or	a, #0x01
       000059 C7 53 0B         [ 1]  101 	ld	0x530b, a
