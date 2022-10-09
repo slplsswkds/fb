@@ -20,14 +20,14 @@ void tim2_init() {
     TIM2_CCR2H = 0x00;
     TIM2_CCR2L = 0x00;
     TIM2_CCER1 &= ~CC2P; // Active high
-    TIM2_CCER1 |= CC2E; // Enable CH1 output
+    TIM2_CCER1 |= CC2E; // Enable CH2 output
     TIM2_CCMR2 |= (0b110 << 4); //PWM mode 1
     
     // TIM2_CH3 init
     TIM2_CCR3H = 0x00;
     TIM2_CCR3L = 0x00;
     TIM2_CCER2 &= ~CC3P; // Active high
-    TIM2_CCER2 |= CC3E; // Enable CH1 output
+    TIM2_CCER2 |= CC3E; // Enable CH3 output
     TIM2_CCMR3 |= (0b110 << 4); //PWM mode 1
 
     TIM2_CR1 |= CEN; // Enable TIM2

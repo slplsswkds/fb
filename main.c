@@ -17,21 +17,6 @@ static void delay(uint16_t t) {
     while(t--) {};
 }
 
-void write_to_eeprom(void) {
-    if (!(FLASH_IAPSR & 0x02))
-    {
-        // unlock EEPROM
-        FLASH_DUKR = 0xAE;
-        FLASH_DUKR = 0x56;
-    }
-    // wait for acces to write
-    while (!(FLASH_IAPSR & DUL));
-
-    EEPROM_FIRST_ADDR = 0xff;
-
-    FLASH_IAPSR &= ~(DUL);      // lock EEPROM
-}
-
 int main() {
     do { __asm sim __endasm; } while(0); // Disable interrupts
     

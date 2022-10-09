@@ -9,55 +9,76 @@
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
                                      11 	.globl _eeprom_unlock
-                                     12 ;--------------------------------------------------------
-                                     13 ; ram data
-                                     14 ;--------------------------------------------------------
-                                     15 	.area DATA
-                                     16 ;--------------------------------------------------------
-                                     17 ; ram data
-                                     18 ;--------------------------------------------------------
-                                     19 	.area INITIALIZED
-                                     20 ;--------------------------------------------------------
-                                     21 ; absolute external ram data
-                                     22 ;--------------------------------------------------------
-                                     23 	.area DABS (ABS)
-                                     24 
-                                     25 ; default segment ordering for linker
-                                     26 	.area HOME
-                                     27 	.area GSINIT
-                                     28 	.area GSFINAL
-                                     29 	.area CONST
-                                     30 	.area INITIALIZER
-                                     31 	.area CODE
-                                     32 
-                                     33 ;--------------------------------------------------------
-                                     34 ; global & static initialisations
-                                     35 ;--------------------------------------------------------
-                                     36 	.area HOME
-                                     37 	.area GSINIT
-                                     38 	.area GSFINAL
-                                     39 	.area GSINIT
-                                     40 ;--------------------------------------------------------
-                                     41 ; Home
-                                     42 ;--------------------------------------------------------
-                                     43 	.area HOME
+                                     12 	.globl _write_to_eeprom
+                                     13 ;--------------------------------------------------------
+                                     14 ; ram data
+                                     15 ;--------------------------------------------------------
+                                     16 	.area DATA
+                                     17 ;--------------------------------------------------------
+                                     18 ; ram data
+                                     19 ;--------------------------------------------------------
+                                     20 	.area INITIALIZED
+                                     21 ;--------------------------------------------------------
+                                     22 ; absolute external ram data
+                                     23 ;--------------------------------------------------------
+                                     24 	.area DABS (ABS)
+                                     25 
+                                     26 ; default segment ordering for linker
+                                     27 	.area HOME
+                                     28 	.area GSINIT
+                                     29 	.area GSFINAL
+                                     30 	.area CONST
+                                     31 	.area INITIALIZER
+                                     32 	.area CODE
+                                     33 
+                                     34 ;--------------------------------------------------------
+                                     35 ; global & static initialisations
+                                     36 ;--------------------------------------------------------
+                                     37 	.area HOME
+                                     38 	.area GSINIT
+                                     39 	.area GSFINAL
+                                     40 	.area GSINIT
+                                     41 ;--------------------------------------------------------
+                                     42 ; Home
+                                     43 ;--------------------------------------------------------
                                      44 	.area HOME
-                                     45 ;--------------------------------------------------------
-                                     46 ; code
-                                     47 ;--------------------------------------------------------
-                                     48 	.area CODE
-                                     49 ;	./src/flash.c: 3: void eeprom_unlock() {
-                                     50 ;	-----------------------------------------
-                                     51 ;	 function eeprom_unlock
-                                     52 ;	-----------------------------------------
-      00827D                         53 _eeprom_unlock:
-                                     54 ;	./src/flash.c: 4: FLASH_PUKR = 0x56;
-      00827D 35 56 50 62      [ 1]   55 	mov	0x5062+0, #0x56
-                                     56 ;	./src/flash.c: 5: FLASH_PUKR = 0xAE;
-      008281 35 AE 50 62      [ 1]   57 	mov	0x5062+0, #0xae
-                                     58 ;	./src/flash.c: 6: }
-      008285 81               [ 4]   59 	ret
-                                     60 	.area CODE
-                                     61 	.area CONST
-                                     62 	.area INITIALIZER
-                                     63 	.area CABS (ABS)
+                                     45 	.area HOME
+                                     46 ;--------------------------------------------------------
+                                     47 ; code
+                                     48 ;--------------------------------------------------------
+                                     49 	.area CODE
+                                     50 ;	./src/flash.c: 3: void eeprom_unlock() {
+                                     51 ;	-----------------------------------------
+                                     52 ;	 function eeprom_unlock
+                                     53 ;	-----------------------------------------
+      008262                         54 _eeprom_unlock:
+                                     55 ;	./src/flash.c: 4: FLASH_PUKR = 0x56;
+      008262 35 56 50 62      [ 1]   56 	mov	0x5062+0, #0x56
+                                     57 ;	./src/flash.c: 5: FLASH_PUKR = 0xAE;
+      008266 35 AE 50 62      [ 1]   58 	mov	0x5062+0, #0xae
+                                     59 ;	./src/flash.c: 6: }
+      00826A 81               [ 4]   60 	ret
+                                     61 ;	./src/flash.c: 8: void write_to_eeprom(void) {
+                                     62 ;	-----------------------------------------
+                                     63 ;	 function write_to_eeprom
+                                     64 ;	-----------------------------------------
+      00826B                         65 _write_to_eeprom:
+                                     66 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
+      00826B 72 02 50 5F 08   [ 2]   67 	btjt	0x505f, #1, 00103$
+                                     68 ;	./src/flash.c: 12: FLASH_DUKR = 0xAE;
+      008270 35 AE 50 64      [ 1]   69 	mov	0x5064+0, #0xae
+                                     70 ;	./src/flash.c: 13: FLASH_DUKR = 0x56;
+      008274 35 56 50 64      [ 1]   71 	mov	0x5064+0, #0x56
+                                     72 ;	./src/flash.c: 16: while (!(FLASH_IAPSR & DUL));
+      008278                         73 00103$:
+      008278 72 07 50 5F FB   [ 2]   74 	btjf	0x505f, #3, 00103$
+                                     75 ;	./src/flash.c: 18: EEPROM_FIRST_ADDR = 0xff;
+      00827D 35 FF 40 00      [ 1]   76 	mov	0x4000+0, #0xff
+                                     77 ;	./src/flash.c: 20: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
+      008281 72 17 50 5F      [ 1]   78 	bres	0x505f, #3
+                                     79 ;	./src/flash.c: 21: }
+      008285 81               [ 4]   80 	ret
+                                     81 	.area CODE
+                                     82 	.area CONST
+                                     83 	.area INITIALIZER
+                                     84 	.area CABS (ABS)

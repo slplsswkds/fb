@@ -1,5 +1,5 @@
 XH3
-H B areas 2 global symbols
+H B areas 3 global symbols
 M flash
 O -mstm8
 S .__.ABS. Def000000
@@ -12,10 +12,21 @@ A GSINIT size 0 flags 0 addr 0
 A GSFINAL size 0 flags 0 addr 0
 A CONST size 0 flags 0 addr 0
 A INITIALIZER size 0 flags 0 addr 0
-A CODE size 9 flags 0 addr 0
+A CODE size 24 flags 0 addr 0
 S _eeprom_unlock Def000000
+S _write_to_eeprom Def000009
 A CABS size 0 flags 8 addr 0
 T 00 00 00
 R 00 00 00 09
 T 00 00 00 35 56 50 62 35 AE 50 62 81
+R 00 00 00 09
+T 00 00 09
+R 00 00 00 09
+T 00 00 09 72 02 50 5F 08 35 AE 50 64 35 56 50 64
+R 00 00 00 09
+T 00 00 16
+R 00 00 00 09
+T 00 00 16 72 07 50 5F FB 35 FF 40 00 72 17 50 5F
+R 00 00 00 09
+T 00 00 23 81
 R 00 00 00 09

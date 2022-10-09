@@ -89,17 +89,17 @@ CODE                                00008024    00000F9B =        3995. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000802C  _write_to_eeprom                   main
-     00008047  _main                              main
-     0000806C  _button_hundler                    main
-     00008107  _normalize_from                    color
-     00008138  _write_color_to_registers          color
-     0000816F  _smart_increment                   color
-     00008178  _smart_decrement                   color
-     0000817F  _tim2_init                         tim2
-     000081E8  _gpio_init                         gpio
-     00008271  _clk_init                          clk
-     0000827D  _eeprom_unlock                     flash
+     0000802C  _main                              main
+     00008051  _button_hundler                    main
+     000080EC  _normalize_from                    color
+     0000811D  _write_color_to_registers          color
+     00008154  _smart_increment                   color
+     0000815D  _smart_decrement                   color
+     00008164  _tim2_init                         tim2
+     000081CD  _gpio_init                         gpio
+     00008256  _clk_init                          clk
+     00008262  _eeprom_unlock                     flash
+     0000826B  _write_to_eeprom                   flash
      00008286  ___fsmul                           _fsmul
      00008440  _sqrtf                             sqrtf
      0000853E  _expf                              expf
