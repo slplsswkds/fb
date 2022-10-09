@@ -2,13 +2,13 @@
                                       2 ; File Created by SDCC : free open source ANSI-C Compiler
                                       3 ; Version 4.2.0 #13081 (Linux)
                                       4 ;--------------------------------------------------------
-                                      5 	.module clk
+                                      5 	.module flash
                                       6 	.optsdcc -mstm8
                                       7 	
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
-                                     11 	.globl _clk_init
+                                     11 	.globl _eeprom_unlock
                                      12 ;--------------------------------------------------------
                                      13 ; ram data
                                      14 ;--------------------------------------------------------
@@ -46,23 +46,18 @@
                                      46 ; code
                                      47 ;--------------------------------------------------------
                                      48 	.area CODE
-                                     49 ;	./src/clk.c: 3: void clk_init() {
+                                     49 ;	./src/flash.c: 3: void eeprom_unlock() {
                                      50 ;	-----------------------------------------
-                                     51 ;	 function clk_init
+                                     51 ;	 function eeprom_unlock
                                      52 ;	-----------------------------------------
-      008271                         53 _clk_init:
-                                     54 ;	./src/clk.c: 5: while(~CLK_ICKR & HSIRDY) {} ;
-      008271                         55 00101$:
-      008271 C6 50 C0         [ 1]   56 	ld	a, 0x50c0
-      008274 5F               [ 1]   57 	clrw	x
-      008275 97               [ 1]   58 	ld	xl, a
-      008276 53               [ 2]   59 	cplw	x
-      008277 9F               [ 1]   60 	ld	a, xl
-      008278 A5 02            [ 1]   61 	bcp	a, #0x02
-      00827A 26 F5            [ 1]   62 	jrne	00101$
-                                     63 ;	./src/clk.c: 6: }
-      00827C 81               [ 4]   64 	ret
-                                     65 	.area CODE
-                                     66 	.area CONST
-                                     67 	.area INITIALIZER
-                                     68 	.area CABS (ABS)
+      000000                         53 _eeprom_unlock:
+                                     54 ;	./src/flash.c: 4: FLASH_PUKR = 0x56;
+      000000 35 56 50 62      [ 1]   55 	mov	0x5062+0, #0x56
+                                     56 ;	./src/flash.c: 5: FLASH_PUKR = 0xAE;
+      000004 35 AE 50 62      [ 1]   57 	mov	0x5062+0, #0xae
+                                     58 ;	./src/flash.c: 6: }
+      000008 81               [ 4]   59 	ret
+                                     60 	.area CODE
+                                     61 	.area CONST
+                                     62 	.area INITIALIZER
+                                     63 	.area CABS (ABS)

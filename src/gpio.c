@@ -1,10 +1,12 @@
 #include "../inc/gpio.h"
 
 void gpio_init() {
+    // Onboard LED
     // Output - PushPull - 2MHz
     PB_DDR |= (1 << 5);
     PB_CR1 |= (1 << 5);
     PB_CR2 &= ~(1 << 5);
+    PB_ODR |= (1 << 5);
     
     // TIM2_CH1 
     // Output - PushPull - 2MHz

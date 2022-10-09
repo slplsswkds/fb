@@ -10,5 +10,6 @@
 ./build/tim2.rel
 ./build/gpio.rel
 ./build/clk.rel
+./build/flash.rel
 
 -e

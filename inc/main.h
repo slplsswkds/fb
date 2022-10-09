@@ -8,3 +8,6 @@
 #include "gpio.h"
 #include "tim2.h"
 #include "color.h"
+#include "flash.h"
+
+void button_hundler(struct Color *color);

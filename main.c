@@ -5,7 +5,7 @@
  * TIM2_CH2 -> PD3
  * TIM2_CH3 -> PA3
  * 
- * But_R+ -> PD1
+ * But_R+ -> PD2
  * But_R- -> PC7
  * But_G+ -> PC6
  * But_G- -> PC5
@@ -13,16 +13,24 @@
  * But_B- -> PC3
  * */
 
-const uint16_t pwm_steps[16] = {0, 1, 2, 5, 11, 24, 52, 116, 256,\
-                     565, 1247, 2753, 6079, 13423, 29637, 65534};
-
 static void delay(uint16_t t) {
     while(t--) {};
 }
 
-void button_hundler(struct Color *color);
+void write_to_eeprom(void) {
+    if (!(FLASH_IAPSR & 0x02))
+    {
+        // unlock EEPROM
+        FLASH_DUKR = 0xAE;
+        FLASH_DUKR = 0x56;
+    }
+    // wait for acces to write
+    while (!(FLASH_IAPSR & DUL));
 
-struct Color rgb;
+    EEPROM_FIRST_ADDR = 0xff;
+
+    FLASH_IAPSR &= ~(DUL);      // lock EEPROM
+}
 
 int main() {
     do { __asm sim __endasm; } while(0); // Disable interrupts
@@ -32,12 +40,14 @@ int main() {
     tim2_init();
     
     do { __asm rim __endasm; } while(0); // Enable interrupts
-    
-    PB_ODR |= (1 << 5);
-    
+
+    write_to_eeprom();
+
+    struct Color rgb;
     rgb.r = 0;
     rgb.g = 0;
     rgb.b = 0;
+    
     for(;;) {
         button_hundler(&rgb);
         write_color_to_registers(&rgb);
