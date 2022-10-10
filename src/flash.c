@@ -5,7 +5,7 @@ void eeprom_unlock() {
     FLASH_PUKR = 0xAE;
 }
 
-void write_to_eeprom(void) {
+void eeprom_write(uint16_t mem_cell, uint8_t data) {
     if (!(FLASH_IAPSR & 0x02))
     {
         // unlock EEPROM
@@ -15,7 +15,16 @@ void write_to_eeprom(void) {
     // wait for acces to write
     while (!(FLASH_IAPSR & DUL));
 
-    EEPROM_FIRST_ADDR = 0xff;
+    uint8_t  *addr;
+    addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
+
+    __asm sim __endasm; // Disable interrupts
+    
+    *addr = data;
+    
+    while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+
+    __asm rim __endasm; // Enable interrupts
 
     FLASH_IAPSR &= ~(DUL);      // lock EEPROM
 }

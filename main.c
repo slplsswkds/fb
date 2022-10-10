@@ -21,15 +21,15 @@ static void delay(uint16_t t) {
 }
 
 int main() {
-    do { __asm sim __endasm; } while(0); // Disable interrupts
+    __asm sim __endasm; // Disable interrupts
     
     clk_init();
     gpio_init();
     tim2_init();
     
-    do { __asm rim __endasm; } while(0); // Enable interrupts
+    __asm rim __endasm; // Enable interrupts
 
-    //write_to_eeprom();
+    //eeprom_write(1, 0xCC);
 
     struct Color rgb;
     rgb.r = 0;

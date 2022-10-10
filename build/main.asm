@@ -9,6 +9,7 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
+	.globl _eeprom_write
 	.globl _smart_decrement
 	.globl _smart_increment
 	.globl _write_color_to_registers
@@ -108,7 +109,7 @@ _delay:
 ;	-----------------------------------------
 _main:
 	sub	sp, #3
-;	main.c: 24: do { __asm sim __endasm; } while(0); // Disable interrupts
+;	main.c: 24: __asm sim __endasm; // Disable interrupts
 	sim	
 ;	main.c: 26: clk_init();
 	call	_clk_init
@@ -116,15 +117,20 @@ _main:
 	call	_gpio_init
 ;	main.c: 28: tim2_init();
 	call	_tim2_init
-;	main.c: 30: do { __asm rim __endasm; } while(0); // Enable interrupts
+;	main.c: 30: __asm rim __endasm; // Enable interrupts
 	rim	
+;	main.c: 32: eeprom_write(1, 0xCC);
+	ld	a, #0xcc
+	clrw	x
+	incw	x
+	call	_eeprom_write
 ;	main.c: 35: rgb.r = 0;
 	clr	(0x01, sp)
 ;	main.c: 36: rgb.g = 0;
 	clr	(0x02, sp)
 ;	main.c: 37: rgb.b = 0;
 	clr	(0x03, sp)
-00108$:
+00102$:
 ;	main.c: 40: button_hundler(&rgb);
 	ldw	x, sp
 	incw	x
@@ -133,7 +139,7 @@ _main:
 	ldw	x, sp
 	incw	x
 	call	_write_color_to_registers
-	jra	00108$
+	jra	00102$
 ;	main.c: 43: }
 	addw	sp, #3
 	ret
@@ -250,8 +256,9 @@ _button_hundler:
 	ldw	x, (0x01, sp)
 	addw	sp, #4
 	jp	_smart_decrement
+;	main.c: 73: if((1 << 5) == (~PB_IDR & (1 << 5))) { // But_LOAD
 00113$:
-;	main.c: 70: }
+;	main.c: 75: }
 	addw	sp, #4
 	ret
 	.area CODE

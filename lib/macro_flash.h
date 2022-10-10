@@ -7,4 +7,6 @@
 #define FLASH_PUKR      *(unsigned char*)0x5062
 #define FLASH_DUKR      *(unsigned char*)0x5064
 
+// FLASH_IAPSR bits
 #define DUL (1 << 3)
+#define EOP (1 << 2)
