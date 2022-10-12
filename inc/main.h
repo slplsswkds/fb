@@ -9,5 +9,8 @@
 #include "tim2.h"
 #include "color.h"
 #include "flash.h"
+#include "uart.h"
+
+extern void uart1_rx_handler(void) __interrupt(18);
 
 void button_hundler(struct Color *color);

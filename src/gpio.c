@@ -30,16 +30,16 @@ void gpio_init() {
     PA_ODR &= ~(1 << 3);
     
     /* Buttons 
-     * But_R+ -> PD1
-     * But_R- -> PC7
-     * But_G+ -> PC6
-     * But_G- -> PC5
-     * But_B+ -> PC4
-     * But_B- -> PC3
-     * 
-     * But_FLASH -> PB4
-     * But_LOAD  -> PB5
-     */
+    * Btn_R+ -> PD2
+    * Btn_R- -> PC7
+    * Btn_G+ -> PC6
+    * Btn_G- -> PC5
+    * Btn_B+ -> PC4
+    * Btn_B- -> PC3
+    * 
+    * Btn_FLASH -> PB4
+    * Btn_LOAD -> PB5
+    * */
     
     PD_DDR &= ~(1 << 2); // Input 
     PD_CR1 |= (1 << 2); // Pull-Up
@@ -73,5 +73,17 @@ void gpio_init() {
     PB_DDR &= ~(1 << 5);
     PB_CR1 |= (1 << 5);
     PB_CR2 &= ~(1 << 5);
+    
+
+    // UART pins
+    // UART1 TX
+    PD_DDR |= (1 << 5); // Output
+    PD_CR1 |= (1 << 5); // PushPull
+    PD_CR2 &= ~(1 << 5); // To 2MHz
+
+    // UART1 RX
+    PD_DDR &= ~(1 << 6); // Input
+    PD_CR1 &= ~(1 << 6); // Floating
+    PD_CR2 &= ~(1 << 6); // External interrupt disabled
 }
 

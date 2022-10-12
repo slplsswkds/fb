@@ -131,7 +131,19 @@ _gpio_init:
 	bset	0x5008, #5
 ;	./src/gpio.c: 75: PB_CR2 &= ~(1 << 5);
 	bres	0x5009, #5
-;	./src/gpio.c: 76: }
+;	./src/gpio.c: 80: PD_DDR |= (1 << 5); // Output
+	bset	0x5011, #5
+;	./src/gpio.c: 81: PD_CR1 |= (1 << 5); // PushPull
+	bset	0x5012, #5
+;	./src/gpio.c: 82: PD_CR2 &= ~(1 << 5); // To 2MHz
+	bres	0x5013, #5
+;	./src/gpio.c: 85: PD_DDR &= ~(1 << 6); // Input
+	bres	0x5011, #6
+;	./src/gpio.c: 86: PD_CR1 &= ~(1 << 6); // Floating
+	bres	0x5012, #6
+;	./src/gpio.c: 87: PD_CR2 &= ~(1 << 6); // External interrupt disabled
+	bres	0x5013, #6
+;	./src/gpio.c: 88: }
 	ret
 	.area CODE
 	.area CONST

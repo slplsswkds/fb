@@ -80,14 +80,14 @@ _eeprom_write:
 	addw	x, #0x4000
 ;	./src/flash.c: 21: __asm sim __endasm; // Disable interrupts
 	sim	
-;	./src/flash.c: 23: *addr = data;
+;	./src/flash.c: 22: *addr = data;
 	ld	a, (0x01, sp)
 	ld	(x), a
-;	./src/flash.c: 25: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
 00106$:
 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
 	ld	a, 0x505f
-;	./src/flash.c: 25: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
 	clrw	x
 	ld	xl, a
 	push	a
@@ -100,12 +100,12 @@ _eeprom_write:
 	pop	a
 	cpw	x, #0x0004
 	jrne	00106$
-;	./src/flash.c: 27: __asm rim __endasm; // Enable interrupts
+;	./src/flash.c: 24: __asm rim __endasm; // Enable interrupts
 	rim	
-;	./src/flash.c: 29: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
+;	./src/flash.c: 26: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
 	and	a, #0xf7
 	ld	0x505f, a
-;	./src/flash.c: 30: }
+;	./src/flash.c: 27: }
 	pop	a
 	ret
 	.area CODE

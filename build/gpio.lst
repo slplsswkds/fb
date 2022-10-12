@@ -131,9 +131,21 @@
       000098 72 1A 50 08      [ 1]  131 	bset	0x5008, #5
                                     132 ;	./src/gpio.c: 75: PB_CR2 &= ~(1 << 5);
       00009C 72 1B 50 09      [ 1]  133 	bres	0x5009, #5
-                                    134 ;	./src/gpio.c: 76: }
-      0000A0 81               [ 4]  135 	ret
-                                    136 	.area CODE
-                                    137 	.area CONST
-                                    138 	.area INITIALIZER
-                                    139 	.area CABS (ABS)
+                                    134 ;	./src/gpio.c: 80: PD_DDR |= (1 << 5); // Output
+      0000A0 72 1A 50 11      [ 1]  135 	bset	0x5011, #5
+                                    136 ;	./src/gpio.c: 81: PD_CR1 |= (1 << 5); // PushPull
+      0000A4 72 1A 50 12      [ 1]  137 	bset	0x5012, #5
+                                    138 ;	./src/gpio.c: 82: PD_CR2 &= ~(1 << 5); // To 2MHz
+      0000A8 72 1B 50 13      [ 1]  139 	bres	0x5013, #5
+                                    140 ;	./src/gpio.c: 85: PD_DDR &= ~(1 << 6); // Input
+      0000AC 72 1D 50 11      [ 1]  141 	bres	0x5011, #6
+                                    142 ;	./src/gpio.c: 86: PD_CR1 &= ~(1 << 6); // Floating
+      0000B0 72 1D 50 12      [ 1]  143 	bres	0x5012, #6
+                                    144 ;	./src/gpio.c: 87: PD_CR2 &= ~(1 << 6); // External interrupt disabled
+      0000B4 72 1D 50 13      [ 1]  145 	bres	0x5013, #6
+                                    146 ;	./src/gpio.c: 88: }
+      0000B8 81               [ 4]  147 	ret
+                                    148 	.area CODE
+                                    149 	.area CONST
+                                    150 	.area INITIALIZER
+                                    151 	.area CABS (ABS)

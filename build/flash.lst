@@ -80,14 +80,14 @@
       000020 1C 40 00         [ 2]   80 	addw	x, #0x4000
                                      81 ;	./src/flash.c: 21: __asm sim __endasm; // Disable interrupts
       000023 9B               [ 1]   82 	sim	
-                                     83 ;	./src/flash.c: 23: *addr = data;
+                                     83 ;	./src/flash.c: 22: *addr = data;
       000024 7B 01            [ 1]   84 	ld	a, (0x01, sp)
       000026 F7               [ 1]   85 	ld	(x), a
-                                     86 ;	./src/flash.c: 25: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+                                     86 ;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
       000027                         87 00106$:
                                      88 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
       000027 C6 50 5F         [ 1]   89 	ld	a, 0x505f
-                                     90 ;	./src/flash.c: 25: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+                                     90 ;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
       00002A 5F               [ 1]   91 	clrw	x
       00002B 97               [ 1]   92 	ld	xl, a
       00002C 88               [ 1]   93 	push	a
@@ -100,12 +100,12 @@
       000034 84               [ 1]  100 	pop	a
       000035 A3 00 04         [ 2]  101 	cpw	x, #0x0004
       000038 26 ED            [ 1]  102 	jrne	00106$
-                                    103 ;	./src/flash.c: 27: __asm rim __endasm; // Enable interrupts
+                                    103 ;	./src/flash.c: 24: __asm rim __endasm; // Enable interrupts
       00003A 9A               [ 1]  104 	rim	
-                                    105 ;	./src/flash.c: 29: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
+                                    105 ;	./src/flash.c: 26: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
       00003B A4 F7            [ 1]  106 	and	a, #0xf7
       00003D C7 50 5F         [ 1]  107 	ld	0x505f, a
-                                    108 ;	./src/flash.c: 30: }
+                                    108 ;	./src/flash.c: 27: }
       000040 84               [ 1]  109 	pop	a
       000041 81               [ 4]  110 	ret
                                     111 	.area CODE

@@ -17,13 +17,10 @@ void eeprom_write(uint16_t mem_cell, uint8_t data) {
 
     uint8_t  *addr;
     addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
-
+                                                      //
     __asm sim __endasm; // Disable interrupts
-    
     *addr = data;
-    
     while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
-
     __asm rim __endasm; // Enable interrupts
 
     FLASH_IAPSR &= ~(DUL);      // lock EEPROM

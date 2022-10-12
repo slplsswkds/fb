@@ -11,5 +11,6 @@
 ./build/gpio.rel
 ./build/clk.rel
 ./build/flash.rel
+./build/uart.rel
 
 -e

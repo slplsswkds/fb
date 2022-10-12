@@ -14,6 +14,7 @@ build_libs:
 	$(CC) -c -m$(PORT) $(SRC)/tim2.c -o $(BUILDPATH)/ -Iinc/
 	$(CC) -c -m$(PORT) $(SRC)/color.c -o $(BUILDPATH)/ -Iinc/
 	$(CC) -c -m$(PORT) $(SRC)/flash.c -o $(BUILDPATH)/ -Iinc/
+	$(CC) -c -m$(PORT) $(SRC)/uart.c -o $(BUILDPATH)/ -Iinc/
 
 
 	$(CC) -m$(PORT) main.c \
@@ -22,6 +23,7 @@ build_libs:
 		$(BUILDPATH)/gpio.rel \
 		$(BUILDPATH)/clk.rel \
 		$(BUILDPATH)/flash.rel \
+		$(BUILDPATH)/uart.rel \
 		-o $(BUILDPATH)/ -Iinc/
 
 clean:

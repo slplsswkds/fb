@@ -11,54 +11,57 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000000  l_CABS                          
      00000000  l_CONST                         
      00000000  l_DABS                          
-     00000000  l_INITIALIZED                   
-     00000000  l_INITIALIZER                   
      00000000  l__CODE                         
      00000000  s_CABS                          
      00000000  s_DABS                          
      00000000  s__CODE                         
+     00000001  l_INITIALIZED                   
+     00000001  l_INITIALIZER                   
      00000001  l_SSEG                          
      00000001  s_DATA                          
-     00000002  l_DATA                          
      00000003  l_GSFINAL                       
-     00000003  s_INITIALIZED                   
-     00000003  s_SSEG                          
-     00000007  l_HOME                          
+     00000005  l_DATA                          
+     00000006  s_INITIALIZED                   
+     00000007  s_SSEG                          
      0000001A  l_GSINIT                        
-     00000FD5  l_CODE                          
+     00000057  l_HOME                          
+     000010BA  l_CODE                          
      00008000  s_HOME                          
-     00008007  s_GSINIT                        
-     00008021  s_GSFINAL                       
-     00008024  s_CODE                          
-     00008024  s_CONST                         
-     00008024  s_INITIALIZER                   
+     00008057  s_GSINIT                        
+     00008071  s_GSFINAL                       
+     00008074  s_CONST                         
+     00008074  s_INITIALIZER                   
+     00008075  s_CODE                          
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DATA                                00000001    00000002 =           2. bytes (REL,CON)
+DATA                                00000001    00000005 =           5. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000001  _errno                             errno
+     00000001  _rgb                               main
+     00000004  _errno                             errno
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000003    00000001 =           1. bytes (REL,CON)
+INITIALIZED                         00000006    00000001 =           1. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
+     00000006  _NEWLINE                           uart
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-HOME                                00008000    00000007 =           7. bytes (REL,CON)
+SSEG                                00000007    00000001 =           1. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -67,7 +70,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT                              00008007    0000001A =          26. bytes (REL,CON)
+HOME                                00008000    00000057 =          87. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -76,7 +79,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             00008021    00000003 =           3. bytes (REL,CON)
+GSINIT                              00008057    0000001A =          26. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -85,43 +88,64 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008024    00000FD5 =        4053. bytes (REL,CON)
+GSFINAL                             00008071    00000003 =           3. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000802C  _main                              main
-     00008055  _button_hundler                    main
-     000080F0  _normalize_from                    color
-     00008121  _write_color_to_registers          color
-     00008158  _smart_increment                   color
-     00008161  _smart_decrement                   color
-     00008168  _tim2_init                         tim2
-     000081D1  _gpio_init                         gpio
-     00008272  _clk_init                          clk
-     0000827E  _eeprom_unlock                     flash
-     00008287  _eeprom_write                      flash
-     000082C0  ___fsmul                           _fsmul
-     0000847A  _sqrtf                             sqrtf
-     00008578  _expf                              expf
-     00008742  ___fslt                            _fslt
-     000087D2  ___fsadd                           _fsadd
-     000089FD  _ldexpf                            ldexpf
-     00008A7F  ___fs2sint                         _fs2sint
-     00008ABF  ___sint2fs                         _sint2fs
-     00008ACF  ___fs2uint                         _fs2uint
-     00008AEF  _frexpf                            frexpf
-     00008CD0  ___fsdiv                           _fsdiv
-     00008D49  ___uchar2fs                        _uchar2fs
-     00008D56  ___fssub                           _fssub
-     00008D7F  ___muluint2ulong                   
-     00008D85  ___mulsint2slong                   
-     00008DD6  ___slong2fs                        _slong2fs
-     00008DFE  ___fs2slong                        _fs2slong
-     00008E48  ___fseq                            _fseq
-     00008E96  ___ulong2fs                        _ulong2fs
-     00008F32  ___fs2ulong                        _fs2ulong
-
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+INITIALIZER                         00008074    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CODE                                00008075    000010BA =        4282. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000807D  _main                              main
+     000080C4  _button_hundler                    main
+     00008184  _normalize_from                    color
+     000081B5  _write_color_to_registers          color
+     000081EC  _smart_increment                   color
+     000081F5  _smart_decrement                   color
+     000081FC  _tim2_init                         tim2
+     00008265  _gpio_init                         gpio
+     0000831E  _clk_init                          clk
+     0000832A  _eeprom_unlock                     flash
+     00008333  _eeprom_write                      flash
+     0000836C  _uart_init                         uart
+     000083C3  _uart_tx_byte                      uart
+     000083DB  _uart_tx_byte_array                uart
+     000083F6  ___fsmul                           _fsmul
+     000085B0  _sqrtf                             sqrtf
+     000086AE  _expf                              expf
+     00008878  ___fslt                            _fslt
+     00008908  ___fsadd                           _fsadd
+     00008B33  _ldexpf                            ldexpf
+     00008BB5  ___fs2sint                         _fs2sint
+     00008BF5  ___sint2fs                         _sint2fs
+     00008C05  ___fs2uint                         _fs2uint
+     00008C25  _frexpf                            frexpf
+     00008E06  ___fsdiv                           _fsdiv
+     00008E7F  ___uchar2fs                        _uchar2fs
+     00008E8C  ___fssub                           _fssub
+     00008EB5  ___muluint2ulong                   
+     00008EBB  ___mulsint2slong                   
+     00008F0C  ___slong2fs                        _slong2fs
+     00008F34  ___fs2slong                        _fs2slong
+     00008F7E  ___fseq                            _fseq
+     00008FCC  ___ulong2fs                        _ulong2fs
+     00009068  ___fs2ulong                        _fs2ulong
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 
 Files Linked                              [ module(s) ]
 
@@ -131,6 +155,7 @@ Files Linked                              [ module(s) ]
 ./build/gpio.rel                          [ gpio ]
 ./build/clk.rel                           [ clk ]
 ./build/flash.rel                         [ flash ]
+./build/uart.rel                          [ uart ]
 
 
 Libraries Linked                          [ object file ]
@@ -156,7 +181,7 @@ Libraries Linked                          [ object file ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _ulong2fs.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2ulong.rel ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
 
 User Base Address Definitions
 
