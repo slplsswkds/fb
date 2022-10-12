@@ -17,6 +17,7 @@
 	.globl _btn_b_minus_is_pressed
 	.globl _btn_flash_is_pressed
 	.globl _btn_load_is_pressed
+	.globl _get_number_from_buttons
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -336,6 +337,96 @@ _btn_load_is_pressed:
 00104$:
 	clr	a
 ;	./src/gpio.c: 120: }
+	ret
+;	./src/gpio.c: 122: static void delay(uint16_t t) {
+;	-----------------------------------------
+;	 function delay
+;	-----------------------------------------
+_delay:
+;	./src/gpio.c: 123: while(t--) {};
+00101$:
+	ldw	y, x
+	decw	x
+	tnzw	y
+	jrne	00101$
+;	./src/gpio.c: 124: }
+	ret
+;	./src/gpio.c: 126: uint8_t get_number_from_buttons() {
+;	-----------------------------------------
+;	 function get_number_from_buttons
+;	-----------------------------------------
+_get_number_from_buttons:
+	push	a
+;	./src/gpio.c: 127: uint8_t number = 0;
+	clr	(0x01, sp)
+;	./src/gpio.c: 129: while(1) { // In future should be added timeout
+00116$:
+;	./src/gpio.c: 130: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	./src/gpio.c: 132: if(btn_r_plus_is_pressed()) {
+	call	_btn_r_plus_is_pressed
+	tnz	a
+	jreq	00102$
+;	./src/gpio.c: 133: number |= (1 << 5);
+	ld	a, (0x01, sp)
+	or	a, #0x20
+	ld	(0x01, sp), a
+00102$:
+;	./src/gpio.c: 136: if(btn_g_plus_is_pressed()) {
+	call	_btn_g_plus_is_pressed
+	tnz	a
+	jreq	00104$
+;	./src/gpio.c: 137: number |= (1 << 4);
+	ld	a, (0x01, sp)
+	or	a, #0x10
+	ld	(0x01, sp), a
+00104$:
+;	./src/gpio.c: 140: if(btn_b_plus_is_pressed()) {
+	call	_btn_b_plus_is_pressed
+	tnz	a
+	jreq	00106$
+;	./src/gpio.c: 141: number |= (1 << 3);
+	ld	a, (0x01, sp)
+	or	a, #0x08
+	ld	(0x01, sp), a
+00106$:
+;	./src/gpio.c: 144: if(btn_r_minus_is_pressed()) {
+	call	_btn_r_minus_is_pressed
+	tnz	a
+	jreq	00108$
+;	./src/gpio.c: 145: number |= (1 << 2);
+	ld	a, (0x01, sp)
+	or	a, #0x04
+	ld	(0x01, sp), a
+00108$:
+;	./src/gpio.c: 148: if(btn_g_minus_is_pressed()) {
+	call	_btn_g_minus_is_pressed
+	tnz	a
+	jreq	00110$
+;	./src/gpio.c: 149: number |= (1 << 1);
+	ld	a, (0x01, sp)
+	or	a, #0x02
+	ld	(0x01, sp), a
+00110$:
+;	./src/gpio.c: 152: if(btn_b_minus_is_pressed()) {
+	call	_btn_b_minus_is_pressed
+	tnz	a
+	jreq	00112$
+;	./src/gpio.c: 153: number |= (1 << 0);
+	srl	(0x01, sp)
+	scf
+	rlc	(0x01, sp)
+00112$:
+;	./src/gpio.c: 159: if(btn_load_is_pressed()) {
+	call	_btn_load_is_pressed
+	tnz	a
+	jreq	00116$
+;	./src/gpio.c: 164: return number;
+	ld	a, (0x01, sp)
+;	./src/gpio.c: 165: }
+	addw	sp, #1
 	ret
 	.area CODE
 	.area CONST

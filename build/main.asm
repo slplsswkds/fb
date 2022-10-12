@@ -16,6 +16,7 @@
 	.globl _smart_increment
 	.globl _write_color_to_registers
 	.globl _tim2_init
+	.globl _get_number_from_buttons
 	.globl _btn_load_is_pressed
 	.globl _btn_flash_is_pressed
 	.globl _btn_b_minus_is_pressed
@@ -193,14 +194,14 @@ _main:
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
-	sub	sp, #2
-	ldw	(0x01, sp), x
+	sub	sp, #3
+	ldw	(0x02, sp), x
 ;	main.c: 51: if(btn_r_plus_is_pressed()) {
 	call	_btn_r_plus_is_pressed
 	tnz	a
 	jreq	00102$
 ;	main.c: 52: smart_increment(&color->r);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x02, sp)
 	call	_smart_increment
 00102$:
 ;	main.c: 55: if(btn_r_minus_is_pressed()) {
@@ -208,13 +209,13 @@ _button_hundler:
 	tnz	a
 	jreq	00104$
 ;	main.c: 56: smart_decrement(&color->r);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x02, sp)
 	call	_smart_decrement
 00104$:
 ;	main.c: 59: if(btn_g_plus_is_pressed()) {
 	call	_btn_g_plus_is_pressed
 ;	main.c: 60: smart_increment(&color->g);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x02, sp)
 	incw	x
 ;	main.c: 59: if(btn_g_plus_is_pressed()) {
 	tnz	a
@@ -236,7 +237,7 @@ _button_hundler:
 ;	main.c: 67: if(btn_b_plus_is_pressed()) {
 	call	_btn_b_plus_is_pressed
 ;	main.c: 68: smart_increment(&color->b);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x02, sp)
 	incw	x
 	incw	x
 ;	main.c: 67: if(btn_b_plus_is_pressed()) {
@@ -259,10 +260,31 @@ _button_hundler:
 ;	main.c: 75: if(btn_flash_is_pressed()) {
 	call	_btn_flash_is_pressed
 ;	main.c: 78: if(btn_load_is_pressed()) {
-	addw	sp, #2
-;	main.c: 80: }
-	jp	_btn_load_is_pressed
-;	main.c: 82: extern void uart1_rx_handler(void) __interrupt(18) {
+	call	_btn_load_is_pressed
+	tnz	a
+	jreq	00119$
+;	main.c: 82: char num = '1';
+	ld	a, #0x31
+	ld	(0x01, sp), a
+;	main.c: 83: uint8_t number = get_number_from_buttons();
+	call	_get_number_from_buttons
+;	main.c: 84: if(number == 0) {
+	tnz	a
+	jrne	00116$
+;	main.c: 85: num = '0';
+	ld	a, #0x30
+	ld	(0x01, sp), a
+00116$:
+;	main.c: 88: uart_tx_byte_array(&num, 1);
+	ldw	x, sp
+	incw	x
+	ld	a, #0x01
+	call	_uart_tx_byte_array
+00119$:
+;	main.c: 90: }
+	addw	sp, #3
+	ret
+;	main.c: 92: extern void uart1_rx_handler(void) __interrupt(18) {
 ;	-----------------------------------------
 ;	 function uart1_rx_handler
 ;	-----------------------------------------
@@ -270,25 +292,25 @@ _uart1_rx_handler:
 	clr	a
 	div	x, a
 	push	a
-;	main.c: 83: rgb.r = 0;
+;	main.c: 93: rgb.r = 0;
 	mov	_rgb+0, #0x00
-;	main.c: 84: rgb.g = 0;
+;	main.c: 94: rgb.g = 0;
 	mov	_rgb+1, #0x00
-;	main.c: 85: rgb.b = 0;
+;	main.c: 95: rgb.b = 0;
 	mov	_rgb+2, #0x00
-;	main.c: 86: write_color_to_registers(&rgb);
+;	main.c: 96: write_color_to_registers(&rgb);
 	ldw	x, #(_rgb+0)
 	call	_write_color_to_registers
-;	main.c: 88: UART1_SR &= ~(1 << 5); // Clear interrupt
+;	main.c: 98: UART1_SR &= ~(1 << 5); // Clear interrupt
 	bres	0x5230, #5
-;	main.c: 89: char byte = UART1_DR;
+;	main.c: 99: char byte = UART1_DR;
 	ld	a, 0x5231
 	ld	(0x01, sp), a
-;	main.c: 90: uart_tx_byte(&byte);
+;	main.c: 100: uart_tx_byte(&byte);
 	ldw	x, sp
 	incw	x
 	call	_uart_tx_byte
-;	main.c: 91: }
+;	main.c: 101: }
 	pop	a
 	iret
 	.area CODE

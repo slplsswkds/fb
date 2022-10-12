@@ -118,3 +118,48 @@ uint8_t btn_flash_is_pressed() {
 uint8_t btn_load_is_pressed() {
     return((1 << 5) == (~PB_IDR & (1 << 5)));
 }
+
+static void delay(uint16_t t) {
+    while(t--) {};
+}
+
+uint8_t get_number_from_buttons() {
+    uint8_t number = 0;
+    
+    while(1) { // In future should be added timeout
+        delay(65535);
+
+        if(btn_r_plus_is_pressed()) {
+            number |= (1 << 5);
+        }
+
+        if(btn_g_plus_is_pressed()) {
+            number |= (1 << 4);
+        }
+        
+        if(btn_b_plus_is_pressed()) {
+            number |= (1 << 3);
+        }
+
+        if(btn_r_minus_is_pressed()) {
+            number |= (1 << 2);
+        }
+
+        if(btn_g_minus_is_pressed()) {
+            number |= (1 << 1);
+        }
+        
+        if(btn_b_minus_is_pressed()) {
+            number |= (1 << 0);
+        }
+
+        //if(btn_flash_is_pressed()) {
+        //}
+
+        if(btn_load_is_pressed()) {
+            break;
+        }
+        
+    }
+    return number;
+}

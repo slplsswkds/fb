@@ -1,6 +1,7 @@
 #include "../inc/uart.h"
 
 char NEWLINE = '\n';
+char RETURN_CURSOR = '\r';
 
 void uart_init() {
     // UART_DIV = Fmaster/Baud rate

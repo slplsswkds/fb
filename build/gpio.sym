@@ -15,8 +15,9 @@ Symbol Table
   9 _btn_load_is_pressed                                           000153 GR
   9 _btn_r_minus_is_pressed                                        0000FB GR
   9 _btn_r_plus_is_pressed                                         0000B9 GR
+  9 _delay                                                         000169 R
+  9 _get_number_from_buttons                                       000171 GR
   9 _gpio_init                                                     000000 GR
-
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]
@@ -32,6 +33,6 @@ Area Table
    6 GSFINAL                                    size      0   flags    0
    7 CONST                                      size      0   flags    0
    8 INITIALIZER                                size      0   flags    0
-   9 CODE                                       size    169   flags    0
+   9 CODE                                       size    1CB   flags    0
    A CABS                                       size      0   flags    8
 
