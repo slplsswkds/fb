@@ -7,6 +7,14 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000001 L
+  9 _btn_b_minus_is_pressed                                        000127 GR
+  9 _btn_b_plus_is_pressed                                         0000E5 GR
+  9 _btn_flash_is_pressed                                          00013D GR
+  9 _btn_g_minus_is_pressed                                        000111 GR
+  9 _btn_g_plus_is_pressed                                         0000CF GR
+  9 _btn_load_is_pressed                                           000153 GR
+  9 _btn_r_minus_is_pressed                                        0000FB GR
+  9 _btn_r_plus_is_pressed                                         0000B9 GR
   9 _gpio_init                                                     000000 GR
 
 
@@ -24,6 +32,6 @@ Area Table
    6 GSFINAL                                    size      0   flags    0
    7 CONST                                      size      0   flags    0
    8 INITIALIZER                                size      0   flags    0
-   9 CODE                                       size     B9   flags    0
+   9 CODE                                       size    169   flags    0
    A CABS                                       size      0   flags    8
 

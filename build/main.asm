@@ -16,6 +16,14 @@
 	.globl _smart_increment
 	.globl _write_color_to_registers
 	.globl _tim2_init
+	.globl _btn_load_is_pressed
+	.globl _btn_flash_is_pressed
+	.globl _btn_b_minus_is_pressed
+	.globl _btn_g_minus_is_pressed
+	.globl _btn_r_minus_is_pressed
+	.globl _btn_b_plus_is_pressed
+	.globl _btn_g_plus_is_pressed
+	.globl _btn_r_plus_is_pressed
 	.globl _gpio_init
 	.globl _clk_init
 	.globl _rgb
@@ -185,119 +193,75 @@ _main:
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
-	sub	sp, #4
-	ldw	(0x03, sp), x
-;	main.c: 51: if((1 << 2) == (~PD_IDR & (1 << 2))) { // Btn_R+
-	ld	a, 0x5010
-	clrw	x
-	ld	xl, a
-	cplw	x
-	ld	a, xl
-	and	a, #0x04
-	ld	xl, a
-	clr	a
-	ld	xh, a
-	cpw	x, #0x0004
-	jrne	00102$
+	sub	sp, #2
+	ldw	(0x01, sp), x
+;	main.c: 51: if(btn_r_plus_is_pressed()) {
+	call	_btn_r_plus_is_pressed
+	tnz	a
+	jreq	00102$
 ;	main.c: 52: smart_increment(&color->r);
-	ldw	x, (0x03, sp)
+	ldw	x, (0x01, sp)
 	call	_smart_increment
 00102$:
-;	main.c: 55: if((1 << 7) == (~PC_IDR & (1 << 7))) { // Btn_R-
-	ld	a, 0x500b
-	clrw	x
-	ld	xl, a
-	cplw	x
-	ld	a, xl
-	and	a, #0x80
-	ld	xl, a
-	clr	a
-	ld	xh, a
-	cpw	x, #0x0080
-	jrne	00104$
+;	main.c: 55: if(btn_r_minus_is_pressed()) {
+	call	_btn_r_minus_is_pressed
+	tnz	a
+	jreq	00104$
 ;	main.c: 56: smart_decrement(&color->r);
-	ldw	x, (0x03, sp)
+	ldw	x, (0x01, sp)
 	call	_smart_decrement
 00104$:
-;	main.c: 59: if((1 << 6) == (~PC_IDR & (1 << 6))) { // Btn_G+
-	ld	a, 0x500b
-	clrw	x
-	ld	xl, a
-	cplw	x
-	ld	a, xl
-	and	a, #0x40
-	ld	xl, a
-	clr	a
-;	main.c: 60: smart_increment(&color->g);
-	ldw	y, (0x03, sp)
-	incw	y
-	ldw	(0x01, sp), y
-;	main.c: 59: if((1 << 6) == (~PC_IDR & (1 << 6))) { // Btn_G+
-	ld	xh, a
-	cpw	x, #0x0040
-	jrne	00106$
+;	main.c: 59: if(btn_g_plus_is_pressed()) {
+	call	_btn_g_plus_is_pressed
 ;	main.c: 60: smart_increment(&color->g);
 	ldw	x, (0x01, sp)
+	incw	x
+;	main.c: 59: if(btn_g_plus_is_pressed()) {
+	tnz	a
+	jreq	00106$
+;	main.c: 60: smart_increment(&color->g);
+	pushw	x
 	call	_smart_increment
+	popw	x
 00106$:
-;	main.c: 63: if((1 << 5) == (~PC_IDR & (1 << 5))) { // Btn_G-
-	ld	a, 0x500b
-	clrw	x
-	ld	xl, a
-	cplw	x
-	ld	a, xl
-	and	a, #0x20
-	ld	xl, a
-	clr	a
-	ld	xh, a
-	cpw	x, #0x0020
-	jrne	00108$
+;	main.c: 63: if(btn_g_minus_is_pressed()) {
+	pushw	x
+	call	_btn_g_minus_is_pressed
+	popw	x
+	tnz	a
+	jreq	00108$
 ;	main.c: 64: smart_decrement(&color->g);
-	ldw	x, (0x01, sp)
 	call	_smart_decrement
 00108$:
-;	main.c: 67: if((1 << 4) == (~PC_IDR & (1 << 4))) { // Btn_B+
-	ld	a, 0x500b
-	clrw	x
-	ld	xl, a
-	cplw	x
-	clrw	y
-	ld	a, xl
-	and	a, #0x10
-	ld	yl, a
-;	main.c: 68: smart_increment(&color->b);
-	ldw	x, (0x03, sp)
-	incw	x
-	incw	x
-	ldw	(0x01, sp), x
-;	main.c: 67: if((1 << 4) == (~PC_IDR & (1 << 4))) { // Btn_B+
-	cpw	y, #0x0010
-	jrne	00110$
+;	main.c: 67: if(btn_b_plus_is_pressed()) {
+	call	_btn_b_plus_is_pressed
 ;	main.c: 68: smart_increment(&color->b);
 	ldw	x, (0x01, sp)
+	incw	x
+	incw	x
+;	main.c: 67: if(btn_b_plus_is_pressed()) {
+	tnz	a
+	jreq	00110$
+;	main.c: 68: smart_increment(&color->b);
+	pushw	x
 	call	_smart_increment
+	popw	x
 00110$:
-;	main.c: 71: if((1 << 3) == (~PC_IDR & (1 << 3))) { // Btn_B-
-	ld	a, 0x500b
-	clrw	x
-	ld	xl, a
-	cplw	x
-	ld	a, xl
-	and	a, #0x08
-	ld	xl, a
-	clr	a
-	ld	xh, a
-	cpw	x, #0x0008
-	jrne	00113$
+;	main.c: 71: if(btn_b_minus_is_pressed()) {
+	pushw	x
+	call	_btn_b_minus_is_pressed
+	popw	x
+	tnz	a
+	jreq	00112$
 ;	main.c: 72: smart_decrement(&color->b);
-	ldw	x, (0x01, sp)
-	addw	sp, #4
-	jp	_smart_decrement
-;	main.c: 78: if((1 << 5) == (~PB_IDR & (1 << 5))) { // Btn_LOAD
-00113$:
+	call	_smart_decrement
+00112$:
+;	main.c: 75: if(btn_flash_is_pressed()) {
+	call	_btn_flash_is_pressed
+;	main.c: 78: if(btn_load_is_pressed()) {
+	addw	sp, #2
 ;	main.c: 80: }
-	addw	sp, #4
-	ret
+	jp	_btn_load_is_pressed
 ;	main.c: 82: extern void uart1_rx_handler(void) __interrupt(18) {
 ;	-----------------------------------------
 ;	 function uart1_rx_handler

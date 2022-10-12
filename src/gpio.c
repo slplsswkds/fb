@@ -87,3 +87,34 @@ void gpio_init() {
     PD_CR2 &= ~(1 << 6); // External interrupt disabled
 }
 
+uint8_t btn_r_plus_is_pressed() {
+    return((1 << 2) == (~PD_IDR & (1 << 2)));
+}
+
+uint8_t btn_g_plus_is_pressed() {
+    return((1 << 6) == (~PC_IDR & (1 << 6)));
+}
+
+uint8_t btn_b_plus_is_pressed() {
+    return((1 << 4) == (~PC_IDR & (1 << 4)));
+}
+
+uint8_t btn_r_minus_is_pressed() {
+    return((1 << 7) == (~PC_IDR & (1 << 7)));
+}
+
+uint8_t btn_g_minus_is_pressed() {
+    return((1 << 5) == (~PC_IDR & (1 << 5)));
+}
+
+uint8_t btn_b_minus_is_pressed() {
+    return((1 << 3) == (~PC_IDR & (1 << 3)));
+}
+
+uint8_t btn_flash_is_pressed() {
+    return((1 << 4) == (~PB_IDR & (1 << 4)));
+}
+
+uint8_t btn_load_is_pressed() {
+    return((1 << 5) == (~PB_IDR & (1 << 5)));
+}

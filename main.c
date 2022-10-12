@@ -48,34 +48,34 @@ int main() {
 }
 
 void button_hundler(struct Color *color) {
-    if((1 << 2) == (~PD_IDR & (1 << 2))) { // Btn_R+
+    if(btn_r_plus_is_pressed()) {
         smart_increment(&color->r);
     }
 
-    if((1 << 7) == (~PC_IDR & (1 << 7))) { // Btn_R-
+    if(btn_r_minus_is_pressed()) {
         smart_decrement(&color->r);
     }
 
-    if((1 << 6) == (~PC_IDR & (1 << 6))) { // Btn_G+
+    if(btn_g_plus_is_pressed()) {
         smart_increment(&color->g);
     }
 
-    if((1 << 5) == (~PC_IDR & (1 << 5))) { // Btn_G-
+    if(btn_g_minus_is_pressed()) {
         smart_decrement(&color->g);
     }
     
-    if((1 << 4) == (~PC_IDR & (1 << 4))) { // Btn_B+
+    if(btn_b_plus_is_pressed()) {
         smart_increment(&color->b);
     }
     
-    if((1 << 3) == (~PC_IDR & (1 << 3))) { // Btn_B-
+    if(btn_b_minus_is_pressed()) {
         smart_decrement(&color->b);
     }
 
-    if((1 << 4) == (~PB_IDR & (1 << 4))) { // Btn_FLASH
+    if(btn_flash_is_pressed()) {
     }
 
-    if((1 << 5) == (~PB_IDR & (1 << 5))) { // Btn_LOAD
+    if(btn_load_is_pressed()) {
     }
 }
 

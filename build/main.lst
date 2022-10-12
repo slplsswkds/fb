@@ -16,318 +16,282 @@
                                      16 	.globl _smart_increment
                                      17 	.globl _write_color_to_registers
                                      18 	.globl _tim2_init
-                                     19 	.globl _gpio_init
-                                     20 	.globl _clk_init
-                                     21 	.globl _rgb
-                                     22 	.globl _button_hundler
-                                     23 ;--------------------------------------------------------
-                                     24 ; ram data
-                                     25 ;--------------------------------------------------------
-                                     26 	.area DATA
-      000000                         27 _rgb::
-      000000                         28 	.ds 3
-                                     29 ;--------------------------------------------------------
-                                     30 ; ram data
+                                     19 	.globl _btn_load_is_pressed
+                                     20 	.globl _btn_flash_is_pressed
+                                     21 	.globl _btn_b_minus_is_pressed
+                                     22 	.globl _btn_g_minus_is_pressed
+                                     23 	.globl _btn_r_minus_is_pressed
+                                     24 	.globl _btn_b_plus_is_pressed
+                                     25 	.globl _btn_g_plus_is_pressed
+                                     26 	.globl _btn_r_plus_is_pressed
+                                     27 	.globl _gpio_init
+                                     28 	.globl _clk_init
+                                     29 	.globl _rgb
+                                     30 	.globl _button_hundler
                                      31 ;--------------------------------------------------------
-                                     32 	.area INITIALIZED
+                                     32 ; ram data
                                      33 ;--------------------------------------------------------
-                                     34 ; Stack segment in internal ram
-                                     35 ;--------------------------------------------------------
-                                     36 	.area	SSEG
-      000000                         37 __start__stack:
-      000000                         38 	.ds	1
-                                     39 
-                                     40 ;--------------------------------------------------------
-                                     41 ; absolute external ram data
-                                     42 ;--------------------------------------------------------
-                                     43 	.area DABS (ABS)
-                                     44 
-                                     45 ; default segment ordering for linker
-                                     46 	.area HOME
-                                     47 	.area GSINIT
-                                     48 	.area GSFINAL
-                                     49 	.area CONST
-                                     50 	.area INITIALIZER
-                                     51 	.area CODE
+                                     34 	.area DATA
+      000000                         35 _rgb::
+      000000                         36 	.ds 3
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area INITIALIZED
+                                     41 ;--------------------------------------------------------
+                                     42 ; Stack segment in internal ram
+                                     43 ;--------------------------------------------------------
+                                     44 	.area	SSEG
+      000000                         45 __start__stack:
+      000000                         46 	.ds	1
+                                     47 
+                                     48 ;--------------------------------------------------------
+                                     49 ; absolute external ram data
+                                     50 ;--------------------------------------------------------
+                                     51 	.area DABS (ABS)
                                      52 
-                                     53 ;--------------------------------------------------------
-                                     54 ; interrupt vector
-                                     55 ;--------------------------------------------------------
-                                     56 	.area HOME
-      000000                         57 __interrupt_vect:
-      000000 82v00u00u00             58 	int s_GSINIT ; reset
-      000004 82 00 00 00             59 	int 0x000000 ; trap
-      000008 82 00 00 00             60 	int 0x000000 ; int0
-      00000C 82 00 00 00             61 	int 0x000000 ; int1
-      000010 82 00 00 00             62 	int 0x000000 ; int2
-      000014 82 00 00 00             63 	int 0x000000 ; int3
-      000018 82 00 00 00             64 	int 0x000000 ; int4
-      00001C 82 00 00 00             65 	int 0x000000 ; int5
-      000020 82 00 00 00             66 	int 0x000000 ; int6
-      000024 82 00 00 00             67 	int 0x000000 ; int7
-      000028 82 00 00 00             68 	int 0x000000 ; int8
-      00002C 82 00 00 00             69 	int 0x000000 ; int9
-      000030 82 00 00 00             70 	int 0x000000 ; int10
-      000034 82 00 00 00             71 	int 0x000000 ; int11
-      000038 82 00 00 00             72 	int 0x000000 ; int12
-      00003C 82 00 00 00             73 	int 0x000000 ; int13
-      000040 82 00 00 00             74 	int 0x000000 ; int14
-      000044 82 00 00 00             75 	int 0x000000 ; int15
-      000048 82 00 00 00             76 	int 0x000000 ; int16
-      00004C 82 00 00 00             77 	int 0x000000 ; int17
-      000050 82v00u00uEA             78 	int _uart1_rx_handler ; int18
-                                     79 ;--------------------------------------------------------
-                                     80 ; global & static initialisations
-                                     81 ;--------------------------------------------------------
-                                     82 	.area HOME
-                                     83 	.area GSINIT
-                                     84 	.area GSFINAL
-                                     85 	.area GSINIT
-      000000                         86 __sdcc_init_data:
-                                     87 ; stm8_genXINIT() start
-      000000 AEr00r00         [ 2]   88 	ldw x, #l_DATA
-      000003 27 07            [ 1]   89 	jreq	00002$
-      000005                         90 00001$:
-      000005 72 4FuFFuFF      [ 1]   91 	clr (s_DATA - 1, x)
-      000009 5A               [ 2]   92 	decw x
-      00000A 26 F9            [ 1]   93 	jrne	00001$
-      00000C                         94 00002$:
-      00000C AEr00r00         [ 2]   95 	ldw	x, #l_INITIALIZER
-      00000F 27 09            [ 1]   96 	jreq	00004$
-      000011                         97 00003$:
-      000011 D6uFFuFF         [ 1]   98 	ld	a, (s_INITIALIZER - 1, x)
-      000014 D7uFFuFF         [ 1]   99 	ld	(s_INITIALIZED - 1, x), a
-      000017 5A               [ 2]  100 	decw	x
-      000018 26 F7            [ 1]  101 	jrne	00003$
-      00001A                        102 00004$:
-                                    103 ; stm8_genXINIT() end
-                                    104 	.area GSFINAL
-      000000 CCr00r54         [ 2]  105 	jp	__sdcc_program_startup
-                                    106 ;--------------------------------------------------------
-                                    107 ; Home
-                                    108 ;--------------------------------------------------------
-                                    109 	.area HOME
-                                    110 	.area HOME
-      000054                        111 __sdcc_program_startup:
-      000054 CCr00r08         [ 2]  112 	jp	_main
-                                    113 ;	return from main will return to caller
+                                     53 ; default segment ordering for linker
+                                     54 	.area HOME
+                                     55 	.area GSINIT
+                                     56 	.area GSFINAL
+                                     57 	.area CONST
+                                     58 	.area INITIALIZER
+                                     59 	.area CODE
+                                     60 
+                                     61 ;--------------------------------------------------------
+                                     62 ; interrupt vector
+                                     63 ;--------------------------------------------------------
+                                     64 	.area HOME
+      000000                         65 __interrupt_vect:
+      000000 82v00u00u00             66 	int s_GSINIT ; reset
+      000004 82 00 00 00             67 	int 0x000000 ; trap
+      000008 82 00 00 00             68 	int 0x000000 ; int0
+      00000C 82 00 00 00             69 	int 0x000000 ; int1
+      000010 82 00 00 00             70 	int 0x000000 ; int2
+      000014 82 00 00 00             71 	int 0x000000 ; int3
+      000018 82 00 00 00             72 	int 0x000000 ; int4
+      00001C 82 00 00 00             73 	int 0x000000 ; int5
+      000020 82 00 00 00             74 	int 0x000000 ; int6
+      000024 82 00 00 00             75 	int 0x000000 ; int7
+      000028 82 00 00 00             76 	int 0x000000 ; int8
+      00002C 82 00 00 00             77 	int 0x000000 ; int9
+      000030 82 00 00 00             78 	int 0x000000 ; int10
+      000034 82 00 00 00             79 	int 0x000000 ; int11
+      000038 82 00 00 00             80 	int 0x000000 ; int12
+      00003C 82 00 00 00             81 	int 0x000000 ; int13
+      000040 82 00 00 00             82 	int 0x000000 ; int14
+      000044 82 00 00 00             83 	int 0x000000 ; int15
+      000048 82 00 00 00             84 	int 0x000000 ; int16
+      00004C 82 00 00 00             85 	int 0x000000 ; int17
+      000050 82v00u00uA4             86 	int _uart1_rx_handler ; int18
+                                     87 ;--------------------------------------------------------
+                                     88 ; global & static initialisations
+                                     89 ;--------------------------------------------------------
+                                     90 	.area HOME
+                                     91 	.area GSINIT
+                                     92 	.area GSFINAL
+                                     93 	.area GSINIT
+      000000                         94 __sdcc_init_data:
+                                     95 ; stm8_genXINIT() start
+      000000 AEr00r00         [ 2]   96 	ldw x, #l_DATA
+      000003 27 07            [ 1]   97 	jreq	00002$
+      000005                         98 00001$:
+      000005 72 4FuFFuFF      [ 1]   99 	clr (s_DATA - 1, x)
+      000009 5A               [ 2]  100 	decw x
+      00000A 26 F9            [ 1]  101 	jrne	00001$
+      00000C                        102 00002$:
+      00000C AEr00r00         [ 2]  103 	ldw	x, #l_INITIALIZER
+      00000F 27 09            [ 1]  104 	jreq	00004$
+      000011                        105 00003$:
+      000011 D6uFFuFF         [ 1]  106 	ld	a, (s_INITIALIZER - 1, x)
+      000014 D7uFFuFF         [ 1]  107 	ld	(s_INITIALIZED - 1, x), a
+      000017 5A               [ 2]  108 	decw	x
+      000018 26 F7            [ 1]  109 	jrne	00003$
+      00001A                        110 00004$:
+                                    111 ; stm8_genXINIT() end
+                                    112 	.area GSFINAL
+      000000 CCr00r54         [ 2]  113 	jp	__sdcc_program_startup
                                     114 ;--------------------------------------------------------
-                                    115 ; code
+                                    115 ; Home
                                     116 ;--------------------------------------------------------
-                                    117 	.area CODE
-                                    118 ;	main.c: 19: static void delay(uint16_t t) {
-                                    119 ;	-----------------------------------------
-                                    120 ;	 function delay
-                                    121 ;	-----------------------------------------
-      000000                        122 _delay:
-                                    123 ;	main.c: 20: while(t--) {};
-      000000                        124 00101$:
-      000000 90 93            [ 1]  125 	ldw	y, x
-      000002 5A               [ 2]  126 	decw	x
-      000003 90 5D            [ 2]  127 	tnzw	y
-      000005 26 F9            [ 1]  128 	jrne	00101$
-                                    129 ;	main.c: 21: }
-      000007 81               [ 4]  130 	ret
-                                    131 ;	main.c: 25: int main() {
-                                    132 ;	-----------------------------------------
-                                    133 ;	 function main
-                                    134 ;	-----------------------------------------
-      000008                        135 _main:
-      000008 52 05            [ 2]  136 	sub	sp, #5
-                                    137 ;	main.c: 26: __asm sim __endasm; // Disable interrupts
-      00000A 9B               [ 1]  138 	sim	
-                                    139 ;	main.c: 28: clk_init();
-      00000B CDr00r00         [ 4]  140 	call	_clk_init
-                                    141 ;	main.c: 29: gpio_init();
-      00000E CDr00r00         [ 4]  142 	call	_gpio_init
-                                    143 ;	main.c: 30: tim2_init();
-      000011 CDr00r00         [ 4]  144 	call	_tim2_init
-                                    145 ;	main.c: 31: uart_init();
-      000014 CDr00r00         [ 4]  146 	call	_uart_init
-                                    147 ;	main.c: 33: char banner[5] = {'1', '2', '3', '4', '5'};
-      000017 96               [ 1]  148 	ldw	x, sp
-      000018 5C               [ 1]  149 	incw	x
-      000019 A6 31            [ 1]  150 	ld	a, #0x31
-      00001B F7               [ 1]  151 	ld	(x), a
-      00001C A6 32            [ 1]  152 	ld	a, #0x32
-      00001E 6B 02            [ 1]  153 	ld	(0x02, sp), a
-      000020 A6 33            [ 1]  154 	ld	a, #0x33
-      000022 6B 03            [ 1]  155 	ld	(0x03, sp), a
-      000024 A6 34            [ 1]  156 	ld	a, #0x34
-      000026 6B 04            [ 1]  157 	ld	(0x04, sp), a
-      000028 A6 35            [ 1]  158 	ld	a, #0x35
-      00002A 6B 05            [ 1]  159 	ld	(0x05, sp), a
-                                    160 ;	main.c: 34: uart_tx_byte_array(banner, 5);
-      00002C A6 05            [ 1]  161 	ld	a, #0x05
-      00002E CDr00r00         [ 4]  162 	call	_uart_tx_byte_array
-                                    163 ;	main.c: 36: __asm rim __endasm; // Enable interrupts
-      000031 9A               [ 1]  164 	rim	
-                                    165 ;	main.c: 40: rgb.r = 0;
-      000032 35 00u00u00      [ 1]  166 	mov	_rgb+0, #0x00
-                                    167 ;	main.c: 41: rgb.g = 0;
-      000036 35 00u00u01      [ 1]  168 	mov	_rgb+1, #0x00
-                                    169 ;	main.c: 42: rgb.b = 0;
-      00003A 35 00u00u02      [ 1]  170 	mov	_rgb+2, #0x00
-                                    171 ;	main.c: 44: while(1) {
-      00003E                        172 00102$:
-                                    173 ;	main.c: 45: button_hundler(&rgb);
-      00003E AEr00r00         [ 2]  174 	ldw	x, #(_rgb+0)
-      000041 CDr00r4F         [ 4]  175 	call	_button_hundler
-                                    176 ;	main.c: 46: write_color_to_registers(&rgb);
-      000044 AEr00r00         [ 2]  177 	ldw	x, #(_rgb+0)
-      000047 CDr00r00         [ 4]  178 	call	_write_color_to_registers
-      00004A 20 F2            [ 2]  179 	jra	00102$
-                                    180 ;	main.c: 48: }
-      00004C 5B 05            [ 2]  181 	addw	sp, #5
-      00004E 81               [ 4]  182 	ret
-                                    183 ;	main.c: 50: void button_hundler(struct Color *color) {
-                                    184 ;	-----------------------------------------
-                                    185 ;	 function button_hundler
-                                    186 ;	-----------------------------------------
-      00004F                        187 _button_hundler:
-      00004F 52 04            [ 2]  188 	sub	sp, #4
-      000051 1F 03            [ 2]  189 	ldw	(0x03, sp), x
-                                    190 ;	main.c: 51: if((1 << 2) == (~PD_IDR & (1 << 2))) { // Btn_R+
-      000053 C6 50 10         [ 1]  191 	ld	a, 0x5010
-      000056 5F               [ 1]  192 	clrw	x
-      000057 97               [ 1]  193 	ld	xl, a
-      000058 53               [ 2]  194 	cplw	x
-      000059 9F               [ 1]  195 	ld	a, xl
-      00005A A4 04            [ 1]  196 	and	a, #0x04
-      00005C 97               [ 1]  197 	ld	xl, a
-      00005D 4F               [ 1]  198 	clr	a
-      00005E 95               [ 1]  199 	ld	xh, a
-      00005F A3 00 04         [ 2]  200 	cpw	x, #0x0004
-      000062 26 05            [ 1]  201 	jrne	00102$
+                                    117 	.area HOME
+                                    118 	.area HOME
+      000054                        119 __sdcc_program_startup:
+      000054 CCr00r08         [ 2]  120 	jp	_main
+                                    121 ;	return from main will return to caller
+                                    122 ;--------------------------------------------------------
+                                    123 ; code
+                                    124 ;--------------------------------------------------------
+                                    125 	.area CODE
+                                    126 ;	main.c: 19: static void delay(uint16_t t) {
+                                    127 ;	-----------------------------------------
+                                    128 ;	 function delay
+                                    129 ;	-----------------------------------------
+      000000                        130 _delay:
+                                    131 ;	main.c: 20: while(t--) {};
+      000000                        132 00101$:
+      000000 90 93            [ 1]  133 	ldw	y, x
+      000002 5A               [ 2]  134 	decw	x
+      000003 90 5D            [ 2]  135 	tnzw	y
+      000005 26 F9            [ 1]  136 	jrne	00101$
+                                    137 ;	main.c: 21: }
+      000007 81               [ 4]  138 	ret
+                                    139 ;	main.c: 25: int main() {
+                                    140 ;	-----------------------------------------
+                                    141 ;	 function main
+                                    142 ;	-----------------------------------------
+      000008                        143 _main:
+      000008 52 05            [ 2]  144 	sub	sp, #5
+                                    145 ;	main.c: 26: __asm sim __endasm; // Disable interrupts
+      00000A 9B               [ 1]  146 	sim	
+                                    147 ;	main.c: 28: clk_init();
+      00000B CDr00r00         [ 4]  148 	call	_clk_init
+                                    149 ;	main.c: 29: gpio_init();
+      00000E CDr00r00         [ 4]  150 	call	_gpio_init
+                                    151 ;	main.c: 30: tim2_init();
+      000011 CDr00r00         [ 4]  152 	call	_tim2_init
+                                    153 ;	main.c: 31: uart_init();
+      000014 CDr00r00         [ 4]  154 	call	_uart_init
+                                    155 ;	main.c: 33: char banner[5] = {'1', '2', '3', '4', '5'};
+      000017 96               [ 1]  156 	ldw	x, sp
+      000018 5C               [ 1]  157 	incw	x
+      000019 A6 31            [ 1]  158 	ld	a, #0x31
+      00001B F7               [ 1]  159 	ld	(x), a
+      00001C A6 32            [ 1]  160 	ld	a, #0x32
+      00001E 6B 02            [ 1]  161 	ld	(0x02, sp), a
+      000020 A6 33            [ 1]  162 	ld	a, #0x33
+      000022 6B 03            [ 1]  163 	ld	(0x03, sp), a
+      000024 A6 34            [ 1]  164 	ld	a, #0x34
+      000026 6B 04            [ 1]  165 	ld	(0x04, sp), a
+      000028 A6 35            [ 1]  166 	ld	a, #0x35
+      00002A 6B 05            [ 1]  167 	ld	(0x05, sp), a
+                                    168 ;	main.c: 34: uart_tx_byte_array(banner, 5);
+      00002C A6 05            [ 1]  169 	ld	a, #0x05
+      00002E CDr00r00         [ 4]  170 	call	_uart_tx_byte_array
+                                    171 ;	main.c: 36: __asm rim __endasm; // Enable interrupts
+      000031 9A               [ 1]  172 	rim	
+                                    173 ;	main.c: 40: rgb.r = 0;
+      000032 35 00u00u00      [ 1]  174 	mov	_rgb+0, #0x00
+                                    175 ;	main.c: 41: rgb.g = 0;
+      000036 35 00u00u01      [ 1]  176 	mov	_rgb+1, #0x00
+                                    177 ;	main.c: 42: rgb.b = 0;
+      00003A 35 00u00u02      [ 1]  178 	mov	_rgb+2, #0x00
+                                    179 ;	main.c: 44: while(1) {
+      00003E                        180 00102$:
+                                    181 ;	main.c: 45: button_hundler(&rgb);
+      00003E AEr00r00         [ 2]  182 	ldw	x, #(_rgb+0)
+      000041 CDr00r4F         [ 4]  183 	call	_button_hundler
+                                    184 ;	main.c: 46: write_color_to_registers(&rgb);
+      000044 AEr00r00         [ 2]  185 	ldw	x, #(_rgb+0)
+      000047 CDr00r00         [ 4]  186 	call	_write_color_to_registers
+      00004A 20 F2            [ 2]  187 	jra	00102$
+                                    188 ;	main.c: 48: }
+      00004C 5B 05            [ 2]  189 	addw	sp, #5
+      00004E 81               [ 4]  190 	ret
+                                    191 ;	main.c: 50: void button_hundler(struct Color *color) {
+                                    192 ;	-----------------------------------------
+                                    193 ;	 function button_hundler
+                                    194 ;	-----------------------------------------
+      00004F                        195 _button_hundler:
+      00004F 52 02            [ 2]  196 	sub	sp, #2
+      000051 1F 01            [ 2]  197 	ldw	(0x01, sp), x
+                                    198 ;	main.c: 51: if(btn_r_plus_is_pressed()) {
+      000053 CDr00r00         [ 4]  199 	call	_btn_r_plus_is_pressed
+      000056 4D               [ 1]  200 	tnz	a
+      000057 27 05            [ 1]  201 	jreq	00102$
                                     202 ;	main.c: 52: smart_increment(&color->r);
-      000064 1E 03            [ 2]  203 	ldw	x, (0x03, sp)
-      000066 CDr00r00         [ 4]  204 	call	_smart_increment
-      000069                        205 00102$:
-                                    206 ;	main.c: 55: if((1 << 7) == (~PC_IDR & (1 << 7))) { // Btn_R-
-      000069 C6 50 0B         [ 1]  207 	ld	a, 0x500b
-      00006C 5F               [ 1]  208 	clrw	x
-      00006D 97               [ 1]  209 	ld	xl, a
-      00006E 53               [ 2]  210 	cplw	x
-      00006F 9F               [ 1]  211 	ld	a, xl
-      000070 A4 80            [ 1]  212 	and	a, #0x80
-      000072 97               [ 1]  213 	ld	xl, a
-      000073 4F               [ 1]  214 	clr	a
-      000074 95               [ 1]  215 	ld	xh, a
-      000075 A3 00 80         [ 2]  216 	cpw	x, #0x0080
-      000078 26 05            [ 1]  217 	jrne	00104$
-                                    218 ;	main.c: 56: smart_decrement(&color->r);
-      00007A 1E 03            [ 2]  219 	ldw	x, (0x03, sp)
-      00007C CDr00r00         [ 4]  220 	call	_smart_decrement
-      00007F                        221 00104$:
-                                    222 ;	main.c: 59: if((1 << 6) == (~PC_IDR & (1 << 6))) { // Btn_G+
-      00007F C6 50 0B         [ 1]  223 	ld	a, 0x500b
-      000082 5F               [ 1]  224 	clrw	x
-      000083 97               [ 1]  225 	ld	xl, a
-      000084 53               [ 2]  226 	cplw	x
-      000085 9F               [ 1]  227 	ld	a, xl
-      000086 A4 40            [ 1]  228 	and	a, #0x40
-      000088 97               [ 1]  229 	ld	xl, a
-      000089 4F               [ 1]  230 	clr	a
-                                    231 ;	main.c: 60: smart_increment(&color->g);
-      00008A 16 03            [ 2]  232 	ldw	y, (0x03, sp)
-      00008C 90 5C            [ 1]  233 	incw	y
-      00008E 17 01            [ 2]  234 	ldw	(0x01, sp), y
-                                    235 ;	main.c: 59: if((1 << 6) == (~PC_IDR & (1 << 6))) { // Btn_G+
-      000090 95               [ 1]  236 	ld	xh, a
-      000091 A3 00 40         [ 2]  237 	cpw	x, #0x0040
-      000094 26 05            [ 1]  238 	jrne	00106$
-                                    239 ;	main.c: 60: smart_increment(&color->g);
-      000096 1E 01            [ 2]  240 	ldw	x, (0x01, sp)
-      000098 CDr00r00         [ 4]  241 	call	_smart_increment
-      00009B                        242 00106$:
-                                    243 ;	main.c: 63: if((1 << 5) == (~PC_IDR & (1 << 5))) { // Btn_G-
-      00009B C6 50 0B         [ 1]  244 	ld	a, 0x500b
-      00009E 5F               [ 1]  245 	clrw	x
-      00009F 97               [ 1]  246 	ld	xl, a
-      0000A0 53               [ 2]  247 	cplw	x
-      0000A1 9F               [ 1]  248 	ld	a, xl
-      0000A2 A4 20            [ 1]  249 	and	a, #0x20
-      0000A4 97               [ 1]  250 	ld	xl, a
-      0000A5 4F               [ 1]  251 	clr	a
-      0000A6 95               [ 1]  252 	ld	xh, a
-      0000A7 A3 00 20         [ 2]  253 	cpw	x, #0x0020
-      0000AA 26 05            [ 1]  254 	jrne	00108$
-                                    255 ;	main.c: 64: smart_decrement(&color->g);
-      0000AC 1E 01            [ 2]  256 	ldw	x, (0x01, sp)
-      0000AE CDr00r00         [ 4]  257 	call	_smart_decrement
-      0000B1                        258 00108$:
-                                    259 ;	main.c: 67: if((1 << 4) == (~PC_IDR & (1 << 4))) { // Btn_B+
-      0000B1 C6 50 0B         [ 1]  260 	ld	a, 0x500b
-      0000B4 5F               [ 1]  261 	clrw	x
-      0000B5 97               [ 1]  262 	ld	xl, a
-      0000B6 53               [ 2]  263 	cplw	x
-      0000B7 90 5F            [ 1]  264 	clrw	y
-      0000B9 9F               [ 1]  265 	ld	a, xl
-      0000BA A4 10            [ 1]  266 	and	a, #0x10
-      0000BC 90 97            [ 1]  267 	ld	yl, a
-                                    268 ;	main.c: 68: smart_increment(&color->b);
-      0000BE 1E 03            [ 2]  269 	ldw	x, (0x03, sp)
-      0000C0 5C               [ 1]  270 	incw	x
-      0000C1 5C               [ 1]  271 	incw	x
-      0000C2 1F 01            [ 2]  272 	ldw	(0x01, sp), x
-                                    273 ;	main.c: 67: if((1 << 4) == (~PC_IDR & (1 << 4))) { // Btn_B+
-      0000C4 90 A3 00 10      [ 2]  274 	cpw	y, #0x0010
-      0000C8 26 05            [ 1]  275 	jrne	00110$
-                                    276 ;	main.c: 68: smart_increment(&color->b);
-      0000CA 1E 01            [ 2]  277 	ldw	x, (0x01, sp)
-      0000CC CDr00r00         [ 4]  278 	call	_smart_increment
-      0000CF                        279 00110$:
-                                    280 ;	main.c: 71: if((1 << 3) == (~PC_IDR & (1 << 3))) { // Btn_B-
-      0000CF C6 50 0B         [ 1]  281 	ld	a, 0x500b
-      0000D2 5F               [ 1]  282 	clrw	x
-      0000D3 97               [ 1]  283 	ld	xl, a
-      0000D4 53               [ 2]  284 	cplw	x
-      0000D5 9F               [ 1]  285 	ld	a, xl
-      0000D6 A4 08            [ 1]  286 	and	a, #0x08
-      0000D8 97               [ 1]  287 	ld	xl, a
-      0000D9 4F               [ 1]  288 	clr	a
-      0000DA 95               [ 1]  289 	ld	xh, a
-      0000DB A3 00 08         [ 2]  290 	cpw	x, #0x0008
-      0000DE 26 07            [ 1]  291 	jrne	00113$
-                                    292 ;	main.c: 72: smart_decrement(&color->b);
-      0000E0 1E 01            [ 2]  293 	ldw	x, (0x01, sp)
-      0000E2 5B 04            [ 2]  294 	addw	sp, #4
-      0000E4 CCr00r00         [ 2]  295 	jp	_smart_decrement
-                                    296 ;	main.c: 78: if((1 << 5) == (~PB_IDR & (1 << 5))) { // Btn_LOAD
-      0000E7                        297 00113$:
-                                    298 ;	main.c: 80: }
-      0000E7 5B 04            [ 2]  299 	addw	sp, #4
-      0000E9 81               [ 4]  300 	ret
-                                    301 ;	main.c: 82: extern void uart1_rx_handler(void) __interrupt(18) {
-                                    302 ;	-----------------------------------------
-                                    303 ;	 function uart1_rx_handler
-                                    304 ;	-----------------------------------------
-      0000EA                        305 _uart1_rx_handler:
-      0000EA 4F               [ 1]  306 	clr	a
-      0000EB 62               [ 2]  307 	div	x, a
-      0000EC 88               [ 1]  308 	push	a
-                                    309 ;	main.c: 83: rgb.r = 0;
-      0000ED 35 00u00u00      [ 1]  310 	mov	_rgb+0, #0x00
-                                    311 ;	main.c: 84: rgb.g = 0;
-      0000F1 35 00u00u01      [ 1]  312 	mov	_rgb+1, #0x00
-                                    313 ;	main.c: 85: rgb.b = 0;
-      0000F5 35 00u00u02      [ 1]  314 	mov	_rgb+2, #0x00
-                                    315 ;	main.c: 86: write_color_to_registers(&rgb);
-      0000F9 AEr00r00         [ 2]  316 	ldw	x, #(_rgb+0)
-      0000FC CDr00r00         [ 4]  317 	call	_write_color_to_registers
-                                    318 ;	main.c: 88: UART1_SR &= ~(1 << 5); // Clear interrupt
-      0000FF 72 1B 52 30      [ 1]  319 	bres	0x5230, #5
-                                    320 ;	main.c: 89: char byte = UART1_DR;
-      000103 C6 52 31         [ 1]  321 	ld	a, 0x5231
-      000106 6B 01            [ 1]  322 	ld	(0x01, sp), a
-                                    323 ;	main.c: 90: uart_tx_byte(&byte);
-      000108 96               [ 1]  324 	ldw	x, sp
-      000109 5C               [ 1]  325 	incw	x
-      00010A CDr00r00         [ 4]  326 	call	_uart_tx_byte
-                                    327 ;	main.c: 91: }
-      00010D 84               [ 1]  328 	pop	a
-      00010E 80               [11]  329 	iret
-                                    330 	.area CODE
-                                    331 	.area CONST
-                                    332 	.area INITIALIZER
-                                    333 	.area CABS (ABS)
+      000059 1E 01            [ 2]  203 	ldw	x, (0x01, sp)
+      00005B CDr00r00         [ 4]  204 	call	_smart_increment
+      00005E                        205 00102$:
+                                    206 ;	main.c: 55: if(btn_r_minus_is_pressed()) {
+      00005E CDr00r00         [ 4]  207 	call	_btn_r_minus_is_pressed
+      000061 4D               [ 1]  208 	tnz	a
+      000062 27 05            [ 1]  209 	jreq	00104$
+                                    210 ;	main.c: 56: smart_decrement(&color->r);
+      000064 1E 01            [ 2]  211 	ldw	x, (0x01, sp)
+      000066 CDr00r00         [ 4]  212 	call	_smart_decrement
+      000069                        213 00104$:
+                                    214 ;	main.c: 59: if(btn_g_plus_is_pressed()) {
+      000069 CDr00r00         [ 4]  215 	call	_btn_g_plus_is_pressed
+                                    216 ;	main.c: 60: smart_increment(&color->g);
+      00006C 1E 01            [ 2]  217 	ldw	x, (0x01, sp)
+      00006E 5C               [ 1]  218 	incw	x
+                                    219 ;	main.c: 59: if(btn_g_plus_is_pressed()) {
+      00006F 4D               [ 1]  220 	tnz	a
+      000070 27 05            [ 1]  221 	jreq	00106$
+                                    222 ;	main.c: 60: smart_increment(&color->g);
+      000072 89               [ 2]  223 	pushw	x
+      000073 CDr00r00         [ 4]  224 	call	_smart_increment
+      000076 85               [ 2]  225 	popw	x
+      000077                        226 00106$:
+                                    227 ;	main.c: 63: if(btn_g_minus_is_pressed()) {
+      000077 89               [ 2]  228 	pushw	x
+      000078 CDr00r00         [ 4]  229 	call	_btn_g_minus_is_pressed
+      00007B 85               [ 2]  230 	popw	x
+      00007C 4D               [ 1]  231 	tnz	a
+      00007D 27 03            [ 1]  232 	jreq	00108$
+                                    233 ;	main.c: 64: smart_decrement(&color->g);
+      00007F CDr00r00         [ 4]  234 	call	_smart_decrement
+      000082                        235 00108$:
+                                    236 ;	main.c: 67: if(btn_b_plus_is_pressed()) {
+      000082 CDr00r00         [ 4]  237 	call	_btn_b_plus_is_pressed
+                                    238 ;	main.c: 68: smart_increment(&color->b);
+      000085 1E 01            [ 2]  239 	ldw	x, (0x01, sp)
+      000087 5C               [ 1]  240 	incw	x
+      000088 5C               [ 1]  241 	incw	x
+                                    242 ;	main.c: 67: if(btn_b_plus_is_pressed()) {
+      000089 4D               [ 1]  243 	tnz	a
+      00008A 27 05            [ 1]  244 	jreq	00110$
+                                    245 ;	main.c: 68: smart_increment(&color->b);
+      00008C 89               [ 2]  246 	pushw	x
+      00008D CDr00r00         [ 4]  247 	call	_smart_increment
+      000090 85               [ 2]  248 	popw	x
+      000091                        249 00110$:
+                                    250 ;	main.c: 71: if(btn_b_minus_is_pressed()) {
+      000091 89               [ 2]  251 	pushw	x
+      000092 CDr00r00         [ 4]  252 	call	_btn_b_minus_is_pressed
+      000095 85               [ 2]  253 	popw	x
+      000096 4D               [ 1]  254 	tnz	a
+      000097 27 03            [ 1]  255 	jreq	00112$
+                                    256 ;	main.c: 72: smart_decrement(&color->b);
+      000099 CDr00r00         [ 4]  257 	call	_smart_decrement
+      00009C                        258 00112$:
+                                    259 ;	main.c: 75: if(btn_flash_is_pressed()) {
+      00009C CDr00r00         [ 4]  260 	call	_btn_flash_is_pressed
+                                    261 ;	main.c: 78: if(btn_load_is_pressed()) {
+      00009F 5B 02            [ 2]  262 	addw	sp, #2
+                                    263 ;	main.c: 80: }
+      0000A1 CCr00r00         [ 2]  264 	jp	_btn_load_is_pressed
+                                    265 ;	main.c: 82: extern void uart1_rx_handler(void) __interrupt(18) {
+                                    266 ;	-----------------------------------------
+                                    267 ;	 function uart1_rx_handler
+                                    268 ;	-----------------------------------------
+      0000A4                        269 _uart1_rx_handler:
+      0000A4 4F               [ 1]  270 	clr	a
+      0000A5 62               [ 2]  271 	div	x, a
+      0000A6 88               [ 1]  272 	push	a
+                                    273 ;	main.c: 83: rgb.r = 0;
+      0000A7 35 00u00u00      [ 1]  274 	mov	_rgb+0, #0x00
+                                    275 ;	main.c: 84: rgb.g = 0;
+      0000AB 35 00u00u01      [ 1]  276 	mov	_rgb+1, #0x00
+                                    277 ;	main.c: 85: rgb.b = 0;
+      0000AF 35 00u00u02      [ 1]  278 	mov	_rgb+2, #0x00
+                                    279 ;	main.c: 86: write_color_to_registers(&rgb);
+      0000B3 AEr00r00         [ 2]  280 	ldw	x, #(_rgb+0)
+      0000B6 CDr00r00         [ 4]  281 	call	_write_color_to_registers
+                                    282 ;	main.c: 88: UART1_SR &= ~(1 << 5); // Clear interrupt
+      0000B9 72 1B 52 30      [ 1]  283 	bres	0x5230, #5
+                                    284 ;	main.c: 89: char byte = UART1_DR;
+      0000BD C6 52 31         [ 1]  285 	ld	a, 0x5231
+      0000C0 6B 01            [ 1]  286 	ld	(0x01, sp), a
+                                    287 ;	main.c: 90: uart_tx_byte(&byte);
+      0000C2 96               [ 1]  288 	ldw	x, sp
+      0000C3 5C               [ 1]  289 	incw	x
+      0000C4 CDr00r00         [ 4]  290 	call	_uart_tx_byte
+                                    291 ;	main.c: 91: }
+      0000C7 84               [ 1]  292 	pop	a
+      0000C8 80               [11]  293 	iret
+                                    294 	.area CODE
+                                    295 	.area CONST
+                                    296 	.area INITIALIZER
+                                    297 	.area CABS (ABS)

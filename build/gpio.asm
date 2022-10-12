@@ -9,6 +9,14 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _gpio_init
+	.globl _btn_r_plus_is_pressed
+	.globl _btn_g_plus_is_pressed
+	.globl _btn_b_plus_is_pressed
+	.globl _btn_r_minus_is_pressed
+	.globl _btn_g_minus_is_pressed
+	.globl _btn_b_minus_is_pressed
+	.globl _btn_flash_is_pressed
+	.globl _btn_load_is_pressed
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -144,6 +152,190 @@ _gpio_init:
 ;	./src/gpio.c: 87: PD_CR2 &= ~(1 << 6); // External interrupt disabled
 	bres	0x5013, #6
 ;	./src/gpio.c: 88: }
+	ret
+;	./src/gpio.c: 90: uint8_t btn_r_plus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_r_plus_is_pressed
+;	-----------------------------------------
+_btn_r_plus_is_pressed:
+;	./src/gpio.c: 91: return((1 << 2) == (~PD_IDR & (1 << 2)));
+	ld	a, 0x5010
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x04
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0004
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 92: }
+	ret
+;	./src/gpio.c: 94: uint8_t btn_g_plus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_g_plus_is_pressed
+;	-----------------------------------------
+_btn_g_plus_is_pressed:
+;	./src/gpio.c: 95: return((1 << 6) == (~PC_IDR & (1 << 6)));
+	ld	a, 0x500b
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x40
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0040
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 96: }
+	ret
+;	./src/gpio.c: 98: uint8_t btn_b_plus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_b_plus_is_pressed
+;	-----------------------------------------
+_btn_b_plus_is_pressed:
+;	./src/gpio.c: 99: return((1 << 4) == (~PC_IDR & (1 << 4)));
+	ld	a, 0x500b
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x10
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0010
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 100: }
+	ret
+;	./src/gpio.c: 102: uint8_t btn_r_minus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_r_minus_is_pressed
+;	-----------------------------------------
+_btn_r_minus_is_pressed:
+;	./src/gpio.c: 103: return((1 << 7) == (~PC_IDR & (1 << 7)));
+	ld	a, 0x500b
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x80
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0080
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 104: }
+	ret
+;	./src/gpio.c: 106: uint8_t btn_g_minus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_g_minus_is_pressed
+;	-----------------------------------------
+_btn_g_minus_is_pressed:
+;	./src/gpio.c: 107: return((1 << 5) == (~PC_IDR & (1 << 5)));
+	ld	a, 0x500b
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x20
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0020
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 108: }
+	ret
+;	./src/gpio.c: 110: uint8_t btn_b_minus_is_pressed() {
+;	-----------------------------------------
+;	 function btn_b_minus_is_pressed
+;	-----------------------------------------
+_btn_b_minus_is_pressed:
+;	./src/gpio.c: 111: return((1 << 3) == (~PC_IDR & (1 << 3)));
+	ld	a, 0x500b
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x08
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0008
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 112: }
+	ret
+;	./src/gpio.c: 114: uint8_t btn_flash_is_pressed() {
+;	-----------------------------------------
+;	 function btn_flash_is_pressed
+;	-----------------------------------------
+_btn_flash_is_pressed:
+;	./src/gpio.c: 115: return((1 << 4) == (~PB_IDR & (1 << 4)));
+	ld	a, 0x5006
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x10
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0010
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 116: }
+	ret
+;	./src/gpio.c: 118: uint8_t btn_load_is_pressed() {
+;	-----------------------------------------
+;	 function btn_load_is_pressed
+;	-----------------------------------------
+_btn_load_is_pressed:
+;	./src/gpio.c: 119: return((1 << 5) == (~PB_IDR & (1 << 5)));
+	ld	a, 0x5006
+	clrw	x
+	ld	xl, a
+	cplw	x
+	ld	a, xl
+	and	a, #0x20
+	ld	xl, a
+	clr	a
+	ld	xh, a
+	cpw	x, #0x0020
+	jrne	00104$
+	ld	a, #0x01
+	ret
+00104$:
+	clr	a
+;	./src/gpio.c: 120: }
 	ret
 	.area CODE
 	.area CONST

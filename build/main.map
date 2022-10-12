@@ -25,7 +25,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000007  s_SSEG                          
      0000001A  l_GSINIT                        
      00000057  l_HOME                          
-     000010BA  l_CODE                          
+     00001124  l_CODE                          
      00008000  s_HOME                          
      00008057  s_GSINIT                        
      00008071  s_GSFINAL                       
@@ -106,45 +106,52 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008075    000010BA =        4282. bytes (REL,CON)
+CODE                                00008075    00001124 =        4388. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      0000807D  _main                              main
      000080C4  _button_hundler                    main
-     00008184  _normalize_from                    color
-     000081B5  _write_color_to_registers          color
-     000081EC  _smart_increment                   color
-     000081F5  _smart_decrement                   color
-     000081FC  _tim2_init                         tim2
-     00008265  _gpio_init                         gpio
-     0000831E  _clk_init                          clk
-     0000832A  _eeprom_unlock                     flash
-     00008333  _eeprom_write                      flash
-     0000836C  _uart_init                         uart
-     000083C3  _uart_tx_byte                      uart
-     000083DB  _uart_tx_byte_array                uart
-     000083F6  ___fsmul                           _fsmul
-     000085B0  _sqrtf                             sqrtf
-     000086AE  _expf                              expf
-     00008878  ___fslt                            _fslt
-     00008908  ___fsadd                           _fsadd
-     00008B33  _ldexpf                            ldexpf
-     00008BB5  ___fs2sint                         _fs2sint
-     00008BF5  ___sint2fs                         _sint2fs
-     00008C05  ___fs2uint                         _fs2uint
-     00008C25  _frexpf                            frexpf
-     00008E06  ___fsdiv                           _fsdiv
-     00008E7F  ___uchar2fs                        _uchar2fs
-     00008E8C  ___fssub                           _fssub
-     00008EB5  ___muluint2ulong                   
-     00008EBB  ___mulsint2slong                   
-     00008F0C  ___slong2fs                        _slong2fs
-     00008F34  ___fs2slong                        _fs2slong
-     00008F7E  ___fseq                            _fseq
-     00008FCC  ___ulong2fs                        _ulong2fs
-     00009068  ___fs2ulong                        _fs2ulong
-
+     0000813E  _normalize_from                    color
+     0000816F  _write_color_to_registers          color
+     000081A6  _smart_increment                   color
+     000081AF  _smart_decrement                   color
+     000081B6  _tim2_init                         tim2
+     0000821F  _gpio_init                         gpio
+     000082D8  _btn_r_plus_is_pressed             gpio
+     000082EE  _btn_g_plus_is_pressed             gpio
+     00008304  _btn_b_plus_is_pressed             gpio
+     0000831A  _btn_r_minus_is_pressed            gpio
+     00008330  _btn_g_minus_is_pressed            gpio
+     00008346  _btn_b_minus_is_pressed            gpio
+     0000835C  _btn_flash_is_pressed              gpio
+     00008372  _btn_load_is_pressed               gpio
+     00008388  _clk_init                          clk
+     00008394  _eeprom_unlock                     flash
+     0000839D  _eeprom_write                      flash
+     000083D6  _uart_init                         uart
+     0000842D  _uart_tx_byte                      uart
+     00008445  _uart_tx_byte_array                uart
+     00008460  ___fsmul                           _fsmul
+     0000861A  _sqrtf                             sqrtf
+     00008718  _expf                              expf
+     000088E2  ___fslt                            _fslt
+     00008972  ___fsadd                           _fsadd
+     00008B9D  _ldexpf                            ldexpf
+     00008C1F  ___fs2sint                         _fs2sint
+     00008C5F  ___sint2fs                         _sint2fs
+     00008C6F  ___fs2uint                         _fs2uint
+     00008C8F  _frexpf                            frexpf
+     00008E70  ___fsdiv                           _fsdiv
+     00008EE9  ___uchar2fs                        _uchar2fs
+     00008EF6  ___fssub                           _fssub
+     00008F1F  ___muluint2ulong                   
+     00008F25  ___mulsint2slong                   
+     00008F76  ___slong2fs                        _slong2fs
+     00008F9E  ___fs2slong                        _fs2slong
+     00008FE8  ___fseq                            _fseq
+     00009036  ___ulong2fs                        _ulong2fs
+     000090D2  ___fs2ulong                        _fs2ulong
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 
 Files Linked                              [ module(s) ]
