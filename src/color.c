@@ -33,3 +33,14 @@ void smart_decrement(uint8_t *val) {
         *val -= 1;
     }
 }
+
+void load_color_from_eeprom(struct Color *color, uint8_t color_cell) {
+    uint8_t r, g, b;
+    eeprom_read(3*color_cell+0, &r);
+    eeprom_read(3*color_cell+1, &g);
+    eeprom_read(3*color_cell+2, &b);
+    
+    color->r = r;
+    color->g = g;
+    color->b = b;
+}

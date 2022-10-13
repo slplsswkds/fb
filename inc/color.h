@@ -1,6 +1,7 @@
 #include "../lib/macro_tim2.h"
 #include <stdint.h>
 #include <math.h>
+#include "flash.h"
 
 struct Color {
     uint8_t r;
@@ -21,3 +22,5 @@ void smart_increment(uint8_t *val);
 // the function of subtracting from a variable without 
 // outing of range MIN uint8_t value
 void smart_decrement(uint8_t *val);
+
+void load_color_from_eeprom(struct Color *color, uint8_t color_cell);

@@ -8,12 +8,14 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _eeprom_read
 	.globl _sqrtf
 	.globl _expf
 	.globl _normalize_from
 	.globl _write_color_to_registers
 	.globl _smart_increment
 	.globl _smart_decrement
+	.globl _load_color_from_eeprom
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -157,6 +159,62 @@ _smart_decrement:
 	dec	a
 	ld	(x), a
 ;	./src/color.c: 35: }
+	ret
+;	./src/color.c: 37: void load_color_from_eeprom(struct Color *color, uint8_t color_cell) {
+;	-----------------------------------------
+;	 function load_color_from_eeprom
+;	-----------------------------------------
+_load_color_from_eeprom:
+	sub	sp, #7
+	ldw	(0x06, sp), x
+;	./src/color.c: 39: eeprom_read(3*color_cell+0, &r);
+	clrw	x
+	ld	xl, a
+	pushw	x
+	sllw	x
+	addw	x, (1, sp)
+	addw	sp, #2
+	ldw	(0x04, sp), x
+	ldw	y, x
+	ldw	x, sp
+	incw	x
+	pushw	x
+	ldw	x, y
+	call	_eeprom_read
+;	./src/color.c: 40: eeprom_read(3*color_cell+1, &g);
+	ldw	x, sp
+	incw	x
+	incw	x
+	exgw	x, y
+	ldw	x, (0x04, sp)
+	incw	x
+	pushw	y
+	call	_eeprom_read
+;	./src/color.c: 41: eeprom_read(3*color_cell+2, &b);
+	ldw	x, sp
+	addw	x, #3
+	ldw	y, (0x04, sp)
+	addw	y, #0x0002
+	pushw	x
+	ldw	x, y
+	call	_eeprom_read
+;	./src/color.c: 43: color->r = r;
+	ldw	x, (0x06, sp)
+	ld	a, (0x01, sp)
+	ld	(x), a
+;	./src/color.c: 44: color->g = g;
+	ldw	x, (0x06, sp)
+	incw	x
+	ld	a, (0x02, sp)
+	ld	(x), a
+;	./src/color.c: 45: color->b = b;
+	ldw	x, (0x06, sp)
+	incw	x
+	incw	x
+	ld	a, (0x03, sp)
+	ld	(x), a
+;	./src/color.c: 46: }
+	addw	sp, #7
 	ret
 	.area CODE
 	.area CONST

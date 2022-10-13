@@ -5,3 +5,6 @@ void uart_init();
 
 void uart_tx_byte(char *byte);
 void uart_tx_byte_array(char data[], uint8_t size);
+
+void uart_tx_number(uint16_t number);
+

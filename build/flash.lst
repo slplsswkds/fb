@@ -8,107 +8,174 @@
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
-                                     11 	.globl _eeprom_unlock
-                                     12 	.globl _eeprom_write
-                                     13 ;--------------------------------------------------------
-                                     14 ; ram data
-                                     15 ;--------------------------------------------------------
-                                     16 	.area DATA
-                                     17 ;--------------------------------------------------------
-                                     18 ; ram data
-                                     19 ;--------------------------------------------------------
-                                     20 	.area INITIALIZED
-                                     21 ;--------------------------------------------------------
-                                     22 ; absolute external ram data
-                                     23 ;--------------------------------------------------------
-                                     24 	.area DABS (ABS)
-                                     25 
-                                     26 ; default segment ordering for linker
-                                     27 	.area HOME
-                                     28 	.area GSINIT
-                                     29 	.area GSFINAL
-                                     30 	.area CONST
-                                     31 	.area INITIALIZER
-                                     32 	.area CODE
-                                     33 
-                                     34 ;--------------------------------------------------------
-                                     35 ; global & static initialisations
-                                     36 ;--------------------------------------------------------
-                                     37 	.area HOME
-                                     38 	.area GSINIT
-                                     39 	.area GSFINAL
-                                     40 	.area GSINIT
-                                     41 ;--------------------------------------------------------
-                                     42 ; Home
-                                     43 ;--------------------------------------------------------
-                                     44 	.area HOME
-                                     45 	.area HOME
+                                     11 	.globl _eeprom_lock
+                                     12 	.globl _eeprom_unlock
+                                     13 	.globl _eeprom_clear_all
+                                     14 	.globl _eeprom_write
+                                     15 	.globl _eeprom_read
+                                     16 ;--------------------------------------------------------
+                                     17 ; ram data
+                                     18 ;--------------------------------------------------------
+                                     19 	.area DATA
+                                     20 ;--------------------------------------------------------
+                                     21 ; ram data
+                                     22 ;--------------------------------------------------------
+                                     23 	.area INITIALIZED
+                                     24 ;--------------------------------------------------------
+                                     25 ; absolute external ram data
+                                     26 ;--------------------------------------------------------
+                                     27 	.area DABS (ABS)
+                                     28 
+                                     29 ; default segment ordering for linker
+                                     30 	.area HOME
+                                     31 	.area GSINIT
+                                     32 	.area GSFINAL
+                                     33 	.area CONST
+                                     34 	.area INITIALIZER
+                                     35 	.area CODE
+                                     36 
+                                     37 ;--------------------------------------------------------
+                                     38 ; global & static initialisations
+                                     39 ;--------------------------------------------------------
+                                     40 	.area HOME
+                                     41 	.area GSINIT
+                                     42 	.area GSFINAL
+                                     43 	.area GSINIT
+                                     44 ;--------------------------------------------------------
+                                     45 ; Home
                                      46 ;--------------------------------------------------------
-                                     47 ; code
-                                     48 ;--------------------------------------------------------
-                                     49 	.area CODE
-                                     50 ;	./src/flash.c: 3: void eeprom_unlock() {
-                                     51 ;	-----------------------------------------
-                                     52 ;	 function eeprom_unlock
-                                     53 ;	-----------------------------------------
-      000000                         54 _eeprom_unlock:
-                                     55 ;	./src/flash.c: 4: FLASH_PUKR = 0x56;
-      000000 35 56 50 62      [ 1]   56 	mov	0x5062+0, #0x56
-                                     57 ;	./src/flash.c: 5: FLASH_PUKR = 0xAE;
-      000004 35 AE 50 62      [ 1]   58 	mov	0x5062+0, #0xae
-                                     59 ;	./src/flash.c: 6: }
-      000008 81               [ 4]   60 	ret
-                                     61 ;	./src/flash.c: 8: void eeprom_write(uint16_t mem_cell, uint8_t data) {
-                                     62 ;	-----------------------------------------
-                                     63 ;	 function eeprom_write
-                                     64 ;	-----------------------------------------
-      000009                         65 _eeprom_write:
-      000009 88               [ 1]   66 	push	a
-      00000A 6B 01            [ 1]   67 	ld	(0x01, sp), a
-                                     68 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
-      00000C 72 02 50 5F 08   [ 2]   69 	btjt	0x505f, #1, 00103$
-                                     70 ;	./src/flash.c: 12: FLASH_DUKR = 0xAE;
-      000011 35 AE 50 64      [ 1]   71 	mov	0x5064+0, #0xae
-                                     72 ;	./src/flash.c: 13: FLASH_DUKR = 0x56;
-      000015 35 56 50 64      [ 1]   73 	mov	0x5064+0, #0x56
-                                     74 ;	./src/flash.c: 16: while (!(FLASH_IAPSR & DUL));
-      000019                         75 00103$:
-      000019 C6 50 5F         [ 1]   76 	ld	a, 0x505f
-      00001C A5 08            [ 1]   77 	bcp	a, #0x08
-      00001E 27 F9            [ 1]   78 	jreq	00103$
-                                     79 ;	./src/flash.c: 19: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
-      000020 1C 40 00         [ 2]   80 	addw	x, #0x4000
-                                     81 ;	./src/flash.c: 21: __asm sim __endasm; // Disable interrupts
-      000023 9B               [ 1]   82 	sim	
-                                     83 ;	./src/flash.c: 22: *addr = data;
-      000024 7B 01            [ 1]   84 	ld	a, (0x01, sp)
-      000026 F7               [ 1]   85 	ld	(x), a
-                                     86 ;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
-      000027                         87 00106$:
-                                     88 ;	./src/flash.c: 9: if (!(FLASH_IAPSR & 0x02))
-      000027 C6 50 5F         [ 1]   89 	ld	a, 0x505f
-                                     90 ;	./src/flash.c: 23: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
-      00002A 5F               [ 1]   91 	clrw	x
-      00002B 97               [ 1]   92 	ld	xl, a
-      00002C 88               [ 1]   93 	push	a
-      00002D 53               [ 2]   94 	cplw	x
-      00002E 9F               [ 1]   95 	ld	a, xl
-      00002F A4 04            [ 1]   96 	and	a, #0x04
-      000031 97               [ 1]   97 	ld	xl, a
-      000032 4F               [ 1]   98 	clr	a
-      000033 95               [ 1]   99 	ld	xh, a
-      000034 84               [ 1]  100 	pop	a
-      000035 A3 00 04         [ 2]  101 	cpw	x, #0x0004
-      000038 26 ED            [ 1]  102 	jrne	00106$
-                                    103 ;	./src/flash.c: 24: __asm rim __endasm; // Enable interrupts
-      00003A 9A               [ 1]  104 	rim	
-                                    105 ;	./src/flash.c: 26: FLASH_IAPSR &= ~(DUL);      // lock EEPROM
-      00003B A4 F7            [ 1]  106 	and	a, #0xf7
-      00003D C7 50 5F         [ 1]  107 	ld	0x505f, a
-                                    108 ;	./src/flash.c: 27: }
-      000040 84               [ 1]  109 	pop	a
-      000041 81               [ 4]  110 	ret
-                                    111 	.area CODE
-                                    112 	.area CONST
-                                    113 	.area INITIALIZER
-                                    114 	.area CABS (ABS)
+                                     47 	.area HOME
+                                     48 	.area HOME
+                                     49 ;--------------------------------------------------------
+                                     50 ; code
+                                     51 ;--------------------------------------------------------
+                                     52 	.area CODE
+                                     53 ;	./src/flash.c: 3: void eeprom_unlock() {
+                                     54 ;	-----------------------------------------
+                                     55 ;	 function eeprom_unlock
+                                     56 ;	-----------------------------------------
+      000000                         57 _eeprom_unlock:
+                                     58 ;	./src/flash.c: 4: if (!(FLASH_IAPSR & 0x02))
+      000000 72 02 50 5F 08   [ 2]   59 	btjt	0x505f, #1, 00103$
+                                     60 ;	./src/flash.c: 7: FLASH_DUKR = 0xAE;
+      000005 35 AE 50 64      [ 1]   61 	mov	0x5064+0, #0xae
+                                     62 ;	./src/flash.c: 8: FLASH_DUKR = 0x56;
+      000009 35 56 50 64      [ 1]   63 	mov	0x5064+0, #0x56
+                                     64 ;	./src/flash.c: 11: while (!(FLASH_IAPSR & DUL));
+      00000D                         65 00103$:
+      00000D 72 07 50 5F FB   [ 2]   66 	btjf	0x505f, #3, 00103$
+                                     67 ;	./src/flash.c: 12: }
+      000012 81               [ 4]   68 	ret
+                                     69 ;	./src/flash.c: 14: void eeprom_lock() {
+                                     70 ;	-----------------------------------------
+                                     71 ;	 function eeprom_lock
+                                     72 ;	-----------------------------------------
+      000013                         73 _eeprom_lock:
+                                     74 ;	./src/flash.c: 15: FLASH_IAPSR &= ~(DUL);
+      000013 72 17 50 5F      [ 1]   75 	bres	0x505f, #3
+                                     76 ;	./src/flash.c: 16: }
+      000017 81               [ 4]   77 	ret
+                                     78 ;	./src/flash.c: 18: void eeprom_clear_all() {
+                                     79 ;	-----------------------------------------
+                                     80 ;	 function eeprom_clear_all
+                                     81 ;	-----------------------------------------
+      000018                         82 _eeprom_clear_all:
+                                     83 ;	./src/flash.c: 19: for(int c = 0; c < 639; c++) {
+      000018 5F               [ 1]   84 	clrw	x
+      000019                         85 00103$:
+      000019 A3 02 7F         [ 2]   86 	cpw	x, #0x027f
+      00001C 2F 01            [ 1]   87 	jrslt	00118$
+      00001E 81               [ 4]   88 	ret
+      00001F                         89 00118$:
+                                     90 ;	./src/flash.c: 20: eeprom_write(c, 0);
+      00001F 90 93            [ 1]   91 	ldw	y, x
+      000021 89               [ 2]   92 	pushw	x
+      000022 4F               [ 1]   93 	clr	a
+      000023 93               [ 1]   94 	ldw	x, y
+      000024 CDr00r2C         [ 4]   95 	call	_eeprom_write
+      000027 85               [ 2]   96 	popw	x
+                                     97 ;	./src/flash.c: 19: for(int c = 0; c < 639; c++) {
+      000028 5C               [ 1]   98 	incw	x
+      000029 20 EE            [ 2]   99 	jra	00103$
+                                    100 ;	./src/flash.c: 22: }
+      00002B 81               [ 4]  101 	ret
+                                    102 ;	./src/flash.c: 37: void eeprom_write(uint16_t mem_cell, uint8_t data) {
+                                    103 ;	-----------------------------------------
+                                    104 ;	 function eeprom_write
+                                    105 ;	-----------------------------------------
+      00002C                        106 _eeprom_write:
+      00002C 88               [ 1]  107 	push	a
+      00002D 6B 01            [ 1]  108 	ld	(0x01, sp), a
+                                    109 ;	./src/flash.c: 38: eeprom_unlock();
+      00002F 89               [ 2]  110 	pushw	x
+      000030 CDr00r00         [ 4]  111 	call	_eeprom_unlock
+      000033 85               [ 2]  112 	popw	x
+                                    113 ;	./src/flash.c: 40: while (!(FLASH_IAPSR & DUL));
+      000034                        114 00101$:
+      000034 C6 50 5F         [ 1]  115 	ld	a, 0x505f
+      000037 A5 08            [ 1]  116 	bcp	a, #0x08
+      000039 27 F9            [ 1]  117 	jreq	00101$
+                                    118 ;	./src/flash.c: 43: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
+      00003B 1C 40 00         [ 2]  119 	addw	x, #0x4000
+                                    120 ;	./src/flash.c: 45: __asm sim __endasm; // Disable interrupts
+      00003E 9B               [ 1]  121 	sim	
+                                    122 ;	./src/flash.c: 46: *addr = data;
+      00003F 7B 01            [ 1]  123 	ld	a, (0x01, sp)
+      000041 F7               [ 1]  124 	ld	(x), a
+                                    125 ;	./src/flash.c: 47: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+      000042                        126 00104$:
+      000042 C6 50 5F         [ 1]  127 	ld	a, 0x505f
+      000045 5F               [ 1]  128 	clrw	x
+      000046 97               [ 1]  129 	ld	xl, a
+      000047 53               [ 2]  130 	cplw	x
+      000048 9F               [ 1]  131 	ld	a, xl
+      000049 A4 04            [ 1]  132 	and	a, #0x04
+      00004B 97               [ 1]  133 	ld	xl, a
+      00004C 4F               [ 1]  134 	clr	a
+      00004D 95               [ 1]  135 	ld	xh, a
+      00004E A3 00 04         [ 2]  136 	cpw	x, #0x0004
+      000051 26 EF            [ 1]  137 	jrne	00104$
+                                    138 ;	./src/flash.c: 48: __asm rim __endasm; // Enable interrupts
+      000053 9A               [ 1]  139 	rim	
+                                    140 ;	./src/flash.c: 50: eeprom_lock();
+      000054 84               [ 1]  141 	pop	a
+      000055 CCr00r13         [ 2]  142 	jp	_eeprom_lock
+                                    143 ;	./src/flash.c: 51: }
+      000058 84               [ 1]  144 	pop	a
+      000059 81               [ 4]  145 	ret
+                                    146 ;	./src/flash.c: 53: void eeprom_read(uint16_t mem_cell, uint8_t *data) {
+                                    147 ;	-----------------------------------------
+                                    148 ;	 function eeprom_read
+                                    149 ;	-----------------------------------------
+      00005A                        150 _eeprom_read:
+                                    151 ;	./src/flash.c: 55: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell);
+      00005A 1C 40 00         [ 2]  152 	addw	x, #0x4000
+                                    153 ;	./src/flash.c: 57: __asm sim __endasm;
+      00005D 9B               [ 1]  154 	sim	
+                                    155 ;	./src/flash.c: 58: *data = *addr;
+      00005E 16 03            [ 2]  156 	ldw	y, (0x03, sp)
+      000060 F6               [ 1]  157 	ld	a, (x)
+      000061 90 F7            [ 1]  158 	ld	(y), a
+                                    159 ;	./src/flash.c: 59: while(EOP != (~FLASH_IAPSR & EOP));
+      000063                        160 00101$:
+      000063 C6 50 5F         [ 1]  161 	ld	a, 0x505f
+      000066 5F               [ 1]  162 	clrw	x
+      000067 97               [ 1]  163 	ld	xl, a
+      000068 53               [ 2]  164 	cplw	x
+      000069 9F               [ 1]  165 	ld	a, xl
+      00006A A4 04            [ 1]  166 	and	a, #0x04
+      00006C 97               [ 1]  167 	ld	xl, a
+      00006D 4F               [ 1]  168 	clr	a
+      00006E 95               [ 1]  169 	ld	xh, a
+      00006F A3 00 04         [ 2]  170 	cpw	x, #0x0004
+      000072 26 EF            [ 1]  171 	jrne	00101$
+                                    172 ;	./src/flash.c: 60: __asm rim __endasm;
+      000074 9A               [ 1]  173 	rim	
+                                    174 ;	./src/flash.c: 61: }
+      000075 1E 01            [ 2]  175 	ldw	x, (1, sp)
+      000077 5B 04            [ 2]  176 	addw	sp, #4
+      000079 FC               [ 2]  177 	jp	(x)
+                                    178 	.area CODE
+                                    179 	.area CONST
+                                    180 	.area INITIALIZER
+                                    181 	.area CABS (ABS)

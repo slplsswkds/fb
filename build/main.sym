@@ -13,23 +13,24 @@ Symbol Table
   3 __start__stack                                                 000000 R
     _btn_b_minus_is_pressed                                        ****** GX
     _btn_b_plus_is_pressed                                         ****** GX
-    _btn_flash_is_pressed                                          ****** GX
     _btn_g_minus_is_pressed                                        ****** GX
     _btn_g_plus_is_pressed                                         ****** GX
     _btn_load_is_pressed                                           ****** GX
     _btn_r_minus_is_pressed                                        ****** GX
     _btn_r_plus_is_pressed                                         ****** GX
-  A _button_hundler                                                00004F GR
+  A _button_hundler                                                00006A GR
     _clk_init                                                      ****** GX
   A _delay                                                         000000 R
+    _eeprom_write                                                  ****** GX
     _get_number_from_buttons                                       ****** GX
     _gpio_init                                                     ****** GX
+    _load_color_from_eeprom                                        ****** GX
   A _main                                                          000008 GR
   1 _rgb                                                           000000 GR
     _smart_decrement                                               ****** GX
     _smart_increment                                               ****** GX
     _tim2_init                                                     ****** GX
-  A _uart1_rx_handler                                              0000BD R
+  A _uart1_rx_handler                                              0000C5 R
     _uart_init                                                     ****** GX
     _uart_tx_byte                                                  ****** GX
     _uart_tx_byte_array                                            ****** GX
@@ -57,6 +58,6 @@ Area Table
    7 GSFINAL                                    size      3   flags    0
    8 CONST                                      size      0   flags    0
    9 INITIALIZER                                size      0   flags    0
-   A CODE                                       size     E2   flags    0
+   A CODE                                       size     EA   flags    0
    B CABS                                       size      0   flags    8
 

@@ -25,7 +25,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000008  s_SSEG                          
      0000001A  l_GSINIT                        
      00000057  l_HOME                          
-     0000119F  l_CODE                          
+     00001227  l_CODE                          
      00008000  s_HOME                          
      00008057  s_GSINIT                        
      00008071  s_GSFINAL                       
@@ -107,53 +107,57 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008076    0000119F =        4511. bytes (REL,CON)
+CODE                                00008076    00001227 =        4647. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      0000807E  _main                              main
-     000080C5  _button_hundler                    main
-     00008158  _normalize_from                    color
-     00008189  _write_color_to_registers          color
-     000081C0  _smart_increment                   color
-     000081C9  _smart_decrement                   color
-     000081D0  _tim2_init                         tim2
-     00008239  _gpio_init                         gpio
-     000082F2  _btn_r_plus_is_pressed             gpio
-     00008308  _btn_g_plus_is_pressed             gpio
-     0000831E  _btn_b_plus_is_pressed             gpio
-     00008334  _btn_r_minus_is_pressed            gpio
-     0000834A  _btn_g_minus_is_pressed            gpio
-     00008360  _btn_b_minus_is_pressed            gpio
-     00008376  _btn_flash_is_pressed              gpio
-     0000838C  _btn_load_is_pressed               gpio
-     000083AA  _get_number_from_buttons           gpio
-     00008404  _clk_init                          clk
-     00008410  _eeprom_unlock                     flash
-     00008419  _eeprom_write                      flash
-     00008452  _uart_init                         uart
-     000084A9  _uart_tx_byte                      uart
-     000084C1  _uart_tx_byte_array                uart
-     000084DC  ___fsmul                           _fsmul
-     00008696  _sqrtf                             sqrtf
-     00008794  _expf                              expf
-     0000895E  ___fslt                            _fslt
-     000089EE  ___fsadd                           _fsadd
-     00008C19  _ldexpf                            ldexpf
-     00008C9B  ___fs2sint                         _fs2sint
-     00008CDB  ___sint2fs                         _sint2fs
-     00008CEB  ___fs2uint                         _fs2uint
-     00008D0B  _frexpf                            frexpf
-     00008EEC  ___fsdiv                           _fsdiv
-     00008F65  ___uchar2fs                        _uchar2fs
-     00008F72  ___fssub                           _fssub
-     00008F9B  ___muluint2ulong                   
-     00008FA1  ___mulsint2slong                   
-     00008FF2  ___slong2fs                        _slong2fs
-     0000901A  ___fs2slong                        _fs2slong
-     00009064  ___fseq                            _fseq
-     000090B2  ___ulong2fs                        _ulong2fs
-     0000914E  ___fs2ulong                        _fs2ulong
+     000080E0  _button_hundler                    main
+     00008160  _normalize_from                    color
+     00008191  _write_color_to_registers          color
+     000081C8  _smart_increment                   color
+     000081D1  _smart_decrement                   color
+     000081D8  _load_color_from_eeprom            color
+     00008220  _tim2_init                         tim2
+     00008289  _gpio_init                         gpio
+     00008342  _btn_r_plus_is_pressed             gpio
+     00008358  _btn_g_plus_is_pressed             gpio
+     0000836E  _btn_b_plus_is_pressed             gpio
+     00008384  _btn_r_minus_is_pressed            gpio
+     0000839A  _btn_g_minus_is_pressed            gpio
+     000083B0  _btn_b_minus_is_pressed            gpio
+     000083C6  _btn_flash_is_pressed              gpio
+     000083DC  _btn_load_is_pressed               gpio
+     000083FA  _get_number_from_buttons           gpio
+     00008454  _clk_init                          clk
+     00008460  _eeprom_unlock                     flash
+     00008473  _eeprom_lock                       flash
+     00008478  _eeprom_clear_all                  flash
+     0000848C  _eeprom_write                      flash
+     000084BA  _eeprom_read                       flash
+     000084DA  _uart_init                         uart
+     00008531  _uart_tx_byte                      uart
+     00008549  _uart_tx_byte_array                uart
+     00008564  ___fsmul                           _fsmul
+     0000871E  _sqrtf                             sqrtf
+     0000881C  _expf                              expf
+     000089E6  ___fslt                            _fslt
+     00008A76  ___fsadd                           _fsadd
+     00008CA1  _ldexpf                            ldexpf
+     00008D23  ___fs2sint                         _fs2sint
+     00008D63  ___sint2fs                         _sint2fs
+     00008D73  ___fs2uint                         _fs2uint
+     00008D93  _frexpf                            frexpf
+     00008F74  ___fsdiv                           _fsdiv
+     00008FED  ___uchar2fs                        _uchar2fs
+     00008FFA  ___fssub                           _fssub
+     00009023  ___muluint2ulong                   
+     00009029  ___mulsint2slong                   
+     0000907A  ___slong2fs                        _slong2fs
+     000090A2  ___fs2slong                        _fs2slong
+     000090EC  ___fseq                            _fseq
+     0000913A  ___ulong2fs                        _ulong2fs
+     000091D6  ___fs2ulong                        _fs2ulong
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 

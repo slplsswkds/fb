@@ -7,3 +7,6 @@
 void eeprom_unlock();
 
 void eeprom_write(uint16_t mem_cell, uint8_t data);
+void eeprom_read(uint16_t mem_cell, uint8_t *data);
+
+void eeprom_clear_all(void);

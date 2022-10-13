@@ -12,13 +12,14 @@
 	.globl _uart_tx_byte_array
 	.globl _uart_tx_byte
 	.globl _uart_init
+	.globl _eeprom_write
+	.globl _load_color_from_eeprom
 	.globl _smart_decrement
 	.globl _smart_increment
 	.globl _write_color_to_registers
 	.globl _tim2_init
 	.globl _get_number_from_buttons
 	.globl _btn_load_is_pressed
-	.globl _btn_flash_is_pressed
 	.globl _btn_b_minus_is_pressed
 	.globl _btn_g_minus_is_pressed
 	.globl _btn_r_minus_is_pressed
@@ -177,114 +178,116 @@ _main:
 	mov	_rgb+1, #0x00
 ;	main.c: 42: rgb.b = 0;
 	mov	_rgb+2, #0x00
-;	main.c: 44: while(1) {
+;	main.c: 44: eeprom_write(0, 0x0F);
+	ld	a, #0x0f
+	clrw	x
+	call	_eeprom_write
+;	main.c: 45: eeprom_write(1, 0x00);
+	clr	a
+	clrw	x
+	incw	x
+	call	_eeprom_write
+;	main.c: 46: eeprom_write(2, 0xFF);
+	ld	a, #0xff
+	ldw	x, #0x0002
+	call	_eeprom_write
+;	main.c: 48: load_color_from_eeprom(&rgb, 0);
+	clr	a
+	ldw	x, #(_rgb+0)
+	call	_load_color_from_eeprom
+;	main.c: 50: while(1) {
 00102$:
-;	main.c: 45: button_hundler(&rgb);
+;	main.c: 51: button_hundler(&rgb);
 	ldw	x, #(_rgb+0)
 	call	_button_hundler
-;	main.c: 46: write_color_to_registers(&rgb);
+;	main.c: 52: write_color_to_registers(&rgb);
 	ldw	x, #(_rgb+0)
 	call	_write_color_to_registers
 	jra	00102$
-;	main.c: 48: }
+;	main.c: 54: }
 	addw	sp, #5
 	ret
-;	main.c: 50: void button_hundler(struct Color *color) {
+;	main.c: 56: void button_hundler(struct Color *color) {
 ;	-----------------------------------------
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
-	sub	sp, #3
-	ldw	(0x02, sp), x
-;	main.c: 51: if(btn_r_plus_is_pressed()) {
+	sub	sp, #2
+	ldw	(0x01, sp), x
+;	main.c: 57: if(btn_r_plus_is_pressed()) {
 	call	_btn_r_plus_is_pressed
 	tnz	a
 	jreq	00102$
-;	main.c: 52: smart_increment(&color->r);
-	ldw	x, (0x02, sp)
+;	main.c: 58: smart_increment(&color->r);
+	ldw	x, (0x01, sp)
 	call	_smart_increment
 00102$:
-;	main.c: 55: if(btn_r_minus_is_pressed()) {
+;	main.c: 61: if(btn_r_minus_is_pressed()) {
 	call	_btn_r_minus_is_pressed
 	tnz	a
 	jreq	00104$
-;	main.c: 56: smart_decrement(&color->r);
-	ldw	x, (0x02, sp)
+;	main.c: 62: smart_decrement(&color->r);
+	ldw	x, (0x01, sp)
 	call	_smart_decrement
 00104$:
-;	main.c: 59: if(btn_g_plus_is_pressed()) {
+;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	call	_btn_g_plus_is_pressed
-;	main.c: 60: smart_increment(&color->g);
-	ldw	x, (0x02, sp)
+;	main.c: 66: smart_increment(&color->g);
+	ldw	x, (0x01, sp)
 	incw	x
-;	main.c: 59: if(btn_g_plus_is_pressed()) {
+;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	tnz	a
 	jreq	00106$
-;	main.c: 60: smart_increment(&color->g);
+;	main.c: 66: smart_increment(&color->g);
 	pushw	x
 	call	_smart_increment
 	popw	x
 00106$:
-;	main.c: 63: if(btn_g_minus_is_pressed()) {
+;	main.c: 69: if(btn_g_minus_is_pressed()) {
 	pushw	x
 	call	_btn_g_minus_is_pressed
 	popw	x
 	tnz	a
 	jreq	00108$
-;	main.c: 64: smart_decrement(&color->g);
+;	main.c: 70: smart_decrement(&color->g);
 	call	_smart_decrement
 00108$:
-;	main.c: 67: if(btn_b_plus_is_pressed()) {
+;	main.c: 73: if(btn_b_plus_is_pressed()) {
 	call	_btn_b_plus_is_pressed
-;	main.c: 68: smart_increment(&color->b);
-	ldw	x, (0x02, sp)
+;	main.c: 74: smart_increment(&color->b);
+	ldw	x, (0x01, sp)
 	incw	x
 	incw	x
-;	main.c: 67: if(btn_b_plus_is_pressed()) {
+;	main.c: 73: if(btn_b_plus_is_pressed()) {
 	tnz	a
 	jreq	00110$
-;	main.c: 68: smart_increment(&color->b);
+;	main.c: 74: smart_increment(&color->b);
 	pushw	x
 	call	_smart_increment
 	popw	x
 00110$:
-;	main.c: 71: if(btn_b_minus_is_pressed()) {
+;	main.c: 77: if(btn_b_minus_is_pressed()) {
 	pushw	x
 	call	_btn_b_minus_is_pressed
 	popw	x
 	tnz	a
 	jreq	00112$
-;	main.c: 72: smart_decrement(&color->b);
+;	main.c: 78: smart_decrement(&color->b);
 	call	_smart_decrement
 00112$:
-;	main.c: 75: if(btn_flash_is_pressed()) {
-	call	_btn_flash_is_pressed
-;	main.c: 78: if(btn_load_is_pressed()) {
+;	main.c: 84: if(btn_load_is_pressed()) {
 	call	_btn_load_is_pressed
 	tnz	a
-	jreq	00119$
-;	main.c: 82: char num = '1';
-	ld	a, #0x31
-	ld	(0x01, sp), a
-;	main.c: 83: uint8_t number = get_number_from_buttons();
-	call	_get_number_from_buttons
-;	main.c: 84: if(number == 0) {
-	tnz	a
-	jrne	00116$
-;	main.c: 85: num = '0';
-	ld	a, #0x30
-	ld	(0x01, sp), a
-00116$:
-;	main.c: 88: uart_tx_byte_array(&num, 1);
-	ldw	x, sp
-	incw	x
-	ld	a, #0x01
-	call	_uart_tx_byte_array
-00119$:
-;	main.c: 90: }
-	addw	sp, #3
+	jreq	00115$
+;	main.c: 85: uint8_t cell_number = get_number_from_buttons();
+	addw	sp, #2
+	jp	_get_number_from_buttons
+;	main.c: 86: if(cell_number == 0) {
+00115$:
+;	main.c: 93: }
+	addw	sp, #2
 	ret
-;	main.c: 92: extern void uart1_rx_handler(void) __interrupt(18) {
+;	main.c: 95: extern void uart1_rx_handler(void) __interrupt(18) {
 ;	-----------------------------------------
 ;	 function uart1_rx_handler
 ;	-----------------------------------------
@@ -292,25 +295,25 @@ _uart1_rx_handler:
 	clr	a
 	div	x, a
 	push	a
-;	main.c: 93: rgb.r = 0;
+;	main.c: 96: rgb.r = 0;
 	mov	_rgb+0, #0x00
-;	main.c: 94: rgb.g = 0;
+;	main.c: 97: rgb.g = 0;
 	mov	_rgb+1, #0x00
-;	main.c: 95: rgb.b = 0;
+;	main.c: 98: rgb.b = 0;
 	mov	_rgb+2, #0x00
-;	main.c: 96: write_color_to_registers(&rgb);
+;	main.c: 99: write_color_to_registers(&rgb);
 	ldw	x, #(_rgb+0)
 	call	_write_color_to_registers
-;	main.c: 98: UART1_SR &= ~(1 << 5); // Clear interrupt
+;	main.c: 101: UART1_SR &= ~(1 << 5); // Clear interrupt
 	bres	0x5230, #5
-;	main.c: 99: char byte = UART1_DR;
+;	main.c: 102: char byte = UART1_DR;
 	ld	a, 0x5231
 	ld	(0x01, sp), a
-;	main.c: 100: uart_tx_byte(&byte);
+;	main.c: 103: uart_tx_byte(&byte);
 	ldw	x, sp
 	incw	x
 	call	_uart_tx_byte
-;	main.c: 101: }
+;	main.c: 104: }
 	pop	a
 	iret
 	.area CODE

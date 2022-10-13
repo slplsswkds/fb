@@ -35,11 +35,17 @@ int main() {
     
     __asm rim __endasm; // Enable interrupts
 
-    //eeprom_write(1, 0xCC);
+    //eeprom_clear_all();
 
     rgb.r = 0;
     rgb.g = 0;
     rgb.b = 0;
+    
+    eeprom_write(0, 0x0F);
+    eeprom_write(1, 0x00);
+    eeprom_write(2, 0xFF);
+
+    load_color_from_eeprom(&rgb, 0);
     
     while(1) {
         button_hundler(&rgb);
@@ -72,10 +78,17 @@ void button_hundler(struct Color *color) {
         smart_decrement(&color->b);
     }
 
-    if(btn_flash_is_pressed()) {
-    }
+    //if(btn_flash_is_pressed()) {
+    //}
 
     if(btn_load_is_pressed()) {
+        uint8_t cell_number = get_number_from_buttons();
+        if(cell_number == 0) {
+        }
+        else {
+        }
+
+        //uart_tx_byte_array(&num, 1);
     }
 }
 
