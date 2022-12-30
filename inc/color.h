@@ -24,3 +24,4 @@ void smart_increment(uint8_t *val);
 void smart_decrement(uint8_t *val);
 
 void load_color_from_eeprom(struct Color *color, uint8_t color_cell);
+void write_color_to_eeprom(struct Color *color, uint8_t color_cell);

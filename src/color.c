@@ -12,12 +12,12 @@ void write_color_to_registers(struct Color *color) {
     uint16_t green = normalize_from( &color->g );
     uint16_t blue = normalize_from( &color->b );
 
-    TIM2_CCR1H = red >> 8;
-    TIM2_CCR1L = red;
+    TIM2_CCR2H = red >> 8;
+    TIM2_CCR2L = red;
 
-    TIM2_CCR2H = green >> 8;
-    TIM2_CCR2L = green;
-    
+    TIM2_CCR1H = green >> 8;
+    TIM2_CCR1L = green;
+
     TIM2_CCR3H = blue >> 8;
     TIM2_CCR3L = blue;
 }
@@ -43,4 +43,10 @@ void load_color_from_eeprom(struct Color *color, uint8_t color_cell) {
     color->r = r;
     color->g = g;
     color->b = b;
+}
+
+void write_color_to_eeprom(struct Color *color, uint8_t color_cell) {
+    eeprom_write(3*color_cell+0, color->r);
+    eeprom_write(3*color_cell+1, color->g);
+    eeprom_write(3*color_cell+2, color->b);
 }

@@ -58,115 +58,115 @@
                                      58 ;	-----------------------------------------
                                      59 ;	 function uart_init
                                      60 ;	-----------------------------------------
-      0084DA                         61 _uart_init:
+      0084E9                         61 _uart_init:
                                      62 ;	./src/uart.c: 11: UART1_BRR1 = brr & 0x000F;
-      0084DA A6 D0            [ 1]   63 	ld	a, #0xd0
-      0084DC A4 0F            [ 1]   64 	and	a, #0x0f
-      0084DE C7 52 32         [ 1]   65 	ld	0x5232, a
+      0084E9 A6 D0            [ 1]   63 	ld	a, #0xd0
+      0084EB A4 0F            [ 1]   64 	and	a, #0x0f
+      0084ED C7 52 32         [ 1]   65 	ld	0x5232, a
                                      66 ;	./src/uart.c: 12: UART1_BRR2 |= brr >> 12;
                                      67 ;	./src/uart.c: 13: UART1_BRR1 = (brr >> 4) & 0x00FF;
-      0084E1 A6 0D            [ 1]   68 	ld	a, #0x0d
-      0084E3 C7 52 32         [ 1]   69 	ld	0x5232, a
+      0084F0 A6 0D            [ 1]   68 	ld	a, #0x0d
+      0084F2 C7 52 32         [ 1]   69 	ld	0x5232, a
                                      70 ;	./src/uart.c: 15: UART1_CR1 &= ~PIEN; // Parity interrupt disabled
-      0084E6 C6 52 34         [ 1]   71 	ld	a, 0x5234
-      0084E9 A4 FE            [ 1]   72 	and	a, #0xfe
+      0084F5 C6 52 34         [ 1]   71 	ld	a, 0x5234
+      0084F8 A4 FE            [ 1]   72 	and	a, #0xfe
                                      73 ;	./src/uart.c: 16: UART1_CR1 &= ~PCEN; // Parity control disabled
-      0084EB C7 52 34         [ 1]   74 	ld	0x5234, a
-      0084EE A4 FB            [ 1]   75 	and	a, #0xfb
+      0084FA C7 52 34         [ 1]   74 	ld	0x5234, a
+      0084FD A4 FB            [ 1]   75 	and	a, #0xfb
                                      76 ;	./src/uart.c: 17: UART1_CR1 &= ~M; // 8-bit mode
-      0084F0 C7 52 34         [ 1]   77 	ld	0x5234, a
-      0084F3 A4 EF            [ 1]   78 	and	a, #0xef
+      0084FF C7 52 34         [ 1]   77 	ld	0x5234, a
+      008502 A4 EF            [ 1]   78 	and	a, #0xef
                                      79 ;	./src/uart.c: 18: UART1_CR1 &= UARTD; // UART1 enable
-      0084F5 C7 52 34         [ 1]   80 	ld	0x5234, a
-      0084F8 A4 20            [ 1]   81 	and	a, #0x20
-      0084FA C7 52 34         [ 1]   82 	ld	0x5234, a
+      008504 C7 52 34         [ 1]   80 	ld	0x5234, a
+      008507 A4 20            [ 1]   81 	and	a, #0x20
+      008509 C7 52 34         [ 1]   82 	ld	0x5234, a
                                      83 ;	./src/uart.c: 21: UART1_CR2 &= ~TIEN; 
-      0084FD C6 52 35         [ 1]   84 	ld	a, 0x5235
-      008500 A4 7F            [ 1]   85 	and	a, #0x7f
+      00850C C6 52 35         [ 1]   84 	ld	a, 0x5235
+      00850F A4 7F            [ 1]   85 	and	a, #0x7f
                                      86 ;	./src/uart.c: 23: UART1_CR2 &= ~TCIEN;
-      008502 C7 52 35         [ 1]   87 	ld	0x5235, a
-      008505 A4 BF            [ 1]   88 	and	a, #0xbf
+      008511 C7 52 35         [ 1]   87 	ld	0x5235, a
+      008514 A4 BF            [ 1]   88 	and	a, #0xbf
                                      89 ;	./src/uart.c: 25: UART1_CR2 |= RIEN;
-      008507 C7 52 35         [ 1]   90 	ld	0x5235, a
-      00850A AA 20            [ 1]   91 	or	a, #0x20
+      008516 C7 52 35         [ 1]   90 	ld	0x5235, a
+      008519 AA 20            [ 1]   91 	or	a, #0x20
                                      92 ;	./src/uart.c: 27: UART1_CR2 &= ~ILIEN;
-      00850C C7 52 35         [ 1]   93 	ld	0x5235, a
-      00850F A4 EF            [ 1]   94 	and	a, #0xef
+      00851B C7 52 35         [ 1]   93 	ld	0x5235, a
+      00851E A4 EF            [ 1]   94 	and	a, #0xef
                                      95 ;	./src/uart.c: 29: UART1_CR2 |= TEN;
-      008511 C7 52 35         [ 1]   96 	ld	0x5235, a
-      008514 AA 08            [ 1]   97 	or	a, #0x08
+      008520 C7 52 35         [ 1]   96 	ld	0x5235, a
+      008523 AA 08            [ 1]   97 	or	a, #0x08
                                      98 ;	./src/uart.c: 31: UART1_CR2 |= REN;
-      008516 C7 52 35         [ 1]   99 	ld	0x5235, a
-      008519 AA 04            [ 1]  100 	or	a, #0x04
+      008525 C7 52 35         [ 1]   99 	ld	0x5235, a
+      008528 AA 04            [ 1]  100 	or	a, #0x04
                                     101 ;	./src/uart.c: 33: UART1_CR2 &= ~SBK;
-      00851B C7 52 35         [ 1]  102 	ld	0x5235, a
-      00851E A4 FE            [ 1]  103 	and	a, #0xfe
-      008520 C7 52 35         [ 1]  104 	ld	0x5235, a
+      00852A C7 52 35         [ 1]  102 	ld	0x5235, a
+      00852D A4 FE            [ 1]  103 	and	a, #0xfe
+      00852F C7 52 35         [ 1]  104 	ld	0x5235, a
                                     105 ;	./src/uart.c: 36: UART1_CR3 &= ~(1 << 5);
-      008523 C6 52 36         [ 1]  106 	ld	a, 0x5236
-      008526 A4 DF            [ 1]  107 	and	a, #0xdf
+      008532 C6 52 36         [ 1]  106 	ld	a, 0x5236
+      008535 A4 DF            [ 1]  107 	and	a, #0xdf
                                     108 ;	./src/uart.c: 37: UART1_CR3 &= ~(1 << 4);
-      008528 C7 52 36         [ 1]  109 	ld	0x5236, a
-      00852B A4 EF            [ 1]  110 	and	a, #0xef
-      00852D C7 52 36         [ 1]  111 	ld	0x5236, a
+      008537 C7 52 36         [ 1]  109 	ld	0x5236, a
+      00853A A4 EF            [ 1]  110 	and	a, #0xef
+      00853C C7 52 36         [ 1]  111 	ld	0x5236, a
                                     112 ;	./src/uart.c: 38: }
-      008530 81               [ 4]  113 	ret
+      00853F 81               [ 4]  113 	ret
                                     114 ;	./src/uart.c: 40: void uart_tx_byte(char *byte) {
                                     115 ;	-----------------------------------------
                                     116 ;	 function uart_tx_byte
                                     117 ;	-----------------------------------------
-      008531                        118 _uart_tx_byte:
-      008531 51               [ 1]  119 	exgw	x, y
+      008540                        118 _uart_tx_byte:
+      008540 51               [ 1]  119 	exgw	x, y
                                     120 ;	./src/uart.c: 42: while(TXE == (~UART1_SR & TXE)) {};
-      008532                        121 00101$:
-      008532 C6 52 30         [ 1]  122 	ld	a, 0x5230
-      008535 5F               [ 1]  123 	clrw	x
-      008536 97               [ 1]  124 	ld	xl, a
-      008537 53               [ 2]  125 	cplw	x
-      008538 9F               [ 1]  126 	ld	a, xl
-      008539 A4 80            [ 1]  127 	and	a, #0x80
-      00853B 97               [ 1]  128 	ld	xl, a
-      00853C 4F               [ 1]  129 	clr	a
-      00853D 95               [ 1]  130 	ld	xh, a
-      00853E A3 00 80         [ 2]  131 	cpw	x, #0x0080
-      008541 27 EF            [ 1]  132 	jreq	00101$
+      008541                        121 00101$:
+      008541 C6 52 30         [ 1]  122 	ld	a, 0x5230
+      008544 5F               [ 1]  123 	clrw	x
+      008545 97               [ 1]  124 	ld	xl, a
+      008546 53               [ 2]  125 	cplw	x
+      008547 9F               [ 1]  126 	ld	a, xl
+      008548 A4 80            [ 1]  127 	and	a, #0x80
+      00854A 97               [ 1]  128 	ld	xl, a
+      00854B 4F               [ 1]  129 	clr	a
+      00854C 95               [ 1]  130 	ld	xh, a
+      00854D A3 00 80         [ 2]  131 	cpw	x, #0x0080
+      008550 27 EF            [ 1]  132 	jreq	00101$
                                     133 ;	./src/uart.c: 43: UART1_DR = *byte;
-      008543 90 F6            [ 1]  134 	ld	a, (y)
-      008545 C7 52 31         [ 1]  135 	ld	0x5231, a
+      008552 90 F6            [ 1]  134 	ld	a, (y)
+      008554 C7 52 31         [ 1]  135 	ld	0x5231, a
                                     136 ;	./src/uart.c: 44: }
-      008548 81               [ 4]  137 	ret
+      008557 81               [ 4]  137 	ret
                                     138 ;	./src/uart.c: 46: void uart_tx_byte_array(char data[], uint8_t size) {
                                     139 ;	-----------------------------------------
                                     140 ;	 function uart_tx_byte_array
                                     141 ;	-----------------------------------------
-      008549                        142 _uart_tx_byte_array:
-      008549 52 03            [ 2]  143 	sub	sp, #3
-      00854B 1F 02            [ 2]  144 	ldw	(0x02, sp), x
-      00854D 6B 01            [ 1]  145 	ld	(0x01, sp), a
+      008558                        142 _uart_tx_byte_array:
+      008558 52 03            [ 2]  143 	sub	sp, #3
+      00855A 1F 02            [ 2]  144 	ldw	(0x02, sp), x
+      00855C 6B 01            [ 1]  145 	ld	(0x01, sp), a
                                     146 ;	./src/uart.c: 47: for(uint8_t cb = 0; cb < size; cb ++) {
-      00854F 4F               [ 1]  147 	clr	a
-      008550                        148 00103$:
-      008550 11 01            [ 1]  149 	cp	a, (0x01, sp)
-      008552 24 0D            [ 1]  150 	jrnc	00105$
+      00855E 4F               [ 1]  147 	clr	a
+      00855F                        148 00103$:
+      00855F 11 01            [ 1]  149 	cp	a, (0x01, sp)
+      008561 24 0D            [ 1]  150 	jrnc	00105$
                                     151 ;	./src/uart.c: 48: uart_tx_byte(&data[cb]);
-      008554 5F               [ 1]  152 	clrw	x
-      008555 97               [ 1]  153 	ld	xl, a
-      008556 72 FB 02         [ 2]  154 	addw	x, (0x02, sp)
-      008559 88               [ 1]  155 	push	a
-      00855A CD 85 31         [ 4]  156 	call	_uart_tx_byte
-      00855D 84               [ 1]  157 	pop	a
+      008563 5F               [ 1]  152 	clrw	x
+      008564 97               [ 1]  153 	ld	xl, a
+      008565 72 FB 02         [ 2]  154 	addw	x, (0x02, sp)
+      008568 88               [ 1]  155 	push	a
+      008569 CD 85 40         [ 4]  156 	call	_uart_tx_byte
+      00856C 84               [ 1]  157 	pop	a
                                     158 ;	./src/uart.c: 47: for(uint8_t cb = 0; cb < size; cb ++) {
-      00855E 4C               [ 1]  159 	inc	a
-      00855F 20 EF            [ 2]  160 	jra	00103$
-      008561                        161 00105$:
+      00856D 4C               [ 1]  159 	inc	a
+      00856E 20 EF            [ 2]  160 	jra	00103$
+      008570                        161 00105$:
                                     162 ;	./src/uart.c: 50: }
-      008561 5B 03            [ 2]  163 	addw	sp, #3
-      008563 81               [ 4]  164 	ret
+      008570 5B 03            [ 2]  163 	addw	sp, #3
+      008572 81               [ 4]  164 	ret
                                     165 	.area CODE
                                     166 	.area CONST
                                     167 	.area INITIALIZER
-      008074                        168 __xinit__NEWLINE:
-      008074 0A                     169 	.db #0x0a	; 10
-      008075                        170 __xinit__RETURN_CURSOR:
-      008075 0D                     171 	.db #0x0d	; 13
+      008024                        168 __xinit__NEWLINE:
+      008024 0A                     169 	.db #0x0a	; 10
+      008025                        170 __xinit__RETURN_CURSOR:
+      008025 0D                     171 	.db #0x0d	; 13
                                     172 	.area CABS (ABS)

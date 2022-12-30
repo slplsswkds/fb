@@ -22,16 +22,16 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000003  l_GSFINAL                       
      00000005  l_DATA                          
      00000006  s_INITIALIZED                   
+     00000007  l_HOME                          
      00000008  s_SSEG                          
      0000001A  l_GSINIT                        
-     00000057  l_HOME                          
-     00001227  l_CODE                          
+     000012D9  l_CODE                          
      00008000  s_HOME                          
-     00008057  s_GSINIT                        
-     00008071  s_GSFINAL                       
-     00008074  s_CONST                         
-     00008074  s_INITIALIZER                   
-     00008076  s_CODE                          
+     00008007  s_GSINIT                        
+     00008021  s_GSFINAL                       
+     00008024  s_CONST                         
+     00008024  s_INITIALIZER                   
+     00008026  s_CODE                          
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
@@ -71,7 +71,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-HOME                                00008000    00000057 =          87. bytes (REL,CON)
+HOME                                00008000    00000007 =           7. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -80,7 +80,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT                              00008057    0000001A =          26. bytes (REL,CON)
+GSINIT                              00008007    0000001A =          26. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -89,7 +89,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             00008071    00000003 =           3. bytes (REL,CON)
+GSFINAL                             00008021    00000003 =           3. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -98,7 +98,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-INITIALIZER                         00008074    00000002 =           2. bytes (REL,CON)
+INITIALIZER                         00008024    00000002 =           2. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -107,57 +107,60 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008076    00001227 =        4647. bytes (REL,CON)
+CODE                                00008026    000012D9 =        4825. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000807E  _main                              main
-     000080E0  _button_hundler                    main
-     00008160  _normalize_from                    color
-     00008191  _write_color_to_registers          color
-     000081C8  _smart_increment                   color
-     000081D1  _smart_decrement                   color
-     000081D8  _load_color_from_eeprom            color
-     00008220  _tim2_init                         tim2
-     00008289  _gpio_init                         gpio
-     00008342  _btn_r_plus_is_pressed             gpio
-     00008358  _btn_g_plus_is_pressed             gpio
-     0000836E  _btn_b_plus_is_pressed             gpio
-     00008384  _btn_r_minus_is_pressed            gpio
-     0000839A  _btn_g_minus_is_pressed            gpio
-     000083B0  _btn_b_minus_is_pressed            gpio
-     000083C6  _btn_flash_is_pressed              gpio
-     000083DC  _btn_load_is_pressed               gpio
-     000083FA  _get_number_from_buttons           gpio
-     00008454  _clk_init                          clk
-     00008460  _eeprom_unlock                     flash
-     00008473  _eeprom_lock                       flash
-     00008478  _eeprom_clear_all                  flash
-     0000848C  _eeprom_write                      flash
-     000084BA  _eeprom_read                       flash
-     000084DA  _uart_init                         uart
-     00008531  _uart_tx_byte                      uart
-     00008549  _uart_tx_byte_array                uart
-     00008564  ___fsmul                           _fsmul
-     0000871E  _sqrtf                             sqrtf
-     0000881C  _expf                              expf
-     000089E6  ___fslt                            _fslt
-     00008A76  ___fsadd                           _fsadd
-     00008CA1  _ldexpf                            ldexpf
-     00008D23  ___fs2sint                         _fs2sint
-     00008D63  ___sint2fs                         _sint2fs
-     00008D73  ___fs2uint                         _fs2uint
-     00008D93  _frexpf                            frexpf
-     00008F74  ___fsdiv                           _fsdiv
-     00008FED  ___uchar2fs                        _uchar2fs
-     00008FFA  ___fssub                           _fssub
-     00009023  ___muluint2ulong                   
-     00009029  ___mulsint2slong                   
-     0000907A  ___slong2fs                        _slong2fs
-     000090A2  ___fs2slong                        _fs2slong
-     000090EC  ___fseq                            _fseq
-     0000913A  ___ulong2fs                        _ulong2fs
-     000091D6  ___fs2ulong                        _fs2ulong
+     0000802E  _main                              main
+     0000805B  _button_hundler                    main
+     0000813E  _normalize_from                    color
+     0000816F  _write_color_to_registers          color
+     000081A6  _smart_increment                   color
+     000081AF  _smart_decrement                   color
+     000081B6  _load_color_from_eeprom            color
+     000081FE  _write_color_to_eeprom             color
+     0000822F  _tim2_init                         tim2
+     00008298  _gpio_init                         gpio
+     00008351  _btn_r_plus_is_pressed             gpio
+     00008367  _btn_g_plus_is_pressed             gpio
+     0000837D  _btn_b_plus_is_pressed             gpio
+     00008393  _btn_r_minus_is_pressed            gpio
+     000083A9  _btn_g_minus_is_pressed            gpio
+     000083BF  _btn_b_minus_is_pressed            gpio
+     000083D5  _btn_flash_is_pressed              gpio
+     000083EB  _btn_load_is_pressed               gpio
+     00008409  _get_number_from_buttons           gpio
+     00008463  _clk_init                          clk
+     0000846F  _eeprom_unlock                     flash
+     00008482  _eeprom_lock                       flash
+     00008487  _eeprom_clear_all                  flash
+     0000849B  _eeprom_write                      flash
+     000084C9  _eeprom_read                       flash
+     000084E9  _uart_init                         uart
+     00008540  _uart_tx_byte                      uart
+     00008558  _uart_tx_byte_array                uart
+     00008573  ___fsmul                           _fsmul
+     0000872D  _sqrtf                             sqrtf
+     0000882B  _expf                              expf
+     000089F5  ___fslt                            _fslt
+     00008A85  ___fsadd                           _fsadd
+     00008CB0  _ldexpf                            ldexpf
+     00008D32  ___fs2sint                         _fs2sint
+     00008D72  ___sint2fs                         _sint2fs
+     00008D82  ___fs2uint                         _fs2uint
+     00008DA2  ___memcpy                          
+     00008DA2  _memcpy                            
+     00008DF5  _frexpf                            frexpf
+     00008FD6  ___fsdiv                           _fsdiv
+     0000904F  ___uchar2fs                        _uchar2fs
+     0000905C  ___fssub                           _fssub
+     00009085  ___muluint2ulong                   
+     0000908B  ___mulsint2slong                   
+     000090DC  ___slong2fs                        _slong2fs
+     00009104  ___fs2slong                        _fs2slong
+     0000914E  ___fseq                            _fseq
+     0000919C  ___ulong2fs                        _ulong2fs
+     00009238  ___fs2ulong                        _fs2ulong
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 
@@ -183,6 +186,7 @@ Libraries Linked                          [ object file ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2sint.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _sint2fs.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fs2uint.rel ]
+/usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ memcpy.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ frexpf.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _fsdiv.rel ]
 /usr/bin/../share/sdcc/lib/stm8/stm8.lib  [ _uchar2fs.rel ]

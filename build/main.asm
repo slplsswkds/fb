@@ -9,16 +9,12 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _uart_tx_byte_array
-	.globl _uart_tx_byte
-	.globl _uart_init
-	.globl _eeprom_write
+	.globl _write_color_to_eeprom
 	.globl _load_color_from_eeprom
 	.globl _smart_decrement
 	.globl _smart_increment
 	.globl _write_color_to_registers
 	.globl _tim2_init
-	.globl _get_number_from_buttons
 	.globl _btn_load_is_pressed
 	.globl _btn_b_minus_is_pressed
 	.globl _btn_g_minus_is_pressed
@@ -66,26 +62,6 @@ __start__stack:
 	.area HOME
 __interrupt_vect:
 	int s_GSINIT ; reset
-	int 0x000000 ; trap
-	int 0x000000 ; int0
-	int 0x000000 ; int1
-	int 0x000000 ; int2
-	int 0x000000 ; int3
-	int 0x000000 ; int4
-	int 0x000000 ; int5
-	int 0x000000 ; int6
-	int 0x000000 ; int7
-	int 0x000000 ; int8
-	int 0x000000 ; int9
-	int 0x000000 ; int10
-	int 0x000000 ; int11
-	int 0x000000 ; int12
-	int 0x000000 ; int13
-	int 0x000000 ; int14
-	int 0x000000 ; int15
-	int 0x000000 ; int16
-	int 0x000000 ; int17
-	int _uart1_rx_handler ; int18
 ;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
@@ -143,7 +119,6 @@ _delay:
 ;	 function main
 ;	-----------------------------------------
 _main:
-	sub	sp, #5
 ;	main.c: 26: __asm sim __endasm; // Disable interrupts
 	sim	
 ;	main.c: 28: clk_init();
@@ -152,24 +127,6 @@ _main:
 	call	_gpio_init
 ;	main.c: 30: tim2_init();
 	call	_tim2_init
-;	main.c: 31: uart_init();
-	call	_uart_init
-;	main.c: 33: char banner[5] = {'1', '2', '3', '4', '5'};
-	ldw	x, sp
-	incw	x
-	ld	a, #0x31
-	ld	(x), a
-	ld	a, #0x32
-	ld	(0x02, sp), a
-	ld	a, #0x33
-	ld	(0x03, sp), a
-	ld	a, #0x34
-	ld	(0x04, sp), a
-	ld	a, #0x35
-	ld	(0x05, sp), a
-;	main.c: 34: uart_tx_byte_array(banner, 5);
-	ld	a, #0x05
-	call	_uart_tx_byte_array
 ;	main.c: 36: __asm rim __endasm; // Enable interrupts
 	rim	
 ;	main.c: 40: rgb.r = 0;
@@ -178,19 +135,6 @@ _main:
 	mov	_rgb+1, #0x00
 ;	main.c: 42: rgb.b = 0;
 	mov	_rgb+2, #0x00
-;	main.c: 44: eeprom_write(0, 0x0F);
-	ld	a, #0x0f
-	clrw	x
-	call	_eeprom_write
-;	main.c: 45: eeprom_write(1, 0x00);
-	clr	a
-	clrw	x
-	incw	x
-	call	_eeprom_write
-;	main.c: 46: eeprom_write(2, 0xFF);
-	ld	a, #0xff
-	ldw	x, #0x0002
-	call	_eeprom_write
 ;	main.c: 48: load_color_from_eeprom(&rgb, 0);
 	clr	a
 	ldw	x, #(_rgb+0)
@@ -205,21 +149,20 @@ _main:
 	call	_write_color_to_registers
 	jra	00102$
 ;	main.c: 54: }
-	addw	sp, #5
 	ret
 ;	main.c: 56: void button_hundler(struct Color *color) {
 ;	-----------------------------------------
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
-	sub	sp, #2
-	ldw	(0x01, sp), x
+	sub	sp, #7
+	ldw	(0x06, sp), x
 ;	main.c: 57: if(btn_r_plus_is_pressed()) {
 	call	_btn_r_plus_is_pressed
 	tnz	a
 	jreq	00102$
 ;	main.c: 58: smart_increment(&color->r);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x06, sp)
 	call	_smart_increment
 00102$:
 ;	main.c: 61: if(btn_r_minus_is_pressed()) {
@@ -227,13 +170,13 @@ _button_hundler:
 	tnz	a
 	jreq	00104$
 ;	main.c: 62: smart_decrement(&color->r);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x06, sp)
 	call	_smart_decrement
 00104$:
 ;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	call	_btn_g_plus_is_pressed
 ;	main.c: 66: smart_increment(&color->g);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x06, sp)
 	incw	x
 ;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	tnz	a
@@ -255,7 +198,7 @@ _button_hundler:
 ;	main.c: 73: if(btn_b_plus_is_pressed()) {
 	call	_btn_b_plus_is_pressed
 ;	main.c: 74: smart_increment(&color->b);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x06, sp)
 	incw	x
 	incw	x
 ;	main.c: 73: if(btn_b_plus_is_pressed()) {
@@ -275,47 +218,116 @@ _button_hundler:
 ;	main.c: 78: smart_decrement(&color->b);
 	call	_smart_decrement
 00112$:
-;	main.c: 84: if(btn_load_is_pressed()) {
+;	main.c: 88: if(btn_load_is_pressed()) {
+	call	_btn_load_is_pressed
+	ld	(0x05, sp), a
+	jrne	00225$
+	jp	00132$
+00225$:
+;	main.c: 89: uint8_t counter = 0;
+	clr	(0x04, sp)
+;	main.c: 90: while(counter < 10 && btn_load_is_pressed()) {
+00114$:
+	ld	a, (0x04, sp)
+	cp	a, #0x0a
+	jrnc	00116$
 	call	_btn_load_is_pressed
 	tnz	a
-	jreq	00115$
-;	main.c: 85: uint8_t cell_number = get_number_from_buttons();
-	addw	sp, #2
-	jp	_get_number_from_buttons
-;	main.c: 86: if(cell_number == 0) {
-00115$:
-;	main.c: 93: }
-	addw	sp, #2
-	ret
-;	main.c: 95: extern void uart1_rx_handler(void) __interrupt(18) {
-;	-----------------------------------------
-;	 function uart1_rx_handler
-;	-----------------------------------------
-_uart1_rx_handler:
+	jreq	00116$
+;	main.c: 91: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 92: counter += 1;
+	inc	(0x04, sp)
+	jra	00114$
+00116$:
+;	main.c: 96: load_color_from_eeprom(&rgb_buf, 0);        
 	clr	a
-	div	x, a
-	push	a
-;	main.c: 96: rgb.r = 0;
-	mov	_rgb+0, #0x00
-;	main.c: 97: rgb.g = 0;
-	mov	_rgb+1, #0x00
-;	main.c: 98: rgb.b = 0;
-	mov	_rgb+2, #0x00
-;	main.c: 99: write_color_to_registers(&rgb);
-	ldw	x, #(_rgb+0)
-	call	_write_color_to_registers
-;	main.c: 101: UART1_SR &= ~(1 << 5); // Clear interrupt
-	bres	0x5230, #5
-;	main.c: 102: char byte = UART1_DR;
-	ld	a, 0x5231
-	ld	(0x01, sp), a
-;	main.c: 103: uart_tx_byte(&byte);
 	ldw	x, sp
 	incw	x
-	call	_uart_tx_byte
-;	main.c: 104: }
-	pop	a
-	iret
+	call	_load_color_from_eeprom
+;	main.c: 97: write_color_to_registers(&rgb_buf);
+	ldw	x, sp
+	incw	x
+	call	_write_color_to_registers
+;	main.c: 98: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 99: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 100: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 103: while(counter < 23 && btn_load_is_pressed()) {
+00121$:
+	ld	a, (0x04, sp)
+	cp	a, #0x17
+	clr	a
+	rlc	a
+	ld	(0x05, sp), a
+	jreq	00123$
+	call	_btn_load_is_pressed
+	tnz	a
+	jreq	00123$
+;	main.c: 104: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 105: delay(65535);
+	clrw	x
+	decw	x
+	call	_delay
+;	main.c: 106: if (counter % 2 == 0) {
+	ld	a, (0x04, sp)
+	srl	a
+	jrc	00118$
+;	main.c: 107: write_color_to_registers(&rgb_buf);
+	ldw	x, sp
+	incw	x
+	call	_write_color_to_registers
+	jra	00119$
+00118$:
+;	main.c: 110: write_color_to_registers(&rgb);
+	ldw	x, #(_rgb+0)
+	call	_write_color_to_registers
+00119$:
+;	main.c: 112: counter += 1;
+	inc	(0x04, sp)
+	jra	00121$
+00123$:
+;	main.c: 115: if(counter > 10 && counter < 23) {
+	ld	a, (0x04, sp)
+	cp	a, #0x0a
+	jrule	00127$
+	tnz	(0x05, sp)
+	jreq	00127$
+;	main.c: 116: rgb = rgb_buf;
+	push	#0x03
+	push	#0x00
+	ldw	x, sp
+	addw	x, #3
+	pushw	x
+	ldw	x, #(_rgb+0)
+	call	___memcpy
+	jra	00132$
+00127$:
+;	main.c: 118: else if (counter == 23) { 
+	ld	a, (0x04, sp)
+	cp	a, #0x17
+	jrne	00132$
+;	main.c: 119: write_color_to_eeprom(&rgb, 0);        
+	clr	a
+	ldw	x, #(_rgb+0)
+	call	_write_color_to_eeprom
+00132$:
+;	main.c: 122: }
+	addw	sp, #7
+	ret
 	.area CODE
 	.area CONST
 	.area INITIALIZER

@@ -28,10 +28,10 @@ int main() {
     clk_init();
     gpio_init();
     tim2_init();
-    uart_init();
+    //uart_init();
     
-    char banner[5] = {'1', '2', '3', '4', '5'};
-    uart_tx_byte_array(banner, 5);
+    //char banner[5] = {'1', '2', '3', '4', '5'};
+    //uart_tx_byte_array(banner, 5);
     
     __asm rim __endasm; // Enable interrupts
 
@@ -41,9 +41,9 @@ int main() {
     rgb.g = 0;
     rgb.b = 0;
     
-    eeprom_write(0, 0x0F);
-    eeprom_write(1, 0x00);
-    eeprom_write(2, 0xFF);
+    //eeprom_write(0, 0x0F);
+    //eeprom_write(1, 0x00);
+    //eeprom_write(2, 0xFF);
 
     load_color_from_eeprom(&rgb, 0);
     
@@ -78,21 +78,50 @@ void button_hundler(struct Color *color) {
         smart_decrement(&color->b);
     }
 
+    // Problems with reading input status. Button disabled
     //if(btn_flash_is_pressed()) {
+    //   load_color_from_eeprom(&rgb, 0);        
+    //    rgb.r = 100;
     //}
 
+    // Button uses as flash and load button
     if(btn_load_is_pressed()) {
-        uint8_t cell_number = get_number_from_buttons();
-        if(cell_number == 0) {
+        uint8_t counter = 0;
+        while(counter < 10 && btn_load_is_pressed()) {
+            delay(65535);
+            counter += 1;
         }
-        else {
+        
+        struct Color rgb_buf;
+        load_color_from_eeprom(&rgb_buf, 0);        
+        write_color_to_registers(&rgb_buf);
+        delay(65535);
+        delay(65535);
+        delay(65535);
+        
+        // Timer with a preview of the color that will be erased in EEPROM to record the new color
+        while(counter < 23 && btn_load_is_pressed()) {
+            delay(65535);
+            delay(65535);
+            if (counter % 2 == 0) {
+                write_color_to_registers(&rgb_buf);
+            }
+            else {
+                write_color_to_registers(&rgb);
+            }
+            counter += 1;
         }
-
-        //uart_tx_byte_array(&num, 1);
+        
+        if(counter > 10 && counter < 23) {
+            rgb = rgb_buf;
+        }
+        else if (counter == 23) { 
+            write_color_to_eeprom(&rgb, 0);        
+        }
     }
 }
 
-extern void uart1_rx_handler(void) __interrupt(18) {
+/*extern void uart1_rx_handler(void) __interrupt(18) {
     rgb.r = 0;
     rgb.g = 0;
     rgb.b = 0;
@@ -101,4 +130,4 @@ extern void uart1_rx_handler(void) __interrupt(18) {
     UART1_SR &= ~(1 << 5); // Clear interrupt
     char byte = UART1_DR;
     uart_tx_byte(&byte);
-}
+}*/

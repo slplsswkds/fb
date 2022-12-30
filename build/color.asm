@@ -9,6 +9,7 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _eeprom_read
+	.globl _eeprom_write
 	.globl _sqrtf
 	.globl _expf
 	.globl _normalize_from
@@ -16,6 +17,7 @@
 	.globl _smart_increment
 	.globl _smart_decrement
 	.globl _load_color_from_eeprom
+	.globl _write_color_to_eeprom
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -108,18 +110,18 @@ _write_color_to_registers:
 	incw	x
 	incw	x
 	call	_normalize_from
-;	./src/color.c: 15: TIM2_CCR1H = red >> 8;
+;	./src/color.c: 15: TIM2_CCR2H = red >> 8;
 	ld	a, (0x01, sp)
-	ld	0x5311, a
-;	./src/color.c: 16: TIM2_CCR1L = red;
-	ld	a, (0x02, sp)
-	ld	0x5312, a
-;	./src/color.c: 18: TIM2_CCR2H = green >> 8;
-	ld	a, (0x03, sp)
 	ld	0x5313, a
-;	./src/color.c: 19: TIM2_CCR2L = green;
-	ld	a, (0x04, sp)
+;	./src/color.c: 16: TIM2_CCR2L = red;
+	ld	a, (0x02, sp)
 	ld	0x5314, a
+;	./src/color.c: 18: TIM2_CCR1H = green >> 8;
+	ld	a, (0x03, sp)
+	ld	0x5311, a
+;	./src/color.c: 19: TIM2_CCR1L = green;
+	ld	a, (0x04, sp)
+	ld	0x5312, a
 ;	./src/color.c: 21: TIM2_CCR3H = blue >> 8;
 	ld	a, xh
 	ld	0x5315, a
@@ -216,6 +218,42 @@ _load_color_from_eeprom:
 ;	./src/color.c: 46: }
 	addw	sp, #7
 	ret
+;	./src/color.c: 48: void write_color_to_eeprom(struct Color *color, uint8_t color_cell) {
+;	-----------------------------------------
+;	 function write_color_to_eeprom
+;	-----------------------------------------
+_write_color_to_eeprom:
+	sub	sp, #4
+	ldw	(0x03, sp), x
+	ld	yl, a
+;	./src/color.c: 49: eeprom_write(3*color_cell+0, color->r);
+	ldw	x, (0x03, sp)
+	ld	a, (x)
+	clrw	x
+	exg	a, xl
+	ld	a, yl
+	exg	a, xl
+	pushw	x
+	sllw	x
+	addw	x, (1, sp)
+	addw	sp, #2
+	ldw	(0x01, sp), x
+	call	_eeprom_write
+;	./src/color.c: 50: eeprom_write(3*color_cell+1, color->g);
+	ldw	x, (0x03, sp)
+	ld	a, (0x1, x)
+	ldw	x, (0x01, sp)
+	incw	x
+	call	_eeprom_write
+;	./src/color.c: 51: eeprom_write(3*color_cell+2, color->b);
+	ldw	x, (0x03, sp)
+	ld	a, (0x2, x)
+	ldw	x, (0x01, sp)
+	incw	x
+	incw	x
+	addw	sp, #4
+;	./src/color.c: 52: }
+	jp	_eeprom_write
 	.area CODE
 	.area CONST
 	.area INITIALIZER

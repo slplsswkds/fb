@@ -11,6 +11,6 @@
 #include "flash.h"
 #include "uart.h"
 
-extern void uart1_rx_handler(void) __interrupt(18);
+// extern void uart1_rx_handler(void) __interrupt(18);
 
 void button_hundler(struct Color *color);

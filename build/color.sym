@@ -12,14 +12,15 @@ Symbol Table
     ___fsmul                                                       ****** GX
     ___uchar2fs                                                    ****** GX
     _eeprom_read                                                   ****** GX
+    _eeprom_write                                                  ****** GX
     _expf                                                          ****** GX
   9 _load_color_from_eeprom                                        000078 GR
   9 _normalize_from                                                000000 GR
   9 _smart_decrement                                               000071 GR
   9 _smart_increment                                               000068 GR
     _sqrtf                                                         ****** GX
+  9 _write_color_to_eeprom                                         0000C0 GR
   9 _write_color_to_registers                                      000031 GR
-
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]
@@ -35,6 +36,6 @@ Area Table
    6 GSFINAL                                    size      0   flags    0
    7 CONST                                      size      0   flags    0
    8 INITIALIZER                                size      0   flags    0
-   9 CODE                                       size     C0   flags    0
+   9 CODE                                       size     F1   flags    0
    A CABS                                       size      0   flags    8
 

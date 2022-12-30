@@ -50,63 +50,63 @@
                                      50 ;	-----------------------------------------
                                      51 ;	 function tim2_init
                                      52 ;	-----------------------------------------
-      008220                         53 _tim2_init:
+      00822F                         53 _tim2_init:
                                      54 ;	./src/tim2.c: 8: TIM2_PSCR = 0x00; // Prescaler = 1
-      008220 35 00 53 0E      [ 1]   55 	mov	0x530e+0, #0x00
+      00822F 35 00 53 0E      [ 1]   55 	mov	0x530e+0, #0x00
                                      56 ;	./src/tim2.c: 9: TIM2_ARRH = tim2_arrval >> 8;
-      008224 35 3E 53 0F      [ 1]   57 	mov	0x530f+0, #0x3e
+      008233 35 3E 53 0F      [ 1]   57 	mov	0x530f+0, #0x3e
                                      58 ;	./src/tim2.c: 10: TIM2_ARRL = tim2_arrval & 0x00FF;
-      008228 A6 80            [ 1]   59 	ld	a, #0x80
-      00822A C7 53 10         [ 1]   60 	ld	0x5310, a
+      008237 A6 80            [ 1]   59 	ld	a, #0x80
+      008239 C7 53 10         [ 1]   60 	ld	0x5310, a
                                      61 ;	./src/tim2.c: 13: TIM2_CCR1H = 0x00;
-      00822D 35 00 53 11      [ 1]   62 	mov	0x5311+0, #0x00
+      00823C 35 00 53 11      [ 1]   62 	mov	0x5311+0, #0x00
                                      63 ;	./src/tim2.c: 14: TIM2_CCR1L = 0x00;
-      008231 35 00 53 12      [ 1]   64 	mov	0x5312+0, #0x00
+      008240 35 00 53 12      [ 1]   64 	mov	0x5312+0, #0x00
                                      65 ;	./src/tim2.c: 15: TIM2_CCER1 &= ~CC1P; // Active high
-      008235 C6 53 0A         [ 1]   66 	ld	a, 0x530a
-      008238 A4 FD            [ 1]   67 	and	a, #0xfd
+      008244 C6 53 0A         [ 1]   66 	ld	a, 0x530a
+      008247 A4 FD            [ 1]   67 	and	a, #0xfd
                                      68 ;	./src/tim2.c: 16: TIM2_CCER1 |= CC1E; // Enable CH1 output
-      00823A C7 53 0A         [ 1]   69 	ld	0x530a, a
-      00823D AA 01            [ 1]   70 	or	a, #0x01
-      00823F C7 53 0A         [ 1]   71 	ld	0x530a, a
+      008249 C7 53 0A         [ 1]   69 	ld	0x530a, a
+      00824C AA 01            [ 1]   70 	or	a, #0x01
+      00824E C7 53 0A         [ 1]   71 	ld	0x530a, a
                                      72 ;	./src/tim2.c: 17: TIM2_CCMR1 |= (0b110 << 4); //PWM mode 1
-      008242 C6 53 07         [ 1]   73 	ld	a, 0x5307
-      008245 AA 60            [ 1]   74 	or	a, #0x60
-      008247 C7 53 07         [ 1]   75 	ld	0x5307, a
+      008251 C6 53 07         [ 1]   73 	ld	a, 0x5307
+      008254 AA 60            [ 1]   74 	or	a, #0x60
+      008256 C7 53 07         [ 1]   75 	ld	0x5307, a
                                      76 ;	./src/tim2.c: 20: TIM2_CCR2H = 0x00;
-      00824A 35 00 53 13      [ 1]   77 	mov	0x5313+0, #0x00
+      008259 35 00 53 13      [ 1]   77 	mov	0x5313+0, #0x00
                                      78 ;	./src/tim2.c: 21: TIM2_CCR2L = 0x00;
-      00824E 35 00 53 14      [ 1]   79 	mov	0x5314+0, #0x00
+      00825D 35 00 53 14      [ 1]   79 	mov	0x5314+0, #0x00
                                      80 ;	./src/tim2.c: 22: TIM2_CCER1 &= ~CC2P; // Active high
-      008252 C6 53 0A         [ 1]   81 	ld	a, 0x530a
-      008255 A4 DF            [ 1]   82 	and	a, #0xdf
+      008261 C6 53 0A         [ 1]   81 	ld	a, 0x530a
+      008264 A4 DF            [ 1]   82 	and	a, #0xdf
                                      83 ;	./src/tim2.c: 23: TIM2_CCER1 |= CC2E; // Enable CH2 output
-      008257 C7 53 0A         [ 1]   84 	ld	0x530a, a
-      00825A AA 10            [ 1]   85 	or	a, #0x10
-      00825C C7 53 0A         [ 1]   86 	ld	0x530a, a
+      008266 C7 53 0A         [ 1]   84 	ld	0x530a, a
+      008269 AA 10            [ 1]   85 	or	a, #0x10
+      00826B C7 53 0A         [ 1]   86 	ld	0x530a, a
                                      87 ;	./src/tim2.c: 24: TIM2_CCMR2 |= (0b110 << 4); //PWM mode 1
-      00825F C6 53 08         [ 1]   88 	ld	a, 0x5308
-      008262 AA 60            [ 1]   89 	or	a, #0x60
-      008264 C7 53 08         [ 1]   90 	ld	0x5308, a
+      00826E C6 53 08         [ 1]   88 	ld	a, 0x5308
+      008271 AA 60            [ 1]   89 	or	a, #0x60
+      008273 C7 53 08         [ 1]   90 	ld	0x5308, a
                                      91 ;	./src/tim2.c: 27: TIM2_CCR3H = 0x00;
-      008267 35 00 53 15      [ 1]   92 	mov	0x5315+0, #0x00
+      008276 35 00 53 15      [ 1]   92 	mov	0x5315+0, #0x00
                                      93 ;	./src/tim2.c: 28: TIM2_CCR3L = 0x00;
-      00826B 35 00 53 16      [ 1]   94 	mov	0x5316+0, #0x00
+      00827A 35 00 53 16      [ 1]   94 	mov	0x5316+0, #0x00
                                      95 ;	./src/tim2.c: 29: TIM2_CCER2 &= ~CC3P; // Active high
-      00826F C6 53 0B         [ 1]   96 	ld	a, 0x530b
-      008272 A4 FD            [ 1]   97 	and	a, #0xfd
+      00827E C6 53 0B         [ 1]   96 	ld	a, 0x530b
+      008281 A4 FD            [ 1]   97 	and	a, #0xfd
                                      98 ;	./src/tim2.c: 30: TIM2_CCER2 |= CC3E; // Enable CH3 output
-      008274 C7 53 0B         [ 1]   99 	ld	0x530b, a
-      008277 AA 01            [ 1]  100 	or	a, #0x01
-      008279 C7 53 0B         [ 1]  101 	ld	0x530b, a
+      008283 C7 53 0B         [ 1]   99 	ld	0x530b, a
+      008286 AA 01            [ 1]  100 	or	a, #0x01
+      008288 C7 53 0B         [ 1]  101 	ld	0x530b, a
                                     102 ;	./src/tim2.c: 31: TIM2_CCMR3 |= (0b110 << 4); //PWM mode 1
-      00827C C6 53 09         [ 1]  103 	ld	a, 0x5309
-      00827F AA 60            [ 1]  104 	or	a, #0x60
-      008281 C7 53 09         [ 1]  105 	ld	0x5309, a
+      00828B C6 53 09         [ 1]  103 	ld	a, 0x5309
+      00828E AA 60            [ 1]  104 	or	a, #0x60
+      008290 C7 53 09         [ 1]  105 	ld	0x5309, a
                                     106 ;	./src/tim2.c: 33: TIM2_CR1 |= CEN; // Enable TIM2
-      008284 72 10 53 00      [ 1]  107 	bset	0x5300, #0
+      008293 72 10 53 00      [ 1]  107 	bset	0x5300, #0
                                     108 ;	./src/tim2.c: 34: }
-      008288 81               [ 4]  109 	ret
+      008297 81               [ 4]  109 	ret
                                     110 	.area CODE
                                     111 	.area CONST
                                     112 	.area INITIALIZER

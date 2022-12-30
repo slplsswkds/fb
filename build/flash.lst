@@ -99,30 +99,30 @@
       000029 20 EE            [ 2]   99 	jra	00103$
                                     100 ;	./src/flash.c: 22: }
       00002B 81               [ 4]  101 	ret
-                                    102 ;	./src/flash.c: 37: void eeprom_write(uint16_t mem_cell, uint8_t data) {
+                                    102 ;	./src/flash.c: 24: void eeprom_write(uint16_t mem_cell, uint8_t data) {
                                     103 ;	-----------------------------------------
                                     104 ;	 function eeprom_write
                                     105 ;	-----------------------------------------
       00002C                        106 _eeprom_write:
       00002C 88               [ 1]  107 	push	a
       00002D 6B 01            [ 1]  108 	ld	(0x01, sp), a
-                                    109 ;	./src/flash.c: 38: eeprom_unlock();
+                                    109 ;	./src/flash.c: 25: eeprom_unlock();
       00002F 89               [ 2]  110 	pushw	x
       000030 CDr00r00         [ 4]  111 	call	_eeprom_unlock
       000033 85               [ 2]  112 	popw	x
-                                    113 ;	./src/flash.c: 40: while (!(FLASH_IAPSR & DUL));
+                                    113 ;	./src/flash.c: 27: while (!(FLASH_IAPSR & DUL));
       000034                        114 00101$:
       000034 C6 50 5F         [ 1]  115 	ld	a, 0x505f
       000037 A5 08            [ 1]  116 	bcp	a, #0x08
       000039 27 F9            [ 1]  117 	jreq	00101$
-                                    118 ;	./src/flash.c: 43: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
+                                    118 ;	./src/flash.c: 30: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell); //Initialize  pointer
       00003B 1C 40 00         [ 2]  119 	addw	x, #0x4000
-                                    120 ;	./src/flash.c: 45: __asm sim __endasm; // Disable interrupts
+                                    120 ;	./src/flash.c: 32: __asm sim __endasm; // Disable interrupts
       00003E 9B               [ 1]  121 	sim	
-                                    122 ;	./src/flash.c: 46: *addr = data;
+                                    122 ;	./src/flash.c: 33: *addr = data;
       00003F 7B 01            [ 1]  123 	ld	a, (0x01, sp)
       000041 F7               [ 1]  124 	ld	(x), a
-                                    125 ;	./src/flash.c: 47: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
+                                    125 ;	./src/flash.c: 34: while(EOP != (~FLASH_IAPSR & EOP)); // Wait for writing to complete
       000042                        126 00104$:
       000042 C6 50 5F         [ 1]  127 	ld	a, 0x505f
       000045 5F               [ 1]  128 	clrw	x
@@ -135,28 +135,28 @@
       00004D 95               [ 1]  135 	ld	xh, a
       00004E A3 00 04         [ 2]  136 	cpw	x, #0x0004
       000051 26 EF            [ 1]  137 	jrne	00104$
-                                    138 ;	./src/flash.c: 48: __asm rim __endasm; // Enable interrupts
+                                    138 ;	./src/flash.c: 35: __asm rim __endasm; // Enable interrupts
       000053 9A               [ 1]  139 	rim	
-                                    140 ;	./src/flash.c: 50: eeprom_lock();
+                                    140 ;	./src/flash.c: 37: eeprom_lock();
       000054 84               [ 1]  141 	pop	a
       000055 CCr00r13         [ 2]  142 	jp	_eeprom_lock
-                                    143 ;	./src/flash.c: 51: }
+                                    143 ;	./src/flash.c: 38: }
       000058 84               [ 1]  144 	pop	a
       000059 81               [ 4]  145 	ret
-                                    146 ;	./src/flash.c: 53: void eeprom_read(uint16_t mem_cell, uint8_t *data) {
+                                    146 ;	./src/flash.c: 40: void eeprom_read(uint16_t mem_cell, uint8_t *data) {
                                     147 ;	-----------------------------------------
                                     148 ;	 function eeprom_read
                                     149 ;	-----------------------------------------
       00005A                        150 _eeprom_read:
-                                    151 ;	./src/flash.c: 55: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell);
+                                    151 ;	./src/flash.c: 42: addr = (uint8_t *)(EEPROM_FIRST_ADDR + mem_cell);
       00005A 1C 40 00         [ 2]  152 	addw	x, #0x4000
-                                    153 ;	./src/flash.c: 57: __asm sim __endasm;
+                                    153 ;	./src/flash.c: 44: __asm sim __endasm;
       00005D 9B               [ 1]  154 	sim	
-                                    155 ;	./src/flash.c: 58: *data = *addr;
+                                    155 ;	./src/flash.c: 45: *data = *addr;
       00005E 16 03            [ 2]  156 	ldw	y, (0x03, sp)
       000060 F6               [ 1]  157 	ld	a, (x)
       000061 90 F7            [ 1]  158 	ld	(y), a
-                                    159 ;	./src/flash.c: 59: while(EOP != (~FLASH_IAPSR & EOP));
+                                    159 ;	./src/flash.c: 46: while(EOP != (~FLASH_IAPSR & EOP));
       000063                        160 00101$:
       000063 C6 50 5F         [ 1]  161 	ld	a, 0x505f
       000066 5F               [ 1]  162 	clrw	x
@@ -169,9 +169,9 @@
       00006E 95               [ 1]  169 	ld	xh, a
       00006F A3 00 04         [ 2]  170 	cpw	x, #0x0004
       000072 26 EF            [ 1]  171 	jrne	00101$
-                                    172 ;	./src/flash.c: 60: __asm rim __endasm;
+                                    172 ;	./src/flash.c: 47: __asm rim __endasm;
       000074 9A               [ 1]  173 	rim	
-                                    174 ;	./src/flash.c: 61: }
+                                    174 ;	./src/flash.c: 48: }
       000075 1E 01            [ 2]  175 	ldw	x, (1, sp)
       000077 5B 04            [ 2]  176 	addw	sp, #4
       000079 FC               [ 2]  177 	jp	(x)
