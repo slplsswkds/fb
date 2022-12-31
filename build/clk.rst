@@ -50,18 +50,18 @@
                                      50 ;	-----------------------------------------
                                      51 ;	 function clk_init
                                      52 ;	-----------------------------------------
-      008463                         53 _clk_init:
+      0084DB                         53 _clk_init:
                                      54 ;	./src/clk.c: 5: while(~CLK_ICKR & HSIRDY) {} ;
-      008463                         55 00101$:
-      008463 C6 50 C0         [ 1]   56 	ld	a, 0x50c0
-      008466 5F               [ 1]   57 	clrw	x
-      008467 97               [ 1]   58 	ld	xl, a
-      008468 53               [ 2]   59 	cplw	x
-      008469 9F               [ 1]   60 	ld	a, xl
-      00846A A5 02            [ 1]   61 	bcp	a, #0x02
-      00846C 26 F5            [ 1]   62 	jrne	00101$
+      0084DB                         55 00101$:
+      0084DB C6 50 C0         [ 1]   56 	ld	a, 0x50c0
+      0084DE 5F               [ 1]   57 	clrw	x
+      0084DF 97               [ 1]   58 	ld	xl, a
+      0084E0 53               [ 2]   59 	cplw	x
+      0084E1 9F               [ 1]   60 	ld	a, xl
+      0084E2 A5 02            [ 1]   61 	bcp	a, #0x02
+      0084E4 26 F5            [ 1]   62 	jrne	00101$
                                      63 ;	./src/clk.c: 6: }
-      00846E 81               [ 4]   64 	ret
+      0084E6 81               [ 4]   64 	ret
                                      65 	.area CODE
                                      66 	.area CONST
                                      67 	.area INITIALIZER

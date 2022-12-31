@@ -15,6 +15,8 @@
 	.globl _smart_increment
 	.globl _write_color_to_registers
 	.globl _tim2_init
+	.globl _btn_brightness_minus_is_pressed
+	.globl _btn_brightness_plus_is_pressed
 	.globl _btn_load_is_pressed
 	.globl _btn_b_minus_is_pressed
 	.globl _btn_g_minus_is_pressed
@@ -155,14 +157,14 @@ _main:
 ;	 function button_hundler
 ;	-----------------------------------------
 _button_hundler:
-	sub	sp, #7
-	ldw	(0x06, sp), x
+	sub	sp, #9
+	ldw	(0x08, sp), x
 ;	main.c: 57: if(btn_r_plus_is_pressed()) {
 	call	_btn_r_plus_is_pressed
 	tnz	a
 	jreq	00102$
 ;	main.c: 58: smart_increment(&color->r);
-	ldw	x, (0x06, sp)
+	ldw	x, (0x08, sp)
 	call	_smart_increment
 00102$:
 ;	main.c: 61: if(btn_r_minus_is_pressed()) {
@@ -170,163 +172,189 @@ _button_hundler:
 	tnz	a
 	jreq	00104$
 ;	main.c: 62: smart_decrement(&color->r);
-	ldw	x, (0x06, sp)
+	ldw	x, (0x08, sp)
 	call	_smart_decrement
 00104$:
 ;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	call	_btn_g_plus_is_pressed
 ;	main.c: 66: smart_increment(&color->g);
-	ldw	x, (0x06, sp)
+	ldw	x, (0x08, sp)
 	incw	x
+	ldw	(0x01, sp), x
 ;	main.c: 65: if(btn_g_plus_is_pressed()) {
 	tnz	a
 	jreq	00106$
 ;	main.c: 66: smart_increment(&color->g);
-	pushw	x
+	ldw	x, (0x01, sp)
 	call	_smart_increment
-	popw	x
 00106$:
 ;	main.c: 69: if(btn_g_minus_is_pressed()) {
-	pushw	x
 	call	_btn_g_minus_is_pressed
-	popw	x
 	tnz	a
 	jreq	00108$
 ;	main.c: 70: smart_decrement(&color->g);
+	ldw	x, (0x01, sp)
 	call	_smart_decrement
 00108$:
 ;	main.c: 73: if(btn_b_plus_is_pressed()) {
 	call	_btn_b_plus_is_pressed
 ;	main.c: 74: smart_increment(&color->b);
-	ldw	x, (0x06, sp)
+	ldw	x, (0x08, sp)
 	incw	x
 	incw	x
+	ldw	(0x06, sp), x
 ;	main.c: 73: if(btn_b_plus_is_pressed()) {
 	tnz	a
 	jreq	00110$
 ;	main.c: 74: smart_increment(&color->b);
-	pushw	x
+	ldw	x, (0x06, sp)
 	call	_smart_increment
-	popw	x
 00110$:
 ;	main.c: 77: if(btn_b_minus_is_pressed()) {
-	pushw	x
 	call	_btn_b_minus_is_pressed
-	popw	x
 	tnz	a
 	jreq	00112$
 ;	main.c: 78: smart_decrement(&color->b);
+	ldw	x, (0x06, sp)
 	call	_smart_decrement
 00112$:
-;	main.c: 88: if(btn_load_is_pressed()) {
-	call	_btn_load_is_pressed
-	ld	(0x05, sp), a
-	jrne	00225$
-	jp	00132$
-00225$:
-;	main.c: 89: uint8_t counter = 0;
-	clr	(0x04, sp)
-;	main.c: 90: while(counter < 10 && btn_load_is_pressed()) {
+;	main.c: 81: if(btn_brightness_plus_is_pressed()) {
+	call	_btn_brightness_plus_is_pressed
+	tnz	a
+	jreq	00114$
+;	main.c: 82: smart_increment(&color->r);
+	ldw	x, (0x08, sp)
+	call	_smart_increment
+;	main.c: 83: smart_increment(&color->g);
+	ldw	x, (0x01, sp)
+	call	_smart_increment
+;	main.c: 84: smart_increment(&color->b);
+	ldw	x, (0x06, sp)
+	call	_smart_increment
 00114$:
-	ld	a, (0x04, sp)
-	cp	a, #0x0a
-	jrnc	00116$
-	call	_btn_load_is_pressed
+;	main.c: 87: if(btn_brightness_minus_is_pressed()) {
+	call	_btn_brightness_minus_is_pressed
 	tnz	a
 	jreq	00116$
-;	main.c: 91: delay(65535);
+;	main.c: 88: smart_decrement(&color->r);
+	ldw	x, (0x08, sp)
+	call	_smart_decrement
+;	main.c: 89: smart_decrement(&color->g);
+	ldw	x, (0x01, sp)
+	call	_smart_decrement
+;	main.c: 90: smart_decrement(&color->b);
+	ldw	x, (0x06, sp)
+	call	_smart_decrement
+00116$:
+;	main.c: 100: if(btn_load_is_pressed()) {
+	call	_btn_load_is_pressed
+	ld	(0x07, sp), a
+	jrne	00241$
+	jp	00136$
+00241$:
+;	main.c: 101: uint8_t counter = 0;
+	clr	(0x06, sp)
+;	main.c: 102: while(counter < 10 && btn_load_is_pressed()) {
+00118$:
+	ld	a, (0x06, sp)
+	cp	a, #0x0a
+	jrnc	00120$
+	call	_btn_load_is_pressed
+	tnz	a
+	jreq	00120$
+;	main.c: 103: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 92: counter += 1;
-	inc	(0x04, sp)
-	jra	00114$
-00116$:
-;	main.c: 96: load_color_from_eeprom(&rgb_buf, 0);        
+;	main.c: 104: counter += 1;
+	inc	(0x06, sp)
+	jra	00118$
+00120$:
+;	main.c: 108: load_color_from_eeprom(&rgb_buf, 0);        
 	clr	a
 	ldw	x, sp
-	incw	x
+	addw	x, #3
 	call	_load_color_from_eeprom
-;	main.c: 97: write_color_to_registers(&rgb_buf);
+;	main.c: 109: write_color_to_registers(&rgb_buf);
 	ldw	x, sp
-	incw	x
+	addw	x, #3
 	call	_write_color_to_registers
-;	main.c: 98: delay(65535);
+;	main.c: 110: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 99: delay(65535);
+;	main.c: 111: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 100: delay(65535);
+;	main.c: 112: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 103: while(counter < 23 && btn_load_is_pressed()) {
-00121$:
-	ld	a, (0x04, sp)
+;	main.c: 115: while(counter < 23 && btn_load_is_pressed()) {
+00125$:
+	ld	a, (0x06, sp)
 	cp	a, #0x17
 	clr	a
 	rlc	a
-	ld	(0x05, sp), a
-	jreq	00123$
+	ld	(0x07, sp), a
+	jreq	00127$
 	call	_btn_load_is_pressed
 	tnz	a
-	jreq	00123$
-;	main.c: 104: delay(65535);
+	jreq	00127$
+;	main.c: 116: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 105: delay(65535);
+;	main.c: 117: delay(65535);
 	clrw	x
 	decw	x
 	call	_delay
-;	main.c: 106: if (counter % 2 == 0) {
-	ld	a, (0x04, sp)
+;	main.c: 118: if (counter % 2 == 0) {
+	ld	a, (0x06, sp)
 	srl	a
-	jrc	00118$
-;	main.c: 107: write_color_to_registers(&rgb_buf);
+	jrc	00122$
+;	main.c: 119: write_color_to_registers(&rgb_buf);
 	ldw	x, sp
-	incw	x
+	addw	x, #3
 	call	_write_color_to_registers
-	jra	00119$
-00118$:
-;	main.c: 110: write_color_to_registers(&rgb);
+	jra	00123$
+00122$:
+;	main.c: 122: write_color_to_registers(&rgb);
 	ldw	x, #(_rgb+0)
 	call	_write_color_to_registers
-00119$:
-;	main.c: 112: counter += 1;
-	inc	(0x04, sp)
-	jra	00121$
 00123$:
-;	main.c: 115: if(counter > 10 && counter < 23) {
-	ld	a, (0x04, sp)
+;	main.c: 124: counter += 1;
+	inc	(0x06, sp)
+	jra	00125$
+00127$:
+;	main.c: 127: if(counter >= 10 && counter < 23) {
+	ld	a, (0x06, sp)
 	cp	a, #0x0a
-	jrule	00127$
-	tnz	(0x05, sp)
-	jreq	00127$
-;	main.c: 116: rgb = rgb_buf;
+	jrc	00131$
+	tnz	(0x07, sp)
+	jreq	00131$
+;	main.c: 128: rgb = rgb_buf;
 	push	#0x03
 	push	#0x00
 	ldw	x, sp
-	addw	x, #3
+	addw	x, #5
 	pushw	x
 	ldw	x, #(_rgb+0)
 	call	___memcpy
-	jra	00132$
-00127$:
-;	main.c: 118: else if (counter == 23) { 
-	ld	a, (0x04, sp)
+	jra	00136$
+00131$:
+;	main.c: 130: else if (counter == 23) { 
+	ld	a, (0x06, sp)
 	cp	a, #0x17
-	jrne	00132$
-;	main.c: 119: write_color_to_eeprom(&rgb, 0);        
+	jrne	00136$
+;	main.c: 131: write_color_to_eeprom(&rgb, 0);        
 	clr	a
 	ldw	x, #(_rgb+0)
 	call	_write_color_to_eeprom
-00132$:
-;	main.c: 122: }
-	addw	sp, #7
+00136$:
+;	main.c: 134: }
+	addw	sp, #9
 	ret
 	.area CODE
 	.area CONST

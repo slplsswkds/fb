@@ -17,418 +17,478 @@
                                      17 	.globl _btn_b_minus_is_pressed
                                      18 	.globl _btn_flash_is_pressed
                                      19 	.globl _btn_load_is_pressed
-                                     20 	.globl _get_number_from_buttons
-                                     21 ;--------------------------------------------------------
-                                     22 ; ram data
+                                     20 	.globl _btn_brightness_plus_is_pressed
+                                     21 	.globl _btn_brightness_minus_is_pressed
+                                     22 	.globl _get_number_from_buttons
                                      23 ;--------------------------------------------------------
-                                     24 	.area DATA
+                                     24 ; ram data
                                      25 ;--------------------------------------------------------
-                                     26 ; ram data
+                                     26 	.area DATA
                                      27 ;--------------------------------------------------------
-                                     28 	.area INITIALIZED
+                                     28 ; ram data
                                      29 ;--------------------------------------------------------
-                                     30 ; absolute external ram data
+                                     30 	.area INITIALIZED
                                      31 ;--------------------------------------------------------
-                                     32 	.area DABS (ABS)
-                                     33 
-                                     34 ; default segment ordering for linker
-                                     35 	.area HOME
-                                     36 	.area GSINIT
-                                     37 	.area GSFINAL
-                                     38 	.area CONST
-                                     39 	.area INITIALIZER
-                                     40 	.area CODE
-                                     41 
-                                     42 ;--------------------------------------------------------
-                                     43 ; global & static initialisations
+                                     32 ; absolute external ram data
+                                     33 ;--------------------------------------------------------
+                                     34 	.area DABS (ABS)
+                                     35 
+                                     36 ; default segment ordering for linker
+                                     37 	.area HOME
+                                     38 	.area GSINIT
+                                     39 	.area GSFINAL
+                                     40 	.area CONST
+                                     41 	.area INITIALIZER
+                                     42 	.area CODE
+                                     43 
                                      44 ;--------------------------------------------------------
-                                     45 	.area HOME
-                                     46 	.area GSINIT
-                                     47 	.area GSFINAL
+                                     45 ; global & static initialisations
+                                     46 ;--------------------------------------------------------
+                                     47 	.area HOME
                                      48 	.area GSINIT
-                                     49 ;--------------------------------------------------------
-                                     50 ; Home
+                                     49 	.area GSFINAL
+                                     50 	.area GSINIT
                                      51 ;--------------------------------------------------------
-                                     52 	.area HOME
-                                     53 	.area HOME
-                                     54 ;--------------------------------------------------------
-                                     55 ; code
+                                     52 ; Home
+                                     53 ;--------------------------------------------------------
+                                     54 	.area HOME
+                                     55 	.area HOME
                                      56 ;--------------------------------------------------------
-                                     57 	.area CODE
-                                     58 ;	./src/gpio.c: 3: void gpio_init() {
-                                     59 ;	-----------------------------------------
-                                     60 ;	 function gpio_init
+                                     57 ; code
+                                     58 ;--------------------------------------------------------
+                                     59 	.area CODE
+                                     60 ;	./src/gpio.c: 3: void gpio_init() {
                                      61 ;	-----------------------------------------
-      000000                         62 _gpio_init:
-                                     63 ;	./src/gpio.c: 6: PB_DDR |= (1 << 5);
-      000000 72 1A 50 07      [ 1]   64 	bset	0x5007, #5
-                                     65 ;	./src/gpio.c: 7: PB_CR1 |= (1 << 5);
-      000004 72 1A 50 08      [ 1]   66 	bset	0x5008, #5
-                                     67 ;	./src/gpio.c: 8: PB_CR2 &= ~(1 << 5);
-      000008 72 1B 50 09      [ 1]   68 	bres	0x5009, #5
-                                     69 ;	./src/gpio.c: 9: PB_ODR |= (1 << 5);
-      00000C 72 1A 50 05      [ 1]   70 	bset	0x5005, #5
-                                     71 ;	./src/gpio.c: 13: PD_DDR |= (1 << 4);
-      000010 72 18 50 11      [ 1]   72 	bset	0x5011, #4
-                                     73 ;	./src/gpio.c: 14: PD_CR1 |= (1 << 4);
-      000014 72 18 50 12      [ 1]   74 	bset	0x5012, #4
-                                     75 ;	./src/gpio.c: 15: PD_CR2 &= ~(1 << 4);
-      000018 72 19 50 13      [ 1]   76 	bres	0x5013, #4
-                                     77 ;	./src/gpio.c: 16: PD_ODR &= ~(1 << 4);
-      00001C 72 19 50 0F      [ 1]   78 	bres	0x500f, #4
-                                     79 ;	./src/gpio.c: 20: PD_DDR |= (1 << 3);
-      000020 72 16 50 11      [ 1]   80 	bset	0x5011, #3
-                                     81 ;	./src/gpio.c: 21: PD_CR1 |= (1 << 3);
-      000024 72 16 50 12      [ 1]   82 	bset	0x5012, #3
-                                     83 ;	./src/gpio.c: 22: PD_CR2 &= ~(1 << 3);
-      000028 72 17 50 13      [ 1]   84 	bres	0x5013, #3
-                                     85 ;	./src/gpio.c: 23: PD_ODR &= ~(1 << 3);
-      00002C 72 17 50 0F      [ 1]   86 	bres	0x500f, #3
-                                     87 ;	./src/gpio.c: 27: PA_DDR |= (1 << 3);
-      000030 72 16 50 02      [ 1]   88 	bset	0x5002, #3
-                                     89 ;	./src/gpio.c: 28: PA_CR1 |= (1 << 3);
-      000034 72 16 50 03      [ 1]   90 	bset	0x5003, #3
-                                     91 ;	./src/gpio.c: 29: PA_CR2 &= ~(1 << 3);
-      000038 72 17 50 04      [ 1]   92 	bres	0x5004, #3
-                                     93 ;	./src/gpio.c: 30: PA_ODR &= ~(1 << 3);
-      00003C 72 17 50 00      [ 1]   94 	bres	0x5000, #3
-                                     95 ;	./src/gpio.c: 44: PD_DDR &= ~(1 << 2); // Input 
-      000040 72 15 50 11      [ 1]   96 	bres	0x5011, #2
-                                     97 ;	./src/gpio.c: 45: PD_CR1 |= (1 << 2); // Pull-Up
-      000044 72 14 50 12      [ 1]   98 	bset	0x5012, #2
-                                     99 ;	./src/gpio.c: 46: PD_CR2 &= ~(1 << 2); // Interrupt disabled
-      000048 72 15 50 13      [ 1]  100 	bres	0x5013, #2
-                                    101 ;	./src/gpio.c: 48: PC_DDR &= ~(1 << 7);
-      00004C 72 1F 50 0C      [ 1]  102 	bres	0x500c, #7
-                                    103 ;	./src/gpio.c: 49: PC_CR1 |= (1 << 7);
-      000050 72 1E 50 0D      [ 1]  104 	bset	0x500d, #7
-                                    105 ;	./src/gpio.c: 50: PC_CR2 &= ~(1 << 7);
-      000054 72 1F 50 0E      [ 1]  106 	bres	0x500e, #7
-                                    107 ;	./src/gpio.c: 52: PC_DDR &= ~(1 << 6);
-      000058 72 1D 50 0C      [ 1]  108 	bres	0x500c, #6
-                                    109 ;	./src/gpio.c: 53: PC_CR1 |= (1 << 6);
-      00005C 72 1C 50 0D      [ 1]  110 	bset	0x500d, #6
-                                    111 ;	./src/gpio.c: 54: PC_CR2 &= ~(1 << 6);
-      000060 72 1D 50 0E      [ 1]  112 	bres	0x500e, #6
-                                    113 ;	./src/gpio.c: 56: PC_DDR &= ~(1 << 5);
-      000064 72 1B 50 0C      [ 1]  114 	bres	0x500c, #5
-                                    115 ;	./src/gpio.c: 57: PC_CR1 |= (1 << 5);
-      000068 72 1A 50 0D      [ 1]  116 	bset	0x500d, #5
-                                    117 ;	./src/gpio.c: 58: PC_CR2 &= ~(1 << 5);
-      00006C 72 1B 50 0E      [ 1]  118 	bres	0x500e, #5
-                                    119 ;	./src/gpio.c: 60: PC_DDR &= ~(1 << 4);
-      000070 72 19 50 0C      [ 1]  120 	bres	0x500c, #4
-                                    121 ;	./src/gpio.c: 61: PC_CR1 |= (1 << 4);
-      000074 72 18 50 0D      [ 1]  122 	bset	0x500d, #4
-                                    123 ;	./src/gpio.c: 62: PC_CR2 &= ~(1 << 4);
-      000078 72 19 50 0E      [ 1]  124 	bres	0x500e, #4
-                                    125 ;	./src/gpio.c: 64: PC_DDR &= ~(1 << 3);
-      00007C 72 17 50 0C      [ 1]  126 	bres	0x500c, #3
-                                    127 ;	./src/gpio.c: 65: PC_CR1 |= (1 << 3);
-      000080 72 16 50 0D      [ 1]  128 	bset	0x500d, #3
-                                    129 ;	./src/gpio.c: 66: PC_CR2 &= ~(1 << 3);
-      000084 72 17 50 0E      [ 1]  130 	bres	0x500e, #3
-                                    131 ;	./src/gpio.c: 69: PB_DDR &= ~(1 << 4);
-      000088 72 19 50 07      [ 1]  132 	bres	0x5007, #4
-                                    133 ;	./src/gpio.c: 70: PB_CR1 |= (1 << 4);
-      00008C 72 18 50 08      [ 1]  134 	bset	0x5008, #4
-                                    135 ;	./src/gpio.c: 71: PB_CR2 &= ~(1 << 4);
-      000090 72 19 50 09      [ 1]  136 	bres	0x5009, #4
-                                    137 ;	./src/gpio.c: 73: PB_DDR &= ~(1 << 5);
-      000094 72 1B 50 07      [ 1]  138 	bres	0x5007, #5
-                                    139 ;	./src/gpio.c: 74: PB_CR1 |= (1 << 5);
-      000098 72 1A 50 08      [ 1]  140 	bset	0x5008, #5
-                                    141 ;	./src/gpio.c: 75: PB_CR2 &= ~(1 << 5);
-      00009C 72 1B 50 09      [ 1]  142 	bres	0x5009, #5
-                                    143 ;	./src/gpio.c: 80: PD_DDR |= (1 << 5); // Output
-      0000A0 72 1A 50 11      [ 1]  144 	bset	0x5011, #5
-                                    145 ;	./src/gpio.c: 81: PD_CR1 |= (1 << 5); // PushPull
-      0000A4 72 1A 50 12      [ 1]  146 	bset	0x5012, #5
-                                    147 ;	./src/gpio.c: 82: PD_CR2 &= ~(1 << 5); // To 2MHz
-      0000A8 72 1B 50 13      [ 1]  148 	bres	0x5013, #5
-                                    149 ;	./src/gpio.c: 85: PD_DDR &= ~(1 << 6); // Input
-      0000AC 72 1D 50 11      [ 1]  150 	bres	0x5011, #6
-                                    151 ;	./src/gpio.c: 86: PD_CR1 &= ~(1 << 6); // Floating
-      0000B0 72 1D 50 12      [ 1]  152 	bres	0x5012, #6
-                                    153 ;	./src/gpio.c: 87: PD_CR2 &= ~(1 << 6); // External interrupt disabled
-      0000B4 72 1D 50 13      [ 1]  154 	bres	0x5013, #6
-                                    155 ;	./src/gpio.c: 88: }
-      0000B8 81               [ 4]  156 	ret
-                                    157 ;	./src/gpio.c: 90: uint8_t btn_r_plus_is_pressed() {
-                                    158 ;	-----------------------------------------
-                                    159 ;	 function btn_r_plus_is_pressed
-                                    160 ;	-----------------------------------------
-      0000B9                        161 _btn_r_plus_is_pressed:
-                                    162 ;	./src/gpio.c: 91: return((1 << 2) == (~PD_IDR & (1 << 2)));
-      0000B9 C6 50 10         [ 1]  163 	ld	a, 0x5010
-      0000BC 5F               [ 1]  164 	clrw	x
-      0000BD 97               [ 1]  165 	ld	xl, a
-      0000BE 53               [ 2]  166 	cplw	x
-      0000BF 9F               [ 1]  167 	ld	a, xl
-      0000C0 A4 04            [ 1]  168 	and	a, #0x04
-      0000C2 97               [ 1]  169 	ld	xl, a
-      0000C3 4F               [ 1]  170 	clr	a
-      0000C4 95               [ 1]  171 	ld	xh, a
-      0000C5 A3 00 04         [ 2]  172 	cpw	x, #0x0004
-      0000C8 26 03            [ 1]  173 	jrne	00104$
-      0000CA A6 01            [ 1]  174 	ld	a, #0x01
-      0000CC 81               [ 4]  175 	ret
-      0000CD                        176 00104$:
-      0000CD 4F               [ 1]  177 	clr	a
-                                    178 ;	./src/gpio.c: 92: }
-      0000CE 81               [ 4]  179 	ret
-                                    180 ;	./src/gpio.c: 94: uint8_t btn_g_plus_is_pressed() {
-                                    181 ;	-----------------------------------------
-                                    182 ;	 function btn_g_plus_is_pressed
-                                    183 ;	-----------------------------------------
-      0000CF                        184 _btn_g_plus_is_pressed:
-                                    185 ;	./src/gpio.c: 95: return((1 << 6) == (~PC_IDR & (1 << 6)));
-      0000CF C6 50 0B         [ 1]  186 	ld	a, 0x500b
-      0000D2 5F               [ 1]  187 	clrw	x
-      0000D3 97               [ 1]  188 	ld	xl, a
-      0000D4 53               [ 2]  189 	cplw	x
-      0000D5 9F               [ 1]  190 	ld	a, xl
-      0000D6 A4 40            [ 1]  191 	and	a, #0x40
-      0000D8 97               [ 1]  192 	ld	xl, a
-      0000D9 4F               [ 1]  193 	clr	a
-      0000DA 95               [ 1]  194 	ld	xh, a
-      0000DB A3 00 40         [ 2]  195 	cpw	x, #0x0040
-      0000DE 26 03            [ 1]  196 	jrne	00104$
-      0000E0 A6 01            [ 1]  197 	ld	a, #0x01
-      0000E2 81               [ 4]  198 	ret
-      0000E3                        199 00104$:
-      0000E3 4F               [ 1]  200 	clr	a
-                                    201 ;	./src/gpio.c: 96: }
-      0000E4 81               [ 4]  202 	ret
-                                    203 ;	./src/gpio.c: 98: uint8_t btn_b_plus_is_pressed() {
-                                    204 ;	-----------------------------------------
-                                    205 ;	 function btn_b_plus_is_pressed
-                                    206 ;	-----------------------------------------
-      0000E5                        207 _btn_b_plus_is_pressed:
-                                    208 ;	./src/gpio.c: 99: return((1 << 4) == (~PC_IDR & (1 << 4)));
-      0000E5 C6 50 0B         [ 1]  209 	ld	a, 0x500b
-      0000E8 5F               [ 1]  210 	clrw	x
-      0000E9 97               [ 1]  211 	ld	xl, a
-      0000EA 53               [ 2]  212 	cplw	x
-      0000EB 9F               [ 1]  213 	ld	a, xl
-      0000EC A4 10            [ 1]  214 	and	a, #0x10
-      0000EE 97               [ 1]  215 	ld	xl, a
-      0000EF 4F               [ 1]  216 	clr	a
-      0000F0 95               [ 1]  217 	ld	xh, a
-      0000F1 A3 00 10         [ 2]  218 	cpw	x, #0x0010
-      0000F4 26 03            [ 1]  219 	jrne	00104$
-      0000F6 A6 01            [ 1]  220 	ld	a, #0x01
-      0000F8 81               [ 4]  221 	ret
-      0000F9                        222 00104$:
-      0000F9 4F               [ 1]  223 	clr	a
-                                    224 ;	./src/gpio.c: 100: }
-      0000FA 81               [ 4]  225 	ret
-                                    226 ;	./src/gpio.c: 102: uint8_t btn_r_minus_is_pressed() {
-                                    227 ;	-----------------------------------------
-                                    228 ;	 function btn_r_minus_is_pressed
-                                    229 ;	-----------------------------------------
-      0000FB                        230 _btn_r_minus_is_pressed:
-                                    231 ;	./src/gpio.c: 103: return((1 << 7) == (~PC_IDR & (1 << 7)));
-      0000FB C6 50 0B         [ 1]  232 	ld	a, 0x500b
-      0000FE 5F               [ 1]  233 	clrw	x
-      0000FF 97               [ 1]  234 	ld	xl, a
-      000100 53               [ 2]  235 	cplw	x
-      000101 9F               [ 1]  236 	ld	a, xl
-      000102 A4 80            [ 1]  237 	and	a, #0x80
-      000104 97               [ 1]  238 	ld	xl, a
-      000105 4F               [ 1]  239 	clr	a
-      000106 95               [ 1]  240 	ld	xh, a
-      000107 A3 00 80         [ 2]  241 	cpw	x, #0x0080
-      00010A 26 03            [ 1]  242 	jrne	00104$
-      00010C A6 01            [ 1]  243 	ld	a, #0x01
-      00010E 81               [ 4]  244 	ret
-      00010F                        245 00104$:
-      00010F 4F               [ 1]  246 	clr	a
-                                    247 ;	./src/gpio.c: 104: }
-      000110 81               [ 4]  248 	ret
-                                    249 ;	./src/gpio.c: 106: uint8_t btn_g_minus_is_pressed() {
-                                    250 ;	-----------------------------------------
-                                    251 ;	 function btn_g_minus_is_pressed
-                                    252 ;	-----------------------------------------
-      000111                        253 _btn_g_minus_is_pressed:
-                                    254 ;	./src/gpio.c: 107: return((1 << 5) == (~PC_IDR & (1 << 5)));
-      000111 C6 50 0B         [ 1]  255 	ld	a, 0x500b
-      000114 5F               [ 1]  256 	clrw	x
-      000115 97               [ 1]  257 	ld	xl, a
-      000116 53               [ 2]  258 	cplw	x
-      000117 9F               [ 1]  259 	ld	a, xl
-      000118 A4 20            [ 1]  260 	and	a, #0x20
-      00011A 97               [ 1]  261 	ld	xl, a
-      00011B 4F               [ 1]  262 	clr	a
-      00011C 95               [ 1]  263 	ld	xh, a
-      00011D A3 00 20         [ 2]  264 	cpw	x, #0x0020
-      000120 26 03            [ 1]  265 	jrne	00104$
-      000122 A6 01            [ 1]  266 	ld	a, #0x01
-      000124 81               [ 4]  267 	ret
-      000125                        268 00104$:
-      000125 4F               [ 1]  269 	clr	a
-                                    270 ;	./src/gpio.c: 108: }
-      000126 81               [ 4]  271 	ret
-                                    272 ;	./src/gpio.c: 110: uint8_t btn_b_minus_is_pressed() {
-                                    273 ;	-----------------------------------------
-                                    274 ;	 function btn_b_minus_is_pressed
-                                    275 ;	-----------------------------------------
-      000127                        276 _btn_b_minus_is_pressed:
-                                    277 ;	./src/gpio.c: 111: return((1 << 3) == (~PC_IDR & (1 << 3)));
-      000127 C6 50 0B         [ 1]  278 	ld	a, 0x500b
-      00012A 5F               [ 1]  279 	clrw	x
-      00012B 97               [ 1]  280 	ld	xl, a
-      00012C 53               [ 2]  281 	cplw	x
-      00012D 9F               [ 1]  282 	ld	a, xl
-      00012E A4 08            [ 1]  283 	and	a, #0x08
-      000130 97               [ 1]  284 	ld	xl, a
-      000131 4F               [ 1]  285 	clr	a
-      000132 95               [ 1]  286 	ld	xh, a
-      000133 A3 00 08         [ 2]  287 	cpw	x, #0x0008
-      000136 26 03            [ 1]  288 	jrne	00104$
-      000138 A6 01            [ 1]  289 	ld	a, #0x01
-      00013A 81               [ 4]  290 	ret
-      00013B                        291 00104$:
-      00013B 4F               [ 1]  292 	clr	a
-                                    293 ;	./src/gpio.c: 112: }
-      00013C 81               [ 4]  294 	ret
-                                    295 ;	./src/gpio.c: 114: uint8_t btn_flash_is_pressed() {
-                                    296 ;	-----------------------------------------
-                                    297 ;	 function btn_flash_is_pressed
-                                    298 ;	-----------------------------------------
-      00013D                        299 _btn_flash_is_pressed:
-                                    300 ;	./src/gpio.c: 115: return((1 << 4) == (~PB_IDR & (1 << 4)));
-      00013D C6 50 06         [ 1]  301 	ld	a, 0x5006
-      000140 5F               [ 1]  302 	clrw	x
-      000141 97               [ 1]  303 	ld	xl, a
-      000142 53               [ 2]  304 	cplw	x
-      000143 9F               [ 1]  305 	ld	a, xl
-      000144 A4 10            [ 1]  306 	and	a, #0x10
-      000146 97               [ 1]  307 	ld	xl, a
-      000147 4F               [ 1]  308 	clr	a
-      000148 95               [ 1]  309 	ld	xh, a
-      000149 A3 00 10         [ 2]  310 	cpw	x, #0x0010
-      00014C 26 03            [ 1]  311 	jrne	00104$
-      00014E A6 01            [ 1]  312 	ld	a, #0x01
-      000150 81               [ 4]  313 	ret
-      000151                        314 00104$:
-      000151 4F               [ 1]  315 	clr	a
-                                    316 ;	./src/gpio.c: 116: }
-      000152 81               [ 4]  317 	ret
-                                    318 ;	./src/gpio.c: 118: uint8_t btn_load_is_pressed() {
-                                    319 ;	-----------------------------------------
-                                    320 ;	 function btn_load_is_pressed
-                                    321 ;	-----------------------------------------
-      000153                        322 _btn_load_is_pressed:
-                                    323 ;	./src/gpio.c: 119: return((1 << 5) == (~PB_IDR & (1 << 5)));
-      000153 C6 50 06         [ 1]  324 	ld	a, 0x5006
-      000156 5F               [ 1]  325 	clrw	x
-      000157 97               [ 1]  326 	ld	xl, a
-      000158 53               [ 2]  327 	cplw	x
-      000159 9F               [ 1]  328 	ld	a, xl
-      00015A A4 20            [ 1]  329 	and	a, #0x20
-      00015C 97               [ 1]  330 	ld	xl, a
-      00015D 4F               [ 1]  331 	clr	a
-      00015E 95               [ 1]  332 	ld	xh, a
-      00015F A3 00 20         [ 2]  333 	cpw	x, #0x0020
-      000162 26 03            [ 1]  334 	jrne	00104$
-      000164 A6 01            [ 1]  335 	ld	a, #0x01
-      000166 81               [ 4]  336 	ret
-      000167                        337 00104$:
-      000167 4F               [ 1]  338 	clr	a
-                                    339 ;	./src/gpio.c: 120: }
-      000168 81               [ 4]  340 	ret
-                                    341 ;	./src/gpio.c: 122: static void delay(uint16_t t) {
-                                    342 ;	-----------------------------------------
-                                    343 ;	 function delay
-                                    344 ;	-----------------------------------------
-      000169                        345 _delay:
-                                    346 ;	./src/gpio.c: 123: while(t--) {};
-      000169                        347 00101$:
-      000169 90 93            [ 1]  348 	ldw	y, x
-      00016B 5A               [ 2]  349 	decw	x
-      00016C 90 5D            [ 2]  350 	tnzw	y
-      00016E 26 F9            [ 1]  351 	jrne	00101$
-                                    352 ;	./src/gpio.c: 124: }
-      000170 81               [ 4]  353 	ret
-                                    354 ;	./src/gpio.c: 126: uint8_t get_number_from_buttons() {
-                                    355 ;	-----------------------------------------
-                                    356 ;	 function get_number_from_buttons
-                                    357 ;	-----------------------------------------
-      000171                        358 _get_number_from_buttons:
-      000171 88               [ 1]  359 	push	a
-                                    360 ;	./src/gpio.c: 127: uint8_t number = 0;
-      000172 0F 01            [ 1]  361 	clr	(0x01, sp)
-                                    362 ;	./src/gpio.c: 129: while(1) { // In future should be added timeout
-      000174                        363 00116$:
-                                    364 ;	./src/gpio.c: 130: delay(65535);
-      000174 5F               [ 1]  365 	clrw	x
-      000175 5A               [ 2]  366 	decw	x
-      000176 CDr01r69         [ 4]  367 	call	_delay
-                                    368 ;	./src/gpio.c: 132: if(btn_r_plus_is_pressed()) {
-      000179 CDr00rB9         [ 4]  369 	call	_btn_r_plus_is_pressed
-      00017C 4D               [ 1]  370 	tnz	a
-      00017D 27 06            [ 1]  371 	jreq	00102$
-                                    372 ;	./src/gpio.c: 133: number |= (1 << 5);
-      00017F 7B 01            [ 1]  373 	ld	a, (0x01, sp)
-      000181 AA 20            [ 1]  374 	or	a, #0x20
-      000183 6B 01            [ 1]  375 	ld	(0x01, sp), a
-      000185                        376 00102$:
-                                    377 ;	./src/gpio.c: 136: if(btn_g_plus_is_pressed()) {
-      000185 CDr00rCF         [ 4]  378 	call	_btn_g_plus_is_pressed
-      000188 4D               [ 1]  379 	tnz	a
-      000189 27 06            [ 1]  380 	jreq	00104$
-                                    381 ;	./src/gpio.c: 137: number |= (1 << 4);
-      00018B 7B 01            [ 1]  382 	ld	a, (0x01, sp)
-      00018D AA 10            [ 1]  383 	or	a, #0x10
-      00018F 6B 01            [ 1]  384 	ld	(0x01, sp), a
-      000191                        385 00104$:
-                                    386 ;	./src/gpio.c: 140: if(btn_b_plus_is_pressed()) {
-      000191 CDr00rE5         [ 4]  387 	call	_btn_b_plus_is_pressed
-      000194 4D               [ 1]  388 	tnz	a
-      000195 27 06            [ 1]  389 	jreq	00106$
-                                    390 ;	./src/gpio.c: 141: number |= (1 << 3);
-      000197 7B 01            [ 1]  391 	ld	a, (0x01, sp)
-      000199 AA 08            [ 1]  392 	or	a, #0x08
-      00019B 6B 01            [ 1]  393 	ld	(0x01, sp), a
-      00019D                        394 00106$:
-                                    395 ;	./src/gpio.c: 144: if(btn_r_minus_is_pressed()) {
-      00019D CDr00rFB         [ 4]  396 	call	_btn_r_minus_is_pressed
-      0001A0 4D               [ 1]  397 	tnz	a
-      0001A1 27 06            [ 1]  398 	jreq	00108$
-                                    399 ;	./src/gpio.c: 145: number |= (1 << 2);
-      0001A3 7B 01            [ 1]  400 	ld	a, (0x01, sp)
-      0001A5 AA 04            [ 1]  401 	or	a, #0x04
-      0001A7 6B 01            [ 1]  402 	ld	(0x01, sp), a
-      0001A9                        403 00108$:
-                                    404 ;	./src/gpio.c: 148: if(btn_g_minus_is_pressed()) {
-      0001A9 CDr01r11         [ 4]  405 	call	_btn_g_minus_is_pressed
-      0001AC 4D               [ 1]  406 	tnz	a
-      0001AD 27 06            [ 1]  407 	jreq	00110$
-                                    408 ;	./src/gpio.c: 149: number |= (1 << 1);
-      0001AF 7B 01            [ 1]  409 	ld	a, (0x01, sp)
-      0001B1 AA 02            [ 1]  410 	or	a, #0x02
-      0001B3 6B 01            [ 1]  411 	ld	(0x01, sp), a
-      0001B5                        412 00110$:
-                                    413 ;	./src/gpio.c: 152: if(btn_b_minus_is_pressed()) {
-      0001B5 CDr01r27         [ 4]  414 	call	_btn_b_minus_is_pressed
-      0001B8 4D               [ 1]  415 	tnz	a
-      0001B9 27 05            [ 1]  416 	jreq	00112$
-                                    417 ;	./src/gpio.c: 153: number |= (1 << 0);
-      0001BB 04 01            [ 1]  418 	srl	(0x01, sp)
-      0001BD 99               [ 1]  419 	scf
-      0001BE 09 01            [ 1]  420 	rlc	(0x01, sp)
-      0001C0                        421 00112$:
-                                    422 ;	./src/gpio.c: 159: if(btn_load_is_pressed()) {
-      0001C0 CDr01r53         [ 4]  423 	call	_btn_load_is_pressed
-      0001C3 4D               [ 1]  424 	tnz	a
-      0001C4 27 AE            [ 1]  425 	jreq	00116$
-                                    426 ;	./src/gpio.c: 164: return number;
-      0001C6 7B 01            [ 1]  427 	ld	a, (0x01, sp)
-                                    428 ;	./src/gpio.c: 165: }
-      0001C8 5B 01            [ 2]  429 	addw	sp, #1
-      0001CA 81               [ 4]  430 	ret
-                                    431 	.area CODE
-                                    432 	.area CONST
-                                    433 	.area INITIALIZER
-                                    434 	.area CABS (ABS)
+                                     62 ;	 function gpio_init
+                                     63 ;	-----------------------------------------
+      000000                         64 _gpio_init:
+                                     65 ;	./src/gpio.c: 6: PB_DDR |= (1 << 5);
+      000000 72 1A 50 07      [ 1]   66 	bset	0x5007, #5
+                                     67 ;	./src/gpio.c: 7: PB_CR1 |= (1 << 5);
+      000004 72 1A 50 08      [ 1]   68 	bset	0x5008, #5
+                                     69 ;	./src/gpio.c: 8: PB_CR2 &= ~(1 << 5);
+      000008 72 1B 50 09      [ 1]   70 	bres	0x5009, #5
+                                     71 ;	./src/gpio.c: 9: PB_ODR |= (1 << 5);
+      00000C 72 1A 50 05      [ 1]   72 	bset	0x5005, #5
+                                     73 ;	./src/gpio.c: 13: PD_DDR |= (1 << 4);
+      000010 72 18 50 11      [ 1]   74 	bset	0x5011, #4
+                                     75 ;	./src/gpio.c: 14: PD_CR1 |= (1 << 4);
+      000014 72 18 50 12      [ 1]   76 	bset	0x5012, #4
+                                     77 ;	./src/gpio.c: 15: PD_CR2 &= ~(1 << 4);
+      000018 72 19 50 13      [ 1]   78 	bres	0x5013, #4
+                                     79 ;	./src/gpio.c: 16: PD_ODR &= ~(1 << 4);
+      00001C 72 19 50 0F      [ 1]   80 	bres	0x500f, #4
+                                     81 ;	./src/gpio.c: 20: PD_DDR |= (1 << 3);
+      000020 72 16 50 11      [ 1]   82 	bset	0x5011, #3
+                                     83 ;	./src/gpio.c: 21: PD_CR1 |= (1 << 3);
+      000024 72 16 50 12      [ 1]   84 	bset	0x5012, #3
+                                     85 ;	./src/gpio.c: 22: PD_CR2 &= ~(1 << 3);
+      000028 72 17 50 13      [ 1]   86 	bres	0x5013, #3
+                                     87 ;	./src/gpio.c: 23: PD_ODR &= ~(1 << 3);
+      00002C 72 17 50 0F      [ 1]   88 	bres	0x500f, #3
+                                     89 ;	./src/gpio.c: 27: PA_DDR |= (1 << 3);
+      000030 72 16 50 02      [ 1]   90 	bset	0x5002, #3
+                                     91 ;	./src/gpio.c: 28: PA_CR1 |= (1 << 3);
+      000034 72 16 50 03      [ 1]   92 	bset	0x5003, #3
+                                     93 ;	./src/gpio.c: 29: PA_CR2 &= ~(1 << 3);
+      000038 72 17 50 04      [ 1]   94 	bres	0x5004, #3
+                                     95 ;	./src/gpio.c: 30: PA_ODR &= ~(1 << 3);
+      00003C 72 17 50 00      [ 1]   96 	bres	0x5000, #3
+                                     97 ;	./src/gpio.c: 47: PD_DDR &= ~(1 << 2); // Input 
+      000040 72 15 50 11      [ 1]   98 	bres	0x5011, #2
+                                     99 ;	./src/gpio.c: 48: PD_CR1 |= (1 << 2); // Pull-Up
+      000044 72 14 50 12      [ 1]  100 	bset	0x5012, #2
+                                    101 ;	./src/gpio.c: 49: PD_CR2 &= ~(1 << 2); // Interrupt disabled
+      000048 72 15 50 13      [ 1]  102 	bres	0x5013, #2
+                                    103 ;	./src/gpio.c: 51: PC_DDR &= ~(1 << 7);
+      00004C 72 1F 50 0C      [ 1]  104 	bres	0x500c, #7
+                                    105 ;	./src/gpio.c: 52: PC_CR1 |= (1 << 7);
+      000050 72 1E 50 0D      [ 1]  106 	bset	0x500d, #7
+                                    107 ;	./src/gpio.c: 53: PC_CR2 &= ~(1 << 7);
+      000054 72 1F 50 0E      [ 1]  108 	bres	0x500e, #7
+                                    109 ;	./src/gpio.c: 55: PC_DDR &= ~(1 << 6);
+      000058 72 1D 50 0C      [ 1]  110 	bres	0x500c, #6
+                                    111 ;	./src/gpio.c: 56: PC_CR1 |= (1 << 6);
+      00005C 72 1C 50 0D      [ 1]  112 	bset	0x500d, #6
+                                    113 ;	./src/gpio.c: 57: PC_CR2 &= ~(1 << 6);
+      000060 72 1D 50 0E      [ 1]  114 	bres	0x500e, #6
+                                    115 ;	./src/gpio.c: 59: PC_DDR &= ~(1 << 5);
+      000064 72 1B 50 0C      [ 1]  116 	bres	0x500c, #5
+                                    117 ;	./src/gpio.c: 60: PC_CR1 |= (1 << 5);
+      000068 72 1A 50 0D      [ 1]  118 	bset	0x500d, #5
+                                    119 ;	./src/gpio.c: 61: PC_CR2 &= ~(1 << 5);
+      00006C 72 1B 50 0E      [ 1]  120 	bres	0x500e, #5
+                                    121 ;	./src/gpio.c: 63: PC_DDR &= ~(1 << 4);
+      000070 72 19 50 0C      [ 1]  122 	bres	0x500c, #4
+                                    123 ;	./src/gpio.c: 64: PC_CR1 |= (1 << 4);
+      000074 72 18 50 0D      [ 1]  124 	bset	0x500d, #4
+                                    125 ;	./src/gpio.c: 65: PC_CR2 &= ~(1 << 4);
+      000078 72 19 50 0E      [ 1]  126 	bres	0x500e, #4
+                                    127 ;	./src/gpio.c: 67: PC_DDR &= ~(1 << 3);
+      00007C 72 17 50 0C      [ 1]  128 	bres	0x500c, #3
+                                    129 ;	./src/gpio.c: 68: PC_CR1 |= (1 << 3);
+      000080 72 16 50 0D      [ 1]  130 	bset	0x500d, #3
+                                    131 ;	./src/gpio.c: 69: PC_CR2 &= ~(1 << 3);
+      000084 72 17 50 0E      [ 1]  132 	bres	0x500e, #3
+                                    133 ;	./src/gpio.c: 72: PB_DDR &= ~(1 << 4);
+      000088 72 19 50 07      [ 1]  134 	bres	0x5007, #4
+                                    135 ;	./src/gpio.c: 73: PB_CR1 |= (1 << 4);
+      00008C 72 18 50 08      [ 1]  136 	bset	0x5008, #4
+                                    137 ;	./src/gpio.c: 74: PB_CR2 &= ~(1 << 4);
+      000090 72 19 50 09      [ 1]  138 	bres	0x5009, #4
+                                    139 ;	./src/gpio.c: 76: PB_DDR &= ~(1 << 5);
+      000094 72 1B 50 07      [ 1]  140 	bres	0x5007, #5
+                                    141 ;	./src/gpio.c: 77: PB_CR1 |= (1 << 5);
+      000098 72 1A 50 08      [ 1]  142 	bset	0x5008, #5
+                                    143 ;	./src/gpio.c: 78: PB_CR2 &= ~(1 << 5);
+      00009C 72 1B 50 09      [ 1]  144 	bres	0x5009, #5
+                                    145 ;	./src/gpio.c: 80: PA_DDR &= ~(1 << 1);    
+      0000A0 72 13 50 02      [ 1]  146 	bres	0x5002, #1
+                                    147 ;	./src/gpio.c: 81: PA_CR1 |= (1 << 1);    
+      0000A4 72 12 50 03      [ 1]  148 	bset	0x5003, #1
+                                    149 ;	./src/gpio.c: 82: PA_CR2 &= ~(1 << 1);    
+      0000A8 72 13 50 04      [ 1]  150 	bres	0x5004, #1
+                                    151 ;	./src/gpio.c: 84: PA_DDR &= ~(1 << 2);    
+      0000AC 72 15 50 02      [ 1]  152 	bres	0x5002, #2
+                                    153 ;	./src/gpio.c: 85: PA_CR1 |= (1 << 2);    
+      0000B0 72 14 50 03      [ 1]  154 	bset	0x5003, #2
+                                    155 ;	./src/gpio.c: 86: PA_CR2 &= ~(1 << 2);    
+      0000B4 72 15 50 04      [ 1]  156 	bres	0x5004, #2
+                                    157 ;	./src/gpio.c: 90: PD_DDR |= (1 << 5); // Output
+      0000B8 72 1A 50 11      [ 1]  158 	bset	0x5011, #5
+                                    159 ;	./src/gpio.c: 91: PD_CR1 |= (1 << 5); // PushPull
+      0000BC 72 1A 50 12      [ 1]  160 	bset	0x5012, #5
+                                    161 ;	./src/gpio.c: 92: PD_CR2 &= ~(1 << 5); // To 2MHz
+      0000C0 72 1B 50 13      [ 1]  162 	bres	0x5013, #5
+                                    163 ;	./src/gpio.c: 95: PD_DDR &= ~(1 << 6); // Input
+      0000C4 72 1D 50 11      [ 1]  164 	bres	0x5011, #6
+                                    165 ;	./src/gpio.c: 96: PD_CR1 &= ~(1 << 6); // Floating
+      0000C8 72 1D 50 12      [ 1]  166 	bres	0x5012, #6
+                                    167 ;	./src/gpio.c: 97: PD_CR2 &= ~(1 << 6); // External interrupt disabled
+      0000CC 72 1D 50 13      [ 1]  168 	bres	0x5013, #6
+                                    169 ;	./src/gpio.c: 98: }
+      0000D0 81               [ 4]  170 	ret
+                                    171 ;	./src/gpio.c: 100: uint8_t btn_r_plus_is_pressed() {
+                                    172 ;	-----------------------------------------
+                                    173 ;	 function btn_r_plus_is_pressed
+                                    174 ;	-----------------------------------------
+      0000D1                        175 _btn_r_plus_is_pressed:
+                                    176 ;	./src/gpio.c: 101: return((1 << 2) == (~PD_IDR & (1 << 2)));
+      0000D1 C6 50 10         [ 1]  177 	ld	a, 0x5010
+      0000D4 5F               [ 1]  178 	clrw	x
+      0000D5 97               [ 1]  179 	ld	xl, a
+      0000D6 53               [ 2]  180 	cplw	x
+      0000D7 9F               [ 1]  181 	ld	a, xl
+      0000D8 A4 04            [ 1]  182 	and	a, #0x04
+      0000DA 97               [ 1]  183 	ld	xl, a
+      0000DB 4F               [ 1]  184 	clr	a
+      0000DC 95               [ 1]  185 	ld	xh, a
+      0000DD A3 00 04         [ 2]  186 	cpw	x, #0x0004
+      0000E0 26 03            [ 1]  187 	jrne	00104$
+      0000E2 A6 01            [ 1]  188 	ld	a, #0x01
+      0000E4 81               [ 4]  189 	ret
+      0000E5                        190 00104$:
+      0000E5 4F               [ 1]  191 	clr	a
+                                    192 ;	./src/gpio.c: 102: }
+      0000E6 81               [ 4]  193 	ret
+                                    194 ;	./src/gpio.c: 104: uint8_t btn_g_plus_is_pressed() {
+                                    195 ;	-----------------------------------------
+                                    196 ;	 function btn_g_plus_is_pressed
+                                    197 ;	-----------------------------------------
+      0000E7                        198 _btn_g_plus_is_pressed:
+                                    199 ;	./src/gpio.c: 105: return((1 << 6) == (~PC_IDR & (1 << 6)));
+      0000E7 C6 50 0B         [ 1]  200 	ld	a, 0x500b
+      0000EA 5F               [ 1]  201 	clrw	x
+      0000EB 97               [ 1]  202 	ld	xl, a
+      0000EC 53               [ 2]  203 	cplw	x
+      0000ED 9F               [ 1]  204 	ld	a, xl
+      0000EE A4 40            [ 1]  205 	and	a, #0x40
+      0000F0 97               [ 1]  206 	ld	xl, a
+      0000F1 4F               [ 1]  207 	clr	a
+      0000F2 95               [ 1]  208 	ld	xh, a
+      0000F3 A3 00 40         [ 2]  209 	cpw	x, #0x0040
+      0000F6 26 03            [ 1]  210 	jrne	00104$
+      0000F8 A6 01            [ 1]  211 	ld	a, #0x01
+      0000FA 81               [ 4]  212 	ret
+      0000FB                        213 00104$:
+      0000FB 4F               [ 1]  214 	clr	a
+                                    215 ;	./src/gpio.c: 106: }
+      0000FC 81               [ 4]  216 	ret
+                                    217 ;	./src/gpio.c: 108: uint8_t btn_b_plus_is_pressed() {
+                                    218 ;	-----------------------------------------
+                                    219 ;	 function btn_b_plus_is_pressed
+                                    220 ;	-----------------------------------------
+      0000FD                        221 _btn_b_plus_is_pressed:
+                                    222 ;	./src/gpio.c: 109: return((1 << 4) == (~PC_IDR & (1 << 4)));
+      0000FD C6 50 0B         [ 1]  223 	ld	a, 0x500b
+      000100 5F               [ 1]  224 	clrw	x
+      000101 97               [ 1]  225 	ld	xl, a
+      000102 53               [ 2]  226 	cplw	x
+      000103 9F               [ 1]  227 	ld	a, xl
+      000104 A4 10            [ 1]  228 	and	a, #0x10
+      000106 97               [ 1]  229 	ld	xl, a
+      000107 4F               [ 1]  230 	clr	a
+      000108 95               [ 1]  231 	ld	xh, a
+      000109 A3 00 10         [ 2]  232 	cpw	x, #0x0010
+      00010C 26 03            [ 1]  233 	jrne	00104$
+      00010E A6 01            [ 1]  234 	ld	a, #0x01
+      000110 81               [ 4]  235 	ret
+      000111                        236 00104$:
+      000111 4F               [ 1]  237 	clr	a
+                                    238 ;	./src/gpio.c: 110: }
+      000112 81               [ 4]  239 	ret
+                                    240 ;	./src/gpio.c: 112: uint8_t btn_r_minus_is_pressed() {
+                                    241 ;	-----------------------------------------
+                                    242 ;	 function btn_r_minus_is_pressed
+                                    243 ;	-----------------------------------------
+      000113                        244 _btn_r_minus_is_pressed:
+                                    245 ;	./src/gpio.c: 113: return((1 << 7) == (~PC_IDR & (1 << 7)));
+      000113 C6 50 0B         [ 1]  246 	ld	a, 0x500b
+      000116 5F               [ 1]  247 	clrw	x
+      000117 97               [ 1]  248 	ld	xl, a
+      000118 53               [ 2]  249 	cplw	x
+      000119 9F               [ 1]  250 	ld	a, xl
+      00011A A4 80            [ 1]  251 	and	a, #0x80
+      00011C 97               [ 1]  252 	ld	xl, a
+      00011D 4F               [ 1]  253 	clr	a
+      00011E 95               [ 1]  254 	ld	xh, a
+      00011F A3 00 80         [ 2]  255 	cpw	x, #0x0080
+      000122 26 03            [ 1]  256 	jrne	00104$
+      000124 A6 01            [ 1]  257 	ld	a, #0x01
+      000126 81               [ 4]  258 	ret
+      000127                        259 00104$:
+      000127 4F               [ 1]  260 	clr	a
+                                    261 ;	./src/gpio.c: 114: }
+      000128 81               [ 4]  262 	ret
+                                    263 ;	./src/gpio.c: 116: uint8_t btn_g_minus_is_pressed() {
+                                    264 ;	-----------------------------------------
+                                    265 ;	 function btn_g_minus_is_pressed
+                                    266 ;	-----------------------------------------
+      000129                        267 _btn_g_minus_is_pressed:
+                                    268 ;	./src/gpio.c: 117: return((1 << 5) == (~PC_IDR & (1 << 5)));
+      000129 C6 50 0B         [ 1]  269 	ld	a, 0x500b
+      00012C 5F               [ 1]  270 	clrw	x
+      00012D 97               [ 1]  271 	ld	xl, a
+      00012E 53               [ 2]  272 	cplw	x
+      00012F 9F               [ 1]  273 	ld	a, xl
+      000130 A4 20            [ 1]  274 	and	a, #0x20
+      000132 97               [ 1]  275 	ld	xl, a
+      000133 4F               [ 1]  276 	clr	a
+      000134 95               [ 1]  277 	ld	xh, a
+      000135 A3 00 20         [ 2]  278 	cpw	x, #0x0020
+      000138 26 03            [ 1]  279 	jrne	00104$
+      00013A A6 01            [ 1]  280 	ld	a, #0x01
+      00013C 81               [ 4]  281 	ret
+      00013D                        282 00104$:
+      00013D 4F               [ 1]  283 	clr	a
+                                    284 ;	./src/gpio.c: 118: }
+      00013E 81               [ 4]  285 	ret
+                                    286 ;	./src/gpio.c: 120: uint8_t btn_b_minus_is_pressed() {
+                                    287 ;	-----------------------------------------
+                                    288 ;	 function btn_b_minus_is_pressed
+                                    289 ;	-----------------------------------------
+      00013F                        290 _btn_b_minus_is_pressed:
+                                    291 ;	./src/gpio.c: 121: return((1 << 3) == (~PC_IDR & (1 << 3)));
+      00013F C6 50 0B         [ 1]  292 	ld	a, 0x500b
+      000142 5F               [ 1]  293 	clrw	x
+      000143 97               [ 1]  294 	ld	xl, a
+      000144 53               [ 2]  295 	cplw	x
+      000145 9F               [ 1]  296 	ld	a, xl
+      000146 A4 08            [ 1]  297 	and	a, #0x08
+      000148 97               [ 1]  298 	ld	xl, a
+      000149 4F               [ 1]  299 	clr	a
+      00014A 95               [ 1]  300 	ld	xh, a
+      00014B A3 00 08         [ 2]  301 	cpw	x, #0x0008
+      00014E 26 03            [ 1]  302 	jrne	00104$
+      000150 A6 01            [ 1]  303 	ld	a, #0x01
+      000152 81               [ 4]  304 	ret
+      000153                        305 00104$:
+      000153 4F               [ 1]  306 	clr	a
+                                    307 ;	./src/gpio.c: 122: }
+      000154 81               [ 4]  308 	ret
+                                    309 ;	./src/gpio.c: 124: uint8_t btn_flash_is_pressed() {
+                                    310 ;	-----------------------------------------
+                                    311 ;	 function btn_flash_is_pressed
+                                    312 ;	-----------------------------------------
+      000155                        313 _btn_flash_is_pressed:
+                                    314 ;	./src/gpio.c: 125: return((1 << 4) == (~PB_IDR & (1 << 4)));
+      000155 C6 50 06         [ 1]  315 	ld	a, 0x5006
+      000158 5F               [ 1]  316 	clrw	x
+      000159 97               [ 1]  317 	ld	xl, a
+      00015A 53               [ 2]  318 	cplw	x
+      00015B 9F               [ 1]  319 	ld	a, xl
+      00015C A4 10            [ 1]  320 	and	a, #0x10
+      00015E 97               [ 1]  321 	ld	xl, a
+      00015F 4F               [ 1]  322 	clr	a
+      000160 95               [ 1]  323 	ld	xh, a
+      000161 A3 00 10         [ 2]  324 	cpw	x, #0x0010
+      000164 26 03            [ 1]  325 	jrne	00104$
+      000166 A6 01            [ 1]  326 	ld	a, #0x01
+      000168 81               [ 4]  327 	ret
+      000169                        328 00104$:
+      000169 4F               [ 1]  329 	clr	a
+                                    330 ;	./src/gpio.c: 126: }
+      00016A 81               [ 4]  331 	ret
+                                    332 ;	./src/gpio.c: 128: uint8_t btn_load_is_pressed() {
+                                    333 ;	-----------------------------------------
+                                    334 ;	 function btn_load_is_pressed
+                                    335 ;	-----------------------------------------
+      00016B                        336 _btn_load_is_pressed:
+                                    337 ;	./src/gpio.c: 129: return((1 << 5) == (~PB_IDR & (1 << 5)));
+      00016B C6 50 06         [ 1]  338 	ld	a, 0x5006
+      00016E 5F               [ 1]  339 	clrw	x
+      00016F 97               [ 1]  340 	ld	xl, a
+      000170 53               [ 2]  341 	cplw	x
+      000171 9F               [ 1]  342 	ld	a, xl
+      000172 A4 20            [ 1]  343 	and	a, #0x20
+      000174 97               [ 1]  344 	ld	xl, a
+      000175 4F               [ 1]  345 	clr	a
+      000176 95               [ 1]  346 	ld	xh, a
+      000177 A3 00 20         [ 2]  347 	cpw	x, #0x0020
+      00017A 26 03            [ 1]  348 	jrne	00104$
+      00017C A6 01            [ 1]  349 	ld	a, #0x01
+      00017E 81               [ 4]  350 	ret
+      00017F                        351 00104$:
+      00017F 4F               [ 1]  352 	clr	a
+                                    353 ;	./src/gpio.c: 130: }
+      000180 81               [ 4]  354 	ret
+                                    355 ;	./src/gpio.c: 132: uint8_t btn_brightness_plus_is_pressed() {
+                                    356 ;	-----------------------------------------
+                                    357 ;	 function btn_brightness_plus_is_pressed
+                                    358 ;	-----------------------------------------
+      000181                        359 _btn_brightness_plus_is_pressed:
+                                    360 ;	./src/gpio.c: 133: return((1 << 1) == (~PA_IDR & (1 << 1)));
+      000181 C6 50 01         [ 1]  361 	ld	a, 0x5001
+      000184 5F               [ 1]  362 	clrw	x
+      000185 97               [ 1]  363 	ld	xl, a
+      000186 53               [ 2]  364 	cplw	x
+      000187 9F               [ 1]  365 	ld	a, xl
+      000188 A4 02            [ 1]  366 	and	a, #0x02
+      00018A 97               [ 1]  367 	ld	xl, a
+      00018B 4F               [ 1]  368 	clr	a
+      00018C 95               [ 1]  369 	ld	xh, a
+      00018D A3 00 02         [ 2]  370 	cpw	x, #0x0002
+      000190 26 03            [ 1]  371 	jrne	00104$
+      000192 A6 01            [ 1]  372 	ld	a, #0x01
+      000194 81               [ 4]  373 	ret
+      000195                        374 00104$:
+      000195 4F               [ 1]  375 	clr	a
+                                    376 ;	./src/gpio.c: 134: }
+      000196 81               [ 4]  377 	ret
+                                    378 ;	./src/gpio.c: 136: uint8_t btn_brightness_minus_is_pressed() {
+                                    379 ;	-----------------------------------------
+                                    380 ;	 function btn_brightness_minus_is_pressed
+                                    381 ;	-----------------------------------------
+      000197                        382 _btn_brightness_minus_is_pressed:
+                                    383 ;	./src/gpio.c: 137: return((1 << 2) == (~PA_IDR & (1 << 2)));
+      000197 C6 50 01         [ 1]  384 	ld	a, 0x5001
+      00019A 5F               [ 1]  385 	clrw	x
+      00019B 97               [ 1]  386 	ld	xl, a
+      00019C 53               [ 2]  387 	cplw	x
+      00019D 9F               [ 1]  388 	ld	a, xl
+      00019E A4 04            [ 1]  389 	and	a, #0x04
+      0001A0 97               [ 1]  390 	ld	xl, a
+      0001A1 4F               [ 1]  391 	clr	a
+      0001A2 95               [ 1]  392 	ld	xh, a
+      0001A3 A3 00 04         [ 2]  393 	cpw	x, #0x0004
+      0001A6 26 03            [ 1]  394 	jrne	00104$
+      0001A8 A6 01            [ 1]  395 	ld	a, #0x01
+      0001AA 81               [ 4]  396 	ret
+      0001AB                        397 00104$:
+      0001AB 4F               [ 1]  398 	clr	a
+                                    399 ;	./src/gpio.c: 138: }
+      0001AC 81               [ 4]  400 	ret
+                                    401 ;	./src/gpio.c: 140: static void delay(uint16_t t) {
+                                    402 ;	-----------------------------------------
+                                    403 ;	 function delay
+                                    404 ;	-----------------------------------------
+      0001AD                        405 _delay:
+                                    406 ;	./src/gpio.c: 141: while(t--) {};
+      0001AD                        407 00101$:
+      0001AD 90 93            [ 1]  408 	ldw	y, x
+      0001AF 5A               [ 2]  409 	decw	x
+      0001B0 90 5D            [ 2]  410 	tnzw	y
+      0001B2 26 F9            [ 1]  411 	jrne	00101$
+                                    412 ;	./src/gpio.c: 142: }
+      0001B4 81               [ 4]  413 	ret
+                                    414 ;	./src/gpio.c: 144: uint8_t get_number_from_buttons() {
+                                    415 ;	-----------------------------------------
+                                    416 ;	 function get_number_from_buttons
+                                    417 ;	-----------------------------------------
+      0001B5                        418 _get_number_from_buttons:
+      0001B5 88               [ 1]  419 	push	a
+                                    420 ;	./src/gpio.c: 145: uint8_t number = 0;
+      0001B6 0F 01            [ 1]  421 	clr	(0x01, sp)
+                                    422 ;	./src/gpio.c: 147: while(1) { // In future should be added timeout
+      0001B8                        423 00116$:
+                                    424 ;	./src/gpio.c: 148: delay(65535);
+      0001B8 5F               [ 1]  425 	clrw	x
+      0001B9 5A               [ 2]  426 	decw	x
+      0001BA CDr01rAD         [ 4]  427 	call	_delay
+                                    428 ;	./src/gpio.c: 150: if(btn_r_plus_is_pressed()) {
+      0001BD CDr00rD1         [ 4]  429 	call	_btn_r_plus_is_pressed
+      0001C0 4D               [ 1]  430 	tnz	a
+      0001C1 27 06            [ 1]  431 	jreq	00102$
+                                    432 ;	./src/gpio.c: 151: number |= (1 << 5);
+      0001C3 7B 01            [ 1]  433 	ld	a, (0x01, sp)
+      0001C5 AA 20            [ 1]  434 	or	a, #0x20
+      0001C7 6B 01            [ 1]  435 	ld	(0x01, sp), a
+      0001C9                        436 00102$:
+                                    437 ;	./src/gpio.c: 154: if(btn_g_plus_is_pressed()) {
+      0001C9 CDr00rE7         [ 4]  438 	call	_btn_g_plus_is_pressed
+      0001CC 4D               [ 1]  439 	tnz	a
+      0001CD 27 06            [ 1]  440 	jreq	00104$
+                                    441 ;	./src/gpio.c: 155: number |= (1 << 4);
+      0001CF 7B 01            [ 1]  442 	ld	a, (0x01, sp)
+      0001D1 AA 10            [ 1]  443 	or	a, #0x10
+      0001D3 6B 01            [ 1]  444 	ld	(0x01, sp), a
+      0001D5                        445 00104$:
+                                    446 ;	./src/gpio.c: 158: if(btn_b_plus_is_pressed()) {
+      0001D5 CDr00rFD         [ 4]  447 	call	_btn_b_plus_is_pressed
+      0001D8 4D               [ 1]  448 	tnz	a
+      0001D9 27 06            [ 1]  449 	jreq	00106$
+                                    450 ;	./src/gpio.c: 159: number |= (1 << 3);
+      0001DB 7B 01            [ 1]  451 	ld	a, (0x01, sp)
+      0001DD AA 08            [ 1]  452 	or	a, #0x08
+      0001DF 6B 01            [ 1]  453 	ld	(0x01, sp), a
+      0001E1                        454 00106$:
+                                    455 ;	./src/gpio.c: 162: if(btn_r_minus_is_pressed()) {
+      0001E1 CDr01r13         [ 4]  456 	call	_btn_r_minus_is_pressed
+      0001E4 4D               [ 1]  457 	tnz	a
+      0001E5 27 06            [ 1]  458 	jreq	00108$
+                                    459 ;	./src/gpio.c: 163: number |= (1 << 2);
+      0001E7 7B 01            [ 1]  460 	ld	a, (0x01, sp)
+      0001E9 AA 04            [ 1]  461 	or	a, #0x04
+      0001EB 6B 01            [ 1]  462 	ld	(0x01, sp), a
+      0001ED                        463 00108$:
+                                    464 ;	./src/gpio.c: 166: if(btn_g_minus_is_pressed()) {
+      0001ED CDr01r29         [ 4]  465 	call	_btn_g_minus_is_pressed
+      0001F0 4D               [ 1]  466 	tnz	a
+      0001F1 27 06            [ 1]  467 	jreq	00110$
+                                    468 ;	./src/gpio.c: 167: number |= (1 << 1);
+      0001F3 7B 01            [ 1]  469 	ld	a, (0x01, sp)
+      0001F5 AA 02            [ 1]  470 	or	a, #0x02
+      0001F7 6B 01            [ 1]  471 	ld	(0x01, sp), a
+      0001F9                        472 00110$:
+                                    473 ;	./src/gpio.c: 170: if(btn_b_minus_is_pressed()) {
+      0001F9 CDr01r3F         [ 4]  474 	call	_btn_b_minus_is_pressed
+      0001FC 4D               [ 1]  475 	tnz	a
+      0001FD 27 05            [ 1]  476 	jreq	00112$
+                                    477 ;	./src/gpio.c: 171: number |= (1 << 0);
+      0001FF 04 01            [ 1]  478 	srl	(0x01, sp)
+      000201 99               [ 1]  479 	scf
+      000202 09 01            [ 1]  480 	rlc	(0x01, sp)
+      000204                        481 00112$:
+                                    482 ;	./src/gpio.c: 177: if(btn_load_is_pressed()) {
+      000204 CDr01r6B         [ 4]  483 	call	_btn_load_is_pressed
+      000207 4D               [ 1]  484 	tnz	a
+      000208 27 AE            [ 1]  485 	jreq	00116$
+                                    486 ;	./src/gpio.c: 182: return number;
+      00020A 7B 01            [ 1]  487 	ld	a, (0x01, sp)
+                                    488 ;	./src/gpio.c: 183: }
+      00020C 5B 01            [ 2]  489 	addw	sp, #1
+      00020E 81               [ 4]  490 	ret
+                                    491 	.area CODE
+                                    492 	.area CONST
+                                    493 	.area INITIALIZER
+                                    494 	.area CABS (ABS)

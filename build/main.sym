@@ -14,6 +14,8 @@ Symbol Table
   3 __start__stack                                                 000000 R
     _btn_b_minus_is_pressed                                        ****** GX
     _btn_b_plus_is_pressed                                         ****** GX
+    _btn_brightness_minus_is_pressed                               ****** GX
+    _btn_brightness_plus_is_pressed                                ****** GX
     _btn_g_minus_is_pressed                                        ****** GX
     _btn_g_plus_is_pressed                                         ****** GX
     _btn_load_is_pressed                                           ****** GX
@@ -38,7 +40,6 @@ Symbol Table
     s_INITIALIZED                                                  ****** GX
     s_INITIALIZER                                                  ****** GX
 
-
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]
 
@@ -54,6 +55,6 @@ Area Table
    7 GSFINAL                                    size      3   flags    0
    8 CONST                                      size      0   flags    0
    9 INITIALIZER                                size      0   flags    0
-   A CODE                                       size    118   flags    0
+   A CODE                                       size    14C   flags    0
    B CABS                                       size      0   flags    8
 
