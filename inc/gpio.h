@@ -11,6 +11,8 @@ uint8_t btn_g_minus_is_pressed();
 uint8_t btn_b_minus_is_pressed();
 uint8_t btn_flash_is_pressed();
 uint8_t btn_load_is_pressed();
+uint8_t btn_brightness_plus_is_pressed();
+uint8_t btn_brightness_minus_is_pressed();
 
 // Use R+, G+, B+, R-, G-, B- buttons
 // as 5, 4, 3, 2, 1, 0 bits of number. (Bits 7, 6 deserved);

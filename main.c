@@ -77,6 +77,18 @@ void button_hundler(struct Color *color) {
     if(btn_b_minus_is_pressed()) {
         smart_decrement(&color->b);
     }
+    
+    if(btn_brightness_plus_is_pressed()) {
+        smart_increment(&color->r);
+        smart_increment(&color->g);
+        smart_increment(&color->b);
+    }
+
+    if(btn_brightness_minus_is_pressed()) {
+        smart_decrement(&color->r);
+        smart_decrement(&color->g);
+        smart_decrement(&color->b);
+    }
 
     // Problems with reading input status. Button disabled
     //if(btn_flash_is_pressed()) {
@@ -112,7 +124,7 @@ void button_hundler(struct Color *color) {
             counter += 1;
         }
         
-        if(counter > 10 && counter < 23) {
+        if(counter >= 10 && counter < 23) {
             rgb = rgb_buf;
         }
         else if (counter == 23) { 

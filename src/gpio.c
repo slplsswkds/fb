@@ -37,6 +37,9 @@ void gpio_init() {
     * Btn_B+ -> PC4
     * Btn_B- -> PC3
     * 
+    * Btn_Brightness+ PA1
+    * Btn_Brightness- PA2
+    *
     * Btn_FLASH -> PB4
     * Btn_LOAD -> PB5
     * */
@@ -74,6 +77,13 @@ void gpio_init() {
     PB_CR1 |= (1 << 5);
     PB_CR2 &= ~(1 << 5);
     
+    PA_DDR &= ~(1 << 1);    
+    PA_CR1 |= (1 << 1);    
+    PA_CR2 &= ~(1 << 1);    
+
+    PA_DDR &= ~(1 << 2);    
+    PA_CR1 |= (1 << 2);    
+    PA_CR2 &= ~(1 << 2);    
 
     // UART pins
     // UART1 TX
@@ -117,6 +127,14 @@ uint8_t btn_flash_is_pressed() {
 
 uint8_t btn_load_is_pressed() {
     return((1 << 5) == (~PB_IDR & (1 << 5)));
+}
+
+uint8_t btn_brightness_plus_is_pressed() {
+    return((1 << 1) == (~PA_IDR & (1 << 1)));
+}
+
+uint8_t btn_brightness_minus_is_pressed() {
+    return((1 << 2) == (~PA_IDR & (1 << 2)));
 }
 
 static void delay(uint16_t t) {
