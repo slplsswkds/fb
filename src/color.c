@@ -1,9 +1,13 @@
 #include "../inc/color.h"
 
 uint16_t normalize_from(uint8_t *val) {
-    float tmp1 = *val;
-    float tmp2 = sqrtf(10 * tmp1) / 5;
-    return (expf(tmp2));
+    if(*val == 0) {
+        return 0;
+    } else { 
+        float tmp1 = *val;
+        float tmp2 = sqrtf(10 * tmp1) / 5;
+        return (expf(tmp2));
+    }
 }
 
 
