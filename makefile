@@ -1,6 +1,6 @@
 CC = sdcc
 PORT = stm8
-BUILDPATH = .build
+BUILDPATH = ./build
 INC = ./inc
 SRC = ./src
 
